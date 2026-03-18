@@ -190,19 +190,18 @@ body::after {
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 520px;
+  min-height: 540px;
   border-radius: var(--r-xl);
   overflow: hidden;
   border: none;
-  background: #161c28;
+  background: #10141c;
 }
 
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: url('assets/gallery/porsche-cabrio-finish.jpg') center/cover no-repeat;
-  opacity: 0.3;
-  filter: brightness(0.9);
+  background: url("assets/gallery/porsche-cabrio-finish.jpg") center 40%/cover no-repeat;
+  opacity: 0.22;
 }
 
 .hero::after {
@@ -210,8 +209,8 @@ body::after {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at center top, rgba(59,106,212,0.08) 0%, transparent 60%),
-    linear-gradient(180deg, rgba(22,28,40,0.6) 0%, rgba(22,28,40,0.82) 100%);
+    radial-gradient(ellipse 80% 60% at 50% 110%, rgba(59,106,212,0.12) 0%, transparent 70%),
+    linear-gradient(180deg, rgba(16,20,28,0.5) 0%, rgba(16,20,28,0.7) 50%, rgba(16,20,28,0.85) 100%);
   pointer-events: none;
 }
 
@@ -219,65 +218,112 @@ body::after {
   position: relative;
   z-index: 2;
   text-align: center;
-  padding: clamp(44px, 7vw, 88px) clamp(20px, 4vw, 60px);
-  max-width: 640px;
+  padding: clamp(48px, 8vw, 96px) clamp(24px, 5vw, 64px);
+  max-width: 600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Location badge — small, top of hero */
+.hero-location {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 24px;
 }
 
 .hero h1 {
   margin: 0;
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  font-size: clamp(2.4rem, 4.5vw, 3.8rem);
   font-weight: 900;
-  letter-spacing: -0.035em;
-  line-height: 1.06;
+  letter-spacing: -0.04em;
+  line-height: 1.04;
   color: #fff;
 }
 
-.hero-services {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 6px;
-  margin-top: 22px;
-}
-
-.hero-services span {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  height: 30px;
-  padding: 0 14px;
-  border-radius: 999px;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.7);
-  font-size: 0.78rem;
-  font-weight: 600;
+.hero-sub {
+  margin: 16px 0 0;
+  max-width: 38ch;
+  font-size: 0.92rem;
+  color: rgba(255,255,255,0.45);
+  line-height: 1.55;
 }
 
 .hero-actions {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 10px;
-  margin-top: 28px;
-  max-width: 400px;
-  margin-left: auto;
-  margin-right: auto;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 32px;
+  width: 100%;
+  max-width: 280px;
 }
 
-.hero-actions .button {
-  flex: 1;
-  min-width: 0;
-  justify-content: center;
+/* Primary CTA — full width, tall, strong presence */
+.hero-cta-primary {
+  width: 100%;
+  height: 52px;
+  font-size: 0.95rem;
+  border-radius: 14px;
+  box-shadow:
+    0 4px 16px rgba(37,185,86,0.25),
+    0 0 0 1px rgba(37,185,86,0.1);
+}
+
+.hero-cta-primary:hover {
+  box-shadow:
+    0 6px 24px rgba(37,185,86,0.35),
+    0 0 0 1px rgba(37,185,86,0.2);
+}
+
+/* Secondary link — text only, no button chrome */
+.hero-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: rgba(255,255,255,0.5);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: color 0.15s;
+  text-decoration: none;
+}
+
+.hero-link:hover {
+  color: rgba(255,255,255,0.8);
+}
+
+.hero-link svg {
+  transition: transform 0.2s var(--ease);
+}
+
+.hero-link:hover svg {
+  transform: translateY(2px);
+}
+
+/* Thin divider */
+.hero-divider {
+  width: 40px;
+  height: 1px;
+  background: rgba(255,255,255,0.12);
+  margin-top: 28px;
 }
 
 .hero-note {
-  margin-top: 20px;
-  font-size: 0.74rem;
-  color: rgba(255,255,255,0.35);
+  margin-top: 14px;
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.28);
   letter-spacing: 0.02em;
 }
-
 
 /* ===================== BUTTONS ===================== */
 
@@ -1056,15 +1102,26 @@ body::after {
   display: none; grid-template-columns: 1fr 1fr; gap: 5px;
   width: calc(100% - 20px); max-width: 380px;
   padding: 6px; border-radius: 28px;
-  border: 1px solid rgba(15,18,25,0.04);
-  background: rgba(255,255,255,0.98);
-  backdrop-filter: blur(24px) saturate(1.1);
+  border: 1px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.82);
   box-shadow:
-    0 2px 6px rgba(15,18,25,0.03),
-    0 8px 20px rgba(15,18,25,0.05),
-    0 20px 50px rgba(15,18,25,0.06),
-    0 40px 80px rgba(15,18,25,0.04);
+    0 2px 6px rgba(15,18,25,0.06),
+    0 8px 24px rgba(15,18,25,0.10),
+    0 20px 50px rgba(15,18,25,0.08);
   transform: translateX(-50%);
+  isolation: isolate;
+}
+.mobile-cta::before {
+  content: '';
+  position: absolute;
+  inset: -56px -4px -4px;
+  border-radius: 28px;
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 62%);
+  mask-image: linear-gradient(to bottom, transparent 0%, black 62%);
+  z-index: -1;
+  pointer-events: none;
 }
 .mobile-cta a {
   min-height: 44px;
@@ -1186,8 +1243,10 @@ body::after {
   .brand img { height: 22px; }
 
   .hero { min-height: 440px; border-radius: var(--r-xl); }
-  .hero-content { padding: clamp(28px, 6vw, 48px) 18px; }
-  .hero h1 { font-size: clamp(1.6rem, 7vw, 2.2rem); }
+  .hero-content { padding: clamp(36px, 6vw, 56px) 20px; }
+  .hero h1 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
+  .hero-sub { font-size: 0.84rem; }
+  .hero-actions { max-width: 240px; }
 
   .section, .footer, .cta-card, .value-card,
   .package-card, .legal-card, .preview-panel, .faq-item,
@@ -1206,9 +1265,7 @@ body::after {
     font-size: clamp(1.3rem, 5.5vw, 1.7rem);
   }
 
-  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; max-width: 100%; }
-  .hero-services { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
-  .hero-services span { justify-content: center; }
+  .hero-actions .button { width: 100%; font-size: 0.82rem; padding: 0 10px; }
   .cta-actions, .package-content-actions,
   .footer, .preview-panel-actions, .package-summary-footer { display: grid; }
 
