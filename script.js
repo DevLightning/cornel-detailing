@@ -296,6 +296,15 @@ function renderPackages() {
   const grid = document.getElementById("packagesGrid");
   if (!grid) return;
 
+  // Line-style SVG icons per category
+  const categoryIcons = {
+    "Außen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1l2-5h12l2 5h1"/><path d="M5 12v5a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-5"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/><path d="M5 7l1-2h12l1 2"/></svg>',
+    "Innen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9v6"/><path d="M17 9v6"/><path d="M7 12h10"/><circle cx="12" cy="9" r="1"/></svg>',
+    "Politur": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M5 19l2-2"/><path d="M19 19l-2-2"/><path d="M12 17v4"/></svg>',
+    "Versiegelung": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
+    "Premium": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>',
+  };
+
   // Calculate tier based on PKW price (extract number) and item count
   const priceValues = packages.map((pkg) => {
     const match = pkg.prices.pkw.match(/[\d.]+/);
@@ -324,6 +333,7 @@ function renderPackages() {
       const premiumClass = isPremium ? " package-card--premium" : "";
       const premiumBadge = isPremium ? '<span class="premium-badge">★ Premium</span>' : "";
       const titleClass = isPremium ? ' class="premium-title"' : "";
+      const icon = categoryIcons[pkg.category] || categoryIcons["Premium"];
 
       return `
         <article class="package-card${premiumClass} reveal">
@@ -336,7 +346,10 @@ function renderPackages() {
                   <span class="package-group">${pkg.category}</span>
                 </div>
 
-                <h3${titleClass}>${pkg.title}</h3>
+                <div class="package-title-row">
+                  <span class="package-icon">${icon}</span>
+                  <h3${titleClass}>${pkg.title}</h3>
+                </div>
                 <p>${pkg.teaser}</p>
 
                 <div class="package-tier">
