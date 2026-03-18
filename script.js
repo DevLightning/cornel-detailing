@@ -334,9 +334,16 @@ function renderPackages() {
       const premiumBadge = isPremium ? '<span class="premium-badge">★ Premium</span>' : "";
       const titleClass = isPremium ? ' class="premium-title"' : "";
       const icon = categoryIcons[pkg.category] || categoryIcons["Premium"];
+      const catClass = {
+        "Außen": "pkg-cat-aussen",
+        "Innen": "pkg-cat-innen",
+        "Politur": "pkg-cat-politur",
+        "Versiegelung": "pkg-cat-versiegelung",
+        "Premium": "pkg-cat-premium",
+      }[pkg.category] || "pkg-cat-premium";
 
       return `
-        <article class="package-card${premiumClass} reveal">
+        <article class="package-card${premiumClass} ${catClass} reveal">
           <details class="package-details">
             <summary>
               <div class="package-summary">
