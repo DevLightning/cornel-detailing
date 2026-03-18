@@ -7,7 +7,7 @@ const packages = [
     prices: { pkw: "€ 49,-", suv: "€ 69,-", van: "€ 99,-" },
     items: [
       "Vorwäsche",
-      "Felgen Reinigung mit Felgenbürste",
+      "Felgenreinigung mit Felgenbürste",
       "Lackschonende ganzheitliche Handwäsche",
       "Lack händisch abtrocknen",
       "Scheiben-/Spiegelreinigung",
@@ -23,8 +23,8 @@ const packages = [
     items: [
       "Intensive Vorwäsche",
       "Ganzheitlich schmutzlösende Schaumbehandlung",
-      "Intensive Felgen Reinigung mit Felgenbürste und Pinsel",
-      "Intensive Türfalz Reinigung mit Pinsel",
+      "Intensive Felgenreinigung mit Felgenbürste und Pinsel",
+      "Intensive Türfalzreinigung mit Pinsel",
       "Lackschonende ganzheitliche Handwäsche",
       "Ganzheitliche Reinigung von Lack und Scheiben mit Reinigungsknete",
       "Lack händisch abtrocknen",
@@ -74,7 +74,7 @@ const packages = [
     items: [
       "Lack analysieren und Lackdicke messen",
       "2-stufige Politur zur Entfernung von leichten Kratzern",
-      "Lack Endkontrolle um Hologramme und Haze (Grauschleier) zu vermeiden",
+      "Lack-Endkontrolle, um Hologramme und Haze (Grauschleier) zu vermeiden",
     ],
   },
   {
@@ -86,7 +86,7 @@ const packages = [
     items: [
       "Lack analysieren und Lackdicke messen",
       "3-stufige Politur zur Entfernung eines Großteils der polierbaren Kratzer",
-      "Lack Endkontrolle um Hologramme und Haze (Grauschleier) zu vermeiden",
+      "Lack-Endkontrolle, um Hologramme und Haze (Grauschleier) zu vermeiden",
     ],
   },
   {
@@ -97,7 +97,7 @@ const packages = [
     prices: { pkw: "€ 299,-", suv: "€ 399,-", van: "€ 499,-" },
     items: [
       "…nach erfolgter Lackpolitur!!!!",
-      "Lack reinigen endfetten und somit perfekt auf die nachfolgende Versiegelung vorzubereiten",
+      "Lack reinigen entfetten und somit perfekt auf die nachfolgende Versiegelung vorzubereiten",
       "Auftragen einer Schicht Keramik oder Wax mit einer Standzeit von bis zu 12 Monaten",
     ],
   },
@@ -109,7 +109,7 @@ const packages = [
     prices: { pkw: "€ 499,-", suv: "€ 699,-", van: "€ 899,-" },
     items: [
       "…nach erfolgter Lackpolitur!!!!",
-      "Lack reinigen endfetten und somit perfekt auf die nachfolgende Versiegelung vorzubereiten",
+      "Lack reinigen entfetten und somit perfekt auf die nachfolgende Versiegelung vorzubereiten",
       "Auftragen von 2 Schichten Keramikversiegelung mit einer Standzeit von bis zu 60 Monaten",
     ],
   },
