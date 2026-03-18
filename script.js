@@ -139,6 +139,7 @@ const projects = [
     asset: "assets/gallery/porsche-cabrio-finish.jpg",
     layout: "wide",
     featured: true,
+    category: "Exterieur",
   },
   {
     slug: "porsche-cockpit",
@@ -148,6 +149,7 @@ const projects = [
     asset: "assets/gallery/porsche-cockpit.jpg",
     layout: "tall",
     featured: true,
+    category: "Innenraum",
   },
   {
     slug: "porsche-heck",
@@ -155,8 +157,9 @@ const projects = [
     label: "Exterieur Abschluss",
     description: "Finish für den finalen Eindruck mit gleichmäßigem Glanz.",
     asset: "assets/gallery/porsche-heck.jpg",
-    layout: "square",
+    layout: "tall",
     featured: true,
+    category: "Exterieur",
   },
   {
     slug: "ford-transit-exterieur",
@@ -165,6 +168,7 @@ const projects = [
     description: "Gerade Flächen und Spiegelungen sauber herausgearbeitet.",
     asset: "assets/gallery/ford-transit-exterieur.jpg",
     layout: "tall",
+    category: "Exterieur",
   },
   {
     slug: "ford-transit-cockpit",
@@ -173,6 +177,7 @@ const projects = [
     description: "Strukturierte Flächen und ein sauberer Fahrerbereich.",
     asset: "assets/gallery/ford-transit-cockpit.jpg",
     layout: "square",
+    category: "Innenraum",
   },
   {
     slug: "ford-transit-dashboard",
@@ -181,6 +186,7 @@ const projects = [
     description: "Klare Displays und gepflegte Oberflächen bis ins Detail.",
     asset: "assets/gallery/ford-transit-dashboard.jpg",
     layout: "square",
+    category: "Innenraum",
   },
   {
     slug: "citroen-reflexion",
@@ -189,14 +195,61 @@ const projects = [
     description: "Reflexionslinien zeigen die Qualität von Politur und Lackfinish.",
     asset: "assets/gallery/citroen-reflexion.jpg",
     layout: "wide",
+    category: "Exterieur",
   },
   {
     slug: "aston-martin-motorraum",
     title: "Aston Martin Vantage",
-    label: "Motorraum",
+    label: "Motorraum Detail",
     description: "Saubere technische Flächen für ein komplettes Premium-Bild.",
     asset: "assets/gallery/aston-martin-motorraum.jpg",
+    layout: "full",
+    category: "Detail",
+  },
+  {
+    slug: "ford-transit-reflexion-front",
+    title: "Ford Transit Custom",
+    label: "Reflexionskontrolle",
+    description: "Hexagonale Lichtreflexionen zeigen die Qualität der Lackoberfläche nach der Aufbereitung.",
+    asset: "assets/gallery/ford-transit-reflexion-front.jpg",
+    layout: "tall",
+    category: "Exterieur",
+  },
+  {
+    slug: "mercedes-vito-exterieur",
+    title: "Mercedes-Benz V-Klasse",
+    label: "Exterieur Finish",
+    description: "Tiefschwarzer Lack, poliert und versiegelt – ein Minivan auf Premium-Niveau.",
+    asset: "assets/gallery/mercedes-vito-exterieur.jpg",
+    layout: "wide",
+    category: "Exterieur",
+  },
+  {
+    slug: "aston-martin-rot-exterieur",
+    title: "Aston Martin Vantage",
+    label: "Exterieur Rot",
+    description: "Kräftiges Rot, tiefe Reflexionen und ein perfektes Gesamtbild nach der Vollaufbereitung.",
+    asset: "assets/gallery/aston-martin-rot-exterieur.jpg",
     layout: "square",
+    category: "Exterieur",
+  },
+  {
+    slug: "lack-reflexion-nahaufnahme",
+    title: "Lackanalyse",
+    label: "Reflexion Nahaufnahme",
+    description: "Hexagonale Lichtmuster machen kleinste Unregelmäßigkeiten im Lack sichtbar.",
+    asset: "assets/gallery/lack-reflexion-nahaufnahme.jpg",
+    layout: "square",
+    category: "Detail",
+  },
+  {
+    slug: "aston-martin-motorraum-detail",
+    title: "Aston Martin Vantage",
+    label: "Motor Aufbereitung",
+    description: "Jedes Detail zählt – aufbereiteter Motorraum für ein lückenloses Premium-Ergebnis.",
+    asset: "assets/gallery/aston-martin-motorraum-detail.jpg",
+    layout: "square",
+    category: "Detail",
   },
 ];
 
@@ -253,19 +306,19 @@ function showDevBanner() {
 
 function projectMarkup(project, extraClass = "") {
   return `
-    <article class="media-card media-card--${project.layout} ${extraClass}">
+    <div class="media-card media-card--${project.layout} ${extraClass}">
       <img
         class="project-media"
         src="${project.asset}"
         alt="${project.title} – ${project.label}"
         loading="lazy"
       />
+      <span class="media-badge">${project.label}</span>
       <div class="media-overlay">
-        <span class="media-kicker">${project.label}</span>
         <strong>${project.title}</strong>
         <p>${project.description}</p>
       </div>
-    </article>
+    </div>
   `;
 }
 
@@ -283,8 +336,12 @@ function renderGallery() {
 
   target.innerHTML = projects
     .map(
-      (project) => `
-        <article class="gallery-tile gallery-tile--${project.layout} reveal">
+      (project, i) => `
+        <article
+          class="gallery-tile gallery-tile--${project.layout} reveal"
+          style="--i:${i}"
+          data-category="${project.category || ""}"
+        >
           ${projectMarkup(project)}
         </article>
       `
@@ -533,6 +590,71 @@ function injectLocalBusinessSchema() {
   document.head.appendChild(script);
 }
 
+function renderGalleryFilters() {
+  const container = document.getElementById("galleryFilters");
+  if (!container) return;
+
+  // Build ordered category counts (preserving first-seen order)
+  const cats = {};
+  projects.forEach((p) => {
+    if (p.category) cats[p.category] = (cats[p.category] || 0) + 1;
+  });
+
+  const allBtn = `<button class="gallery-filter-btn is-active" data-filter="all">Alle <span class="filter-count">${projects.length}</span></button>`;
+  const catBtns = Object.entries(cats)
+    .map(([cat, count]) => `<button class="gallery-filter-btn" data-filter="${cat}">${cat} <span class="filter-count">${count}</span></button>`)
+    .join("");
+
+  container.innerHTML = allBtn + catBtns;
+}
+
+function setupGalleryFilter() {
+  const container = document.getElementById("galleryFilters");
+  const grid = document.getElementById("galleryGrid");
+  if (!container || !grid) return;
+
+  container.addEventListener("click", (e) => {
+    const btn = e.target.closest(".gallery-filter-btn");
+    if (!btn) return;
+
+    // Update active button
+    container.querySelectorAll(".gallery-filter-btn").forEach((b) => b.classList.remove("is-active"));
+    btn.classList.add("is-active");
+
+    const filter = btn.dataset.filter;
+
+    // Fade out
+    grid.style.opacity = "0";
+    grid.style.transform = "translateY(6px)";
+
+    setTimeout(() => {
+      const list = filter === "all" ? projects : projects.filter((p) => p.category === filter);
+
+      grid.innerHTML = list
+        .map(
+          (project, i) => `
+          <article
+            class="gallery-tile gallery-tile--${project.layout} reveal is-visible"
+            style="--i:${i}"
+            data-category="${project.category || ""}"
+          >
+            ${projectMarkup(project)}
+          </article>
+        `
+        )
+        .join("");
+
+      // Fade back in on next two frames to ensure DOM painted
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          grid.style.opacity = "1";
+          grid.style.transform = "translateY(0)";
+        });
+      });
+    }, 220);
+  });
+}
+
 function setupMobileMenu() {
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("topnav");
@@ -555,16 +677,73 @@ function setupMobileMenu() {
   });
 }
 
+function setupScrollHeader() {
+  const topbar = document.querySelector(".topbar");
+  if (!topbar) return;
+
+  const update = () => {
+    topbar.classList.toggle("is-scrolled", window.scrollY > 24);
+  };
+
+  window.addEventListener("scroll", update, { passive: true });
+  update(); // run once on load in case page is already scrolled
+}
+
+function setupActiveNav() {
+  const navLinks = Array.from(
+    document.querySelectorAll('.topnav a[href^="#"]')
+  );
+  if (!navLinks.length) return;
+
+  const sectionIds = navLinks
+    .map((link) => link.getAttribute("href").slice(1))
+    .filter(Boolean);
+
+  const sections = sectionIds
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+  if (!sections.length) return;
+
+  // Map section id → nav link for fast lookup
+  const linkMap = {};
+  navLinks.forEach((link) => {
+    const id = link.getAttribute("href").slice(1);
+    if (id) linkMap[id] = link;
+  });
+
+  let activeId = null;
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          activeId = entry.target.id;
+          navLinks.forEach((l) => l.classList.remove("is-active"));
+          if (linkMap[activeId]) linkMap[activeId].classList.add("is-active");
+        }
+      });
+    },
+    { rootMargin: "-15% 0px -65% 0px", threshold: 0 }
+  );
+
+  sections.forEach((s) => observer.observe(s));
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   showDevBanner();
   renderFeaturedProjects();
   renderGallery();
   renderPackages();
+  renderGalleryFilters();
   setupStaticText();
   setupActionLinks();
   setupMobileCta();
   setupPackageDetails();
   setupReveal();
   setupMobileMenu();
+  setupScrollHeader();
+  setupActiveNav();
+  setupGalleryFilter();
   injectLocalBusinessSchema();
 });
