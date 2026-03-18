@@ -1143,10 +1143,12 @@ body::after {
     font-size: clamp(1.3rem, 5.5vw, 1.7rem);
   }
 
-  .hero-actions, .cta-actions, .package-content-actions,
+  .hero-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .cta-actions, .package-content-actions,
   .footer, .preview-panel-actions, .package-summary-footer { display: grid; }
 
-  .hero-actions .button, .cta-actions .button,
+  .hero-actions .button { width: 100%; font-size: 0.82rem; padding: 0 10px; }
+  .cta-actions .button,
   .preview-panel-actions .button, .package-content-actions .button { width: 100%; }
 
   .button { height: 48px; }
