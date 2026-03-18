@@ -251,6 +251,15 @@ const projects = [
     layout: "square",
     category: "Detail",
   },
+  {
+    slug: "audi-rs3-exterieur-heck",
+    title: "Audi RS3 Sportback",
+    label: "Exterieur Finish",
+    description: "Tiefschwarzer Lack, poliert und versiegelt – sportliche Präzision auf einem anderen Level.",
+    asset: "assets/gallery/Screenshot_1.png",
+    layout: "full",
+    category: "Exterieur",
+  },
 ];
 
 const homepageRequiredFields = ["phoneDisplay", "whatsappNumber"];
