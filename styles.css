@@ -495,6 +495,41 @@ body::after {
 .package-card summary { list-style: none; cursor: pointer; }
 .package-card summary::-webkit-details-marker { display: none; }
 
+/* Premium package highlight */
+.package-card--premium {
+  border-color: rgba(59,106,212,0.2);
+  background: linear-gradient(180deg,
+    rgba(230,238,250,0.4) 0%,
+    var(--white) 30%,
+    var(--white) 70%,
+    rgba(230,238,250,0.3) 100%);
+  box-shadow:
+    0 2px 12px rgba(15,18,25,0.05),
+    0 0 0 1px rgba(59,106,212,0.06);
+}
+
+.package-card--premium:hover {
+  border-color: rgba(59,106,212,0.3);
+  box-shadow:
+    0 6px 24px rgba(59,106,212,0.1),
+    0 0 0 1px rgba(59,106,212,0.1);
+}
+
+.premium-badge {
+  display: inline-flex;
+  align-items: center;
+  height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--blue) 0%, #5a8ae6 100%);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  box-shadow: 0 2px 8px rgba(59,106,212,0.25);
+}
+
 .package-summary { padding: 18px 20px; }
 
 .package-summary-top {
@@ -1089,7 +1124,6 @@ body::after {
 
   .hero-actions .button, .cta-actions .button,
   .preview-panel-actions .button, .package-content-actions .button { width: 100%; }
-  .hero-actions .button-outline { display: none; }
 
   .button { height: 48px; }
   .package-summary { padding: 14px; }

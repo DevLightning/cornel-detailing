@@ -320,13 +320,18 @@ function renderPackages() {
       else if (tierPercent <= 80) { tierLabel = "Premium"; tierClass = "tier-premium"; }
       else { tierLabel = "Exklusiv"; tierClass = "tier-exclusive"; }
 
+      const isPremium = tierPercent > 60;
+      const premiumClass = isPremium ? " package-card--premium" : "";
+      const premiumBadge = isPremium ? '<span class="premium-badge">★ Premium</span>' : "";
+
       return `
-        <article class="package-card reveal">
+        <article class="package-card${premiumClass} reveal">
           <details class="package-details">
             <summary>
               <div class="package-summary">
                 <div class="package-summary-top">
                   <span class="package-number">Paket ${pkg.number}</span>
+                  ${premiumBadge}
                   <span class="package-group">${pkg.category}</span>
                 </div>
 
