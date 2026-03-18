@@ -380,6 +380,26 @@ body::after {
   transform: translateY(2px);
 }
 
+/* Pulse variant for the "9 Pakete ab" hero link */
+.hero-link--pulse {
+  animation: heroLinkPulse 2.8s ease-in-out infinite;
+}
+.hero-link--pulse:hover {
+  animation: none;
+  color: rgba(255,255,255,0.9);
+}
+
+@keyframes heroLinkPulse {
+  0%, 100% {
+    color: rgba(255,255,255,0.45);
+    text-shadow: none;
+  }
+  50% {
+    color: rgba(255,255,255,0.95);
+    text-shadow: 0 0 14px rgba(255,255,255,0.25);
+  }
+}
+
 /* Thin divider */
 .hero-divider {
   width: 40px;
@@ -885,6 +905,29 @@ body::after {
   z-index: 2;
   width: 100%;
   max-width: 620px;
+}
+
+/* Experience badge in Leistungen section */
+.leistungen-trust {
+  margin-top: 16px;
+}
+.leistungen-trust-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: var(--blue-soft);
+  color: var(--blue-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.leistungen-trust-badge svg {
+  flex-shrink: 0;
+  opacity: 0.8;
 }
 
 /* Override section-tag colour on dark bg */
