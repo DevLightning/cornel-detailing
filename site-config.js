@@ -16,7 +16,7 @@ window.SITE_CONFIG = {
     whatsappNumber: "436764391253",
     whatsappPrefill:
       "Hallo, ich möchte einen Termin bei Cornel Detailing anfragen.",
-    serviceArea: "Würflach, Neukirchen und Umgebung",
+    serviceArea: "Würflach, Neunkirchen und Umgebung",
     appointmentHint: "Termine nach Vereinbarung",
     uid: "Keine UID-Nummer – Kleinunternehmer gemäß § 6 Abs. 1 Z 27 UStG",
     gisa: "",
@@ -33,7 +33,7 @@ window.SITE_CONFIG = {
       privacyUrl: "https://vercel.com/legal/privacy-policy",
     },
     footerText:
-      "Professionelle Autoaufbereitung in Würflach, Neukirchen und Umgebung.",
+      "Professionelle Autoaufbereitung in Würflach, Neunkirchen und Umgebung.",
     privacyDate: "18.03.2026",
   },
 };
