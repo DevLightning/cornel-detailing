@@ -1408,6 +1408,13 @@ body::after {
   color: var(--grey-400) !important;
   margin-top: 8px !important;
 }
+.location-area {
+  font-size: 0.82rem !important;
+  color: var(--grey-500) !important;
+  margin-top: 10px !important;
+  line-height: 1.6 !important;
+}
+.location-area strong { color: var(--grey-700); font-weight: 600; }
 
 .location-info .button {
   margin-top: 14px;

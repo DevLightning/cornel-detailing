@@ -569,35 +569,7 @@ function setupReveal() {
   items.forEach((item) => observer.observe(item));
 }
 
-function injectLocalBusinessSchema() {
-  const business = window.SITE_CONFIG.business;
-
-  if (!business.phoneDisplay) return;
-
-  const schema = {
-    "@context": "https://schema.org",
-    "@type": "AutomotiveBusiness",
-    name: business.name,
-    areaServed: business.serviceArea,
-    telephone: business.phoneDisplay,
-    email: business.email || undefined,
-    address:
-      business.address.street && business.address.postalCode && business.address.city
-        ? {
-            "@type": "PostalAddress",
-            streetAddress: business.address.street,
-            postalCode: business.address.postalCode,
-            addressLocality: business.address.city,
-            addressCountry: business.address.country,
-          }
-        : undefined,
-  };
-
-  const script = document.createElement("script");
-  script.type = "application/ld+json";
-  script.textContent = JSON.stringify(schema);
-  document.head.appendChild(script);
-}
+// Schema.org structured data is defined inline in <head> for optimal SEO crawlability.
 
 function renderGalleryFilters() {
   const container = document.getElementById("galleryFilters");
@@ -754,5 +726,4 @@ document.addEventListener("DOMContentLoaded", () => {
   setupScrollHeader();
   setupActiveNav();
   setupGalleryFilter();
-  injectLocalBusinessSchema();
 });
