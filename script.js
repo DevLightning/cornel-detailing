@@ -287,6 +287,46 @@ const reviews = [
     text: "Professionell und schnell 👍",
     date: "vor 2 Tagen",
   },
+  {
+    name: "Stefan Gruber",
+    initial: "S",
+    color: "#7c5cbf",
+    rating: 5,
+    text: "Absolute Empfehlung! Mein BMW sah nach der Keramikversiegelung aus wie frisch aus dem Showroom. Man merkt sofort, dass hier jemand mit echter Leidenschaft arbeitet – jedes Detail stimmt.",
+    date: "vor 1 Woche",
+  },
+  {
+    name: "Anna Berger",
+    initial: "A",
+    color: "#e07c3b",
+    rating: 5,
+    text: "Super zufrieden mit der Innenreinigung! Der Geruch war weg, alles makellos sauber. Habe meinen Golf noch nie so frisch erlebt. Preis-Leistung ist wirklich top.",
+    date: "vor 2 Wochen",
+  },
+  {
+    name: "Thomas Reiter",
+    initial: "T",
+    color: "#2196a8",
+    rating: 5,
+    text: "Hatte einen hartnäckigen Kratzer im Lack – nach der Politur kaum noch zu sehen. Saubere Arbeit, pünktlich, unkomplizierte Terminvereinbarung per WhatsApp. Gerne wieder!",
+    date: "vor 3 Wochen",
+  },
+  {
+    name: "Markus Hofer",
+    initial: "M",
+    color: "#c84b7a",
+    rating: 5,
+    text: "Komplettaufbereitung innen und außen – Ergebnis war beeindruckend. Mein Auto ist 8 Jahre alt und sieht jetzt wieder richtig gut aus. Danke für die tolle Arbeit!",
+    date: "vor 1 Monat",
+  },
+  {
+    name: "Lisa Stangl",
+    initial: "L",
+    color: "#3b8a4f",
+    rating: 5,
+    text: "Sehr professionell und gewissenhaft. Ich bin extra aus Ternitz hergefahren und es hat sich definitiv gelohnt. Das Auto glänzt wie am ersten Tag. Vielen Dank!",
+    date: "vor 1 Monat",
+  },
 ];
 
 const homepageRequiredFields = ["phoneDisplay", "whatsappNumber"];

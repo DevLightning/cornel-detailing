@@ -921,19 +921,32 @@ body::after {
   margin-top: 32px;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0%, black 8%, black 92%, transparent 100%);
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 .reviews-marquee:hover .reviews-track { animation-play-state: paused; }
+@media (hover: none) {
+  .reviews-marquee:hover .reviews-track { animation-play-state: running; }
+}
 
 .reviews-track {
   display: flex;
   gap: 16px;
   width: max-content;
   animation: reviews-scroll 40s linear infinite;
+  will-change: transform;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
 }
 
 @keyframes reviews-scroll {
   from { transform: translateX(0); }
   to   { transform: translateX(-50%); }
+}
+
+@-webkit-keyframes reviews-scroll {
+  from { -webkit-transform: translateX(0); }
+  to   { -webkit-transform: translateX(-50%); }
 }
 
 /* Individual card */
@@ -1883,14 +1896,21 @@ body::after {
   .preview-panel-actions .button, .package-content-actions .button { width: 100%; }
 
   .button { height: 48px; }
-  .pkg-row-summary { flex-wrap: wrap; padding: 14px 16px; gap: 10px; }
+  .pkg-row-summary { flex-wrap: wrap; padding: 14px 16px; gap: 8px 10px; align-items: flex-start; }
   .pkg-row-icon { display: none; }
-  .pkg-row-prices { width: 100%; gap: 4px; }
-  .pkg-price { flex: 1; min-width: 0; padding: 6px 6px; }
-  .pkg-price strong { font-size: 0.82rem; }
+  .pkg-row-info { flex: 1 1 0; min-width: 0; overflow: hidden; }
+  .pkg-row-info h3 { font-size: 0.95rem; overflow-wrap: break-word; word-break: break-word; white-space: normal; }
+  .pkg-row-teaser { overflow-wrap: break-word; word-break: break-word; white-space: normal; }
+  .pkg-row-prices { width: 100%; gap: 4px; flex-wrap: wrap; }
+  .pkg-price { flex: 1 1 70px; min-width: 0; padding: 6px 4px; }
+  .pkg-price strong { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .pkg-price span { font-size: 0.68rem; }
+  .pkg-toggle { align-self: flex-start; margin-top: 2px; flex-shrink: 0; }
   .pkg-items { padding: 12px 16px 16px; }
   .pkg-items ul { grid-template-columns: 1fr; }
+  .pkg-items ul li { overflow-wrap: break-word; word-break: break-word; }
   .pkg-group-header { padding: 10px 16px; }
+  .pkg-group-name { white-space: normal; overflow-wrap: break-word; }
   .cta-meta { grid-template-columns: 1fr; }
   .gallery-hero-stats { gap: 6px; }
   .gallery-stat { padding: 12px 18px; min-width: 80px; }
@@ -1908,6 +1928,10 @@ body::after {
   .section, .preview-panel, .cta-card, .value-card, .legal-card {
     padding-left: 12px; padding-right: 12px;
   }
+  .pkg-row-summary { padding: 12px 12px; }
+  .pkg-items { padding: 10px 12px 14px; }
+  .pkg-group-header { padding: 10px 12px; }
+  .pkg-price { padding: 5px 4px; }
   .gallery-tile--wide, .gallery-tile--tall, .gallery-tile--square,
   .gallery-tile--full { min-height: 200px; }
   .media-overlay { padding: 12px; }
