@@ -1,5 +1,11 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
+# Disallow unimportant assets from crawl budget
+Disallow: /assets/favicon.png
+
+# Sitemap
 Sitemap: https://corneldetailing.com/sitemap.xml
+
+# Crawl-delay hint for polite bots
+Crawl-delay: 1
