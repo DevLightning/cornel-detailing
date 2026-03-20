@@ -262,6 +262,33 @@ const projects = [
   },
 ];
 
+const reviews = [
+  {
+    name: "Harald Altmann",
+    initial: "H",
+    color: "#3b82c8",
+    rating: 5,
+    text: "Ich habe für das Auto meiner Tochter eine Innen- und Außenreinigung durchführen lassen und bin wirklich sehr zufrieden mit dem Ergebnis. Das Fahrzeug sah danach aus wie neu – innen gründlich gereinigt, frisch duftend und außen perfekt aufbereitet. Besonders positiv hervorheben möchte ich die Sorgfalt und die Liebe zum Detail. Der Service war freundlich, zuverlässig und professionell. Ich kann diesen Reinigungsservice auf jeden Fall weiterempfehlen und komme gerne wieder!",
+    date: "vor 1 Tag",
+  },
+  {
+    name: "Marius Silviu Anghelache",
+    initial: "M",
+    color: "#25b956",
+    rating: 5,
+    text: "The best !",
+    date: "vor 2 Tagen",
+  },
+  {
+    name: "Deian Mihai",
+    initial: "D",
+    color: "#e05c44",
+    rating: 5,
+    text: "Professionell und schnell 👍",
+    date: "vor 2 Tagen",
+  },
+];
+
 const homepageRequiredFields = ["phoneDisplay", "whatsappNumber"];
 
 const icons = {
@@ -362,103 +389,62 @@ function renderPackages() {
   const grid = document.getElementById("packagesGrid");
   if (!grid) return;
 
-  // Line-style SVG icons per category
   const categoryIcons = {
-    "Außen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1l2-5h12l2 5h1"/><path d="M5 12v5a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-5"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/><path d="M5 7l1-2h12l1 2"/></svg>',
-    "Innen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9v6"/><path d="M17 9v6"/><path d="M7 12h10"/><circle cx="12" cy="9" r="1"/></svg>',
-    "Politur": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/><path d="M5 19l2-2"/><path d="M19 19l-2-2"/><path d="M12 17v4"/></svg>',
+    "Außen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1l2-5h12l2 5h1"/><path d="M5 12v5a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-5"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>',
+    "Innen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9v6M17 9v6M7 12h10"/></svg>',
+    "Politur": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>',
     "Versiegelung": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     "Premium": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>',
   };
 
-  // Calculate tier based on PKW price (extract number) and item count
-  const priceValues = packages.map((pkg) => {
-    const match = pkg.prices.pkw.match(/[\d.]+/);
-    return match ? parseFloat(match[0].replace(".", "")) : 1500;
+  // Group packages by category preserving order
+  const groups = {};
+  const groupOrder = [];
+  packages.forEach((pkg) => {
+    if (!groups[pkg.category]) {
+      groups[pkg.category] = [];
+      groupOrder.push(pkg.category);
+    }
+    groups[pkg.category].push(pkg);
   });
-  const maxPrice = Math.max(...priceValues);
 
-  grid.innerHTML = packages
-    .map((pkg, index) => {
-      const items = pkg.items.map((item) => `<li>${item}</li>`).join("");
+  const catClass = {
+    "Außen": "pkg-group-aussen",
+    "Innen": "pkg-group-innen",
+    "Politur": "pkg-group-politur",
+    "Versiegelung": "pkg-group-versiegelung",
+    "Premium": "pkg-group-premium",
+  };
+
+  const groupsHtml = groupOrder.map((cat) => {
+    const pkgs = groups[cat];
+    const icon = categoryIcons[cat] || categoryIcons["Premium"];
+    const groupClass = catClass[cat] || "";
+
+    const rowsHtml = pkgs.map((pkg) => {
+      const items = pkg.items.map((item) => `<li><span class="pkg-check" aria-hidden="true">✓</span>${item}</li>`).join("");
       const note = pkg.note ? `<p class="package-note">${pkg.note}</p>` : "";
 
-      const price = priceValues[index];
-      const priceRatio = price / maxPrice;
-      const itemRatio = pkg.items.length / 10;
-      const tierPercent = Math.round(Math.min((priceRatio * 0.6 + itemRatio * 0.4) * 100, 100));
-
-      let tierLabel, tierClass;
-      if (tierPercent <= 20) { tierLabel = "Einstieg"; tierClass = "tier-basic"; }
-      else if (tierPercent <= 40) { tierLabel = "Standard"; tierClass = "tier-standard"; }
-      else if (tierPercent <= 60) { tierLabel = "Intensiv"; tierClass = "tier-intensive"; }
-      else if (tierPercent <= 80) { tierLabel = "Premium"; tierClass = "tier-premium"; }
-      else { tierLabel = "Exklusiv"; tierClass = "tier-exclusive"; }
-
-      const isPremium = price >= 300;
-      const premiumClass = isPremium ? " package-card--premium" : "";
-      const premiumBadge = isPremium ? '<span class="premium-badge">★ Premium</span>' : "";
-      const titleClass = isPremium ? ' class="premium-title"' : "";
-      const icon = categoryIcons[pkg.category] || categoryIcons["Premium"];
-      const catClass = {
-        "Außen": "pkg-cat-aussen",
-        "Innen": "pkg-cat-innen",
-        "Politur": "pkg-cat-politur",
-        "Versiegelung": "pkg-cat-versiegelung",
-        "Premium": "pkg-cat-premium",
-      }[pkg.category] || "pkg-cat-premium";
-
       return `
-        <article class="package-card${premiumClass} ${catClass} reveal">
-          <details class="package-details">
-            <summary>
-              <div class="package-summary">
-                <div class="package-summary-top">
-                  <span class="package-number">Paket ${pkg.number}</span>
-                  ${premiumBadge}
-                  <span class="package-group">${pkg.category}</span>
-                </div>
-
-                <div class="package-title-row">
-                  <span class="package-icon">${icon}</span>
-                  <h3${titleClass}>${pkg.title}</h3>
-                </div>
-                <p>${pkg.teaser}</p>
-
-                <div class="package-tier">
-                  <div class="package-tier-bar">
-                    <div class="package-tier-fill ${tierClass}" style="width:${tierPercent}%"></div>
-                  </div>
-                  <span class="package-tier-label">${tierLabel} · ${pkg.items.length} Leistungen</span>
-                </div>
-
-                <div class="package-prices" aria-label="Preisübersicht">
-                  <div class="price-box">
-                    <strong>${pkg.prices.pkw}</strong>
-                    <span>PKW</span>
-                  </div>
-                  <div class="price-box">
-                    <strong>${pkg.prices.suv}</strong>
-                    <span>Kombi / SUV</span>
-                  </div>
-                  <div class="price-box">
-                    <strong>${pkg.prices.van}</strong>
-                    <span>Minivan</span>
-                  </div>
-                </div>
-
-                <div class="package-summary-footer">
-                  <span class="package-summary-meta">${pkg.items.length} Leistungen im Paket</span>
-                  <span class="package-toggle">Mehr Infos ${icons.chevron}</span>
-                </div>
+        <article class="pkg-row reveal">
+          <details class="pkg-details">
+            <summary class="pkg-row-summary">
+              <span class="pkg-row-icon" aria-hidden="true">${icon}</span>
+              <div class="pkg-row-info">
+                <span class="pkg-row-num">Paket ${pkg.number}</span>
+                <h3>${pkg.title}</h3>
+                <p class="pkg-row-teaser">${pkg.teaser}</p>
               </div>
+              <div class="pkg-row-prices" aria-label="Preisübersicht">
+                <div class="pkg-price"><strong>${pkg.prices.pkw}</strong><span>PKW</span></div>
+                <div class="pkg-price"><strong>${pkg.prices.suv}</strong><span>SUV</span></div>
+                <div class="pkg-price"><strong>${pkg.prices.van}</strong><span>Van</span></div>
+              </div>
+              <span class="pkg-toggle" aria-hidden="true">${icons.chevron}</span>
             </summary>
-
-            <div class="package-content">
-              <h4>Im Paket enthalten</h4>
+            <div class="pkg-items">
               <ul>${items}</ul>
               ${note}
-
               <div class="package-content-actions">
                 <a class="button button-secondary button-small" data-call-link href="#kontakt">${icons.phone}<span>Anrufen</span></a>
                 <a class="button button-primary button-small cta-pulse" data-whatsapp-link href="#kontakt">${icons.whatsapp}<span>WhatsApp</span></a>
@@ -467,8 +453,20 @@ function renderPackages() {
           </details>
         </article>
       `;
-    })
-    .join("");
+    }).join("");
+
+    return `
+      <div class="pkg-group ${groupClass}">
+        <div class="pkg-group-header">
+          <span class="pkg-group-icon">${icon}</span>
+          <span class="pkg-group-name">${cat}</span>
+        </div>
+        ${rowsHtml}
+      </div>
+    `;
+  }).join("");
+
+  grid.innerHTML = `<div class="pkg-table">${groupsHtml}</div>`;
 }
 
 function setupActionLinks() {
@@ -539,7 +537,7 @@ function setupMobileCta() {
 }
 
 function setupPackageDetails() {
-  const details = Array.from(document.querySelectorAll(".package-details"));
+  const details = Array.from(document.querySelectorAll(".pkg-details"));
   details.forEach((item) => {
     item.addEventListener("toggle", () => {
       if (!item.open) return;
@@ -570,6 +568,40 @@ function setupReveal() {
 }
 
 // Schema.org structured data is defined inline in <head> for optimal SEO crawlability.
+
+function renderReviews() {
+  const track = document.getElementById("reviewsTrack");
+  if (!track) return;
+
+  const stars = (n) =>
+    Array.from({ length: 5 }, (_, i) =>
+      `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="fill:${i < n ? "#FBBC04" : "#e0e0e0"}"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>`
+    ).join("");
+
+  const cardHtml = (r) => `
+    <div class="review-card">
+      <div class="review-card-top">
+        <div class="review-avatar" style="background:${r.color}">${r.initial}</div>
+        <div class="review-meta">
+          <strong>${r.name}</strong>
+          <span class="review-date">${r.date}</span>
+        </div>
+        <svg class="review-google-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+          <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+          <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+          <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+          <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+        </svg>
+      </div>
+      <div class="review-stars">${stars(r.rating)}</div>
+      <p class="review-text">${r.text}</p>
+    </div>
+  `;
+
+  // Duplicate for seamless infinite loop
+  const allCards = [...reviews, ...reviews].map(cardHtml).join("");
+  track.innerHTML = allCards;
+}
 
 function renderGalleryFilters() {
   const container = document.getElementById("galleryFilters");
@@ -716,6 +748,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderFeaturedProjects();
   renderGallery();
   renderPackages();
+  renderReviews();
   renderGalleryFilters();
   setupStaticText();
   setupActionLinks();
