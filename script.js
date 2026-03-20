@@ -641,6 +641,14 @@ function renderReviews() {
   // Duplicate for seamless infinite loop
   const allCards = [...reviews, ...reviews].map(cardHtml).join("");
   track.innerHTML = allCards;
+
+  // Touch: tap anywhere in the marquee to pause; tap again to resume
+  const marquee = track.parentElement;
+  let paused = false;
+  marquee.addEventListener("touchstart", () => {
+    paused = !paused;
+    track.style.animationPlayState = paused ? "paused" : "running";
+  }, { passive: true });
 }
 
 function renderGalleryFilters() {
