@@ -647,7 +647,9 @@ function renderReviews() {
   let paused = false;
   marquee.addEventListener("touchstart", () => {
     paused = !paused;
-    track.style.animationPlayState = paused ? "paused" : "running";
+    const state = paused ? "paused" : "running";
+    track.style.webkitAnimationPlayState = state;
+    track.style.animationPlayState = state;
   }, { passive: true });
 }
 
