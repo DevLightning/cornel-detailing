@@ -783,7 +783,10 @@ function setupActiveNav() {
         if (entry.isIntersecting) {
           activeId = entry.target.id;
           navLinks.forEach((l) => l.classList.remove("is-active"));
-          if (linkMap[activeId]) linkMap[activeId].classList.add("is-active");
+          if (linkMap[activeId]) {
+            linkMap[activeId].classList.add("is-active");
+            if (window._moveNavPill) window._moveNavPill(linkMap[activeId]);
+          }
         }
       });
     },
@@ -791,6 +794,138 @@ function setupActiveNav() {
   );
 
   sections.forEach((s) => observer.observe(s));
+}
+
+function setupNavPill() {
+  var pill = document.getElementById('navPill');
+  var nav  = document.getElementById('topnav');
+  if (!pill || !nav) return;
+
+  function move(link) {
+    if (!link || window.innerWidth <= 860) {
+      pill.classList.remove('is-visible');
+      return;
+    }
+    var navRect  = nav.getBoundingClientRect();
+    var linkRect = link.getBoundingClientRect();
+    pill.style.left  = (linkRect.left - navRect.left) + 'px';
+    pill.style.width = linkRect.width + 'px';
+    pill.classList.add('is-visible');
+  }
+
+  // Expose so setupActiveNav can call it
+  window._moveNavPill = move;
+
+  // Hover preview — slide pill to hovered link, snap back on leave
+  nav.querySelectorAll('a:not(.topnav-cta)').forEach(function(link) {
+    link.addEventListener('mouseenter', function() { move(link); });
+    link.addEventListener('mouseleave', function() {
+      var active = nav.querySelector('.topnav a.is-active');
+      if (active) move(active); else pill.classList.remove('is-visible');
+    });
+  });
+
+  // Reposition on resize
+  window.addEventListener('resize', function() {
+    var active = nav.querySelector('.topnav a.is-active');
+    move(active || null);
+  }, { passive: true });
+}
+
+/* ── VIDEO SHOWCASE ─────────────────────────────────────── */
+function setupVideoShowcase() {
+  var section = document.getElementById("video-showcase");
+  var video   = document.getElementById("showcaseVideo");
+  var btn     = document.getElementById("videoToggle");
+  if (!section || !video || !btn) return;
+
+  var inner      = section.querySelector(".video-showcase-inner");
+  var userPaused = false;
+  var hasLoaded  = false;
+
+  function tryPlay() {
+    if (userPaused) return;
+    if (!hasLoaded && inner) inner.classList.add("is-loading");
+    var p = video.play();
+    if (p !== undefined) {
+      p.then(function () {
+        if (inner) inner.classList.remove("is-loading");
+        hasLoaded = true;
+        btn.classList.remove("is-paused");
+        btn.setAttribute("aria-label", "Video pausieren");
+      }).catch(function () {
+        // Autoplay blocked (unusual since muted) — show play button
+        if (inner) inner.classList.remove("is-loading");
+        btn.classList.add("is-paused");
+        btn.setAttribute("aria-label", "Video abspielen");
+      });
+    }
+  }
+
+  // Autoplay / autopause via IntersectionObserver
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          tryPlay();
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.25 });
+    io.observe(section);
+  } else {
+    // Fallback for very old browsers — just attempt play immediately
+    tryPlay();
+  }
+
+  // Toggle button
+  btn.addEventListener("click", function () {
+    if (video.paused) {
+      userPaused = false;
+      tryPlay();
+    } else {
+      userPaused = true;
+      video.pause();
+      btn.classList.add("is-paused");
+      btn.setAttribute("aria-label", "Video abspielen");
+    }
+  });
+
+  // Touch-to-toggle for mobile (tap anywhere on the section)
+  section.addEventListener("touchend", function (e) {
+    // Only if tap is NOT on the button itself
+    if (!btn.contains(e.target)) {
+      if (video.paused) {
+        userPaused = false;
+        tryPlay();
+      } else {
+        userPaused = true;
+        video.pause();
+        btn.classList.add("is-paused");
+        btn.setAttribute("aria-label", "Video abspielen");
+      }
+    }
+  }, { passive: true });
+
+  // Sync icon state with actual video events
+  video.addEventListener("play", function () {
+    if (inner) inner.classList.remove("is-loading");
+    btn.classList.remove("is-paused");
+    btn.setAttribute("aria-label", "Video pausieren");
+  });
+  video.addEventListener("pause", function () {
+    if (!video.ended) {
+      btn.classList.add("is-paused");
+      btn.setAttribute("aria-label", "Video abspielen");
+    }
+  });
+  video.addEventListener("waiting", function () {
+    if (inner) inner.classList.add("is-loading");
+  });
+  video.addEventListener("canplay", function () {
+    if (inner) inner.classList.remove("is-loading");
+  });
 }
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -808,5 +943,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupMobileMenu();
   setupScrollHeader();
   setupActiveNav();
+  setupNavPill();
   setupGalleryFilter();
+  setupVideoShowcase();
 });
