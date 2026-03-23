@@ -1,0 +1,75 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" width="1200" height="630">
+  <defs>
+    <!-- Background -->
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050505"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </linearGradient>
+
+    <!-- Hero title gradient — white fading down, same as .h1 -->
+    <linearGradient id="title-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="1"/>
+      <stop offset="65%"  stop-color="#ffffff" stop-opacity="0.82"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0.55"/>
+    </linearGradient>
+
+    <!-- Radial green glow behind title -->
+    <radialGradient id="glow" cx="50%" cy="52%" r="45%">
+      <stop offset="0%"   stop-color="#22c55e" stop-opacity="0.13"/>
+      <stop offset="55%"  stop-color="#22c55e" stop-opacity="0.04"/>
+      <stop offset="100%" stop-color="#22c55e" stop-opacity="0"/>
+    </radialGradient>
+
+    <!-- Subtle top-light wash on the card -->
+    <linearGradient id="top-wash" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%"   stop-color="#ffffff" stop-opacity="0.035"/>
+      <stop offset="30%"  stop-color="#ffffff" stop-opacity="0.008"/>
+      <stop offset="100%" stop-color="#ffffff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Base black -->
+  <rect width="1200" height="630" fill="url(#bg)"/>
+
+  <!-- Green glow blob -->
+  <rect width="1200" height="630" fill="url(#glow)"/>
+
+  <!-- Top-light wash -->
+  <rect width="1200" height="630" fill="url(#top-wash)"/>
+
+  <!-- Specular top border line -->
+  <line x1="80" y1="1" x2="1120" y2="1"
+        stroke="url(#title-grad)" stroke-width="1" stroke-opacity="0.12"/>
+
+  <!-- Subtle grid line -->
+  <line x1="0" y1="629" x2="1200" y2="629"
+        stroke="#ffffff" stroke-width="1" stroke-opacity="0.07"/>
+
+  <!-- Green dot accent — top-left badge area -->
+  <circle cx="88" cy="88" r="6" fill="#22c55e" fill-opacity="0.9"/>
+  <text x="104" y="94"
+        font-family="Inter, -apple-system, system-ui, sans-serif"
+        font-size="15" font-weight="600" fill="#22c55e" fill-opacity="0.75"
+        letter-spacing="2">NORVZI.COM</text>
+
+  <!-- Main title -->
+  <text x="88" y="370"
+        font-family="Inter, -apple-system, system-ui, sans-serif"
+        font-size="196" font-weight="900"
+        fill="url(#title-grad)"
+        letter-spacing="-10">norvzi<tspan fill="#22c55e">.</tspan></text>
+
+  <!-- Tagline -->
+  <text x="90" y="450"
+        font-family="Inter, -apple-system, system-ui, sans-serif"
+        font-size="22" font-weight="400"
+        fill="#ffffff" fill-opacity="0.45"
+        letter-spacing="-0.3">Professional short-form clipping specialist. 2.4B+ lifetime views.</text>
+
+  <!-- Bottom-right: stat hint -->
+  <text x="1112" y="548"
+        font-family="Inter, -apple-system, system-ui, sans-serif"
+        font-size="13" font-weight="500"
+        fill="#ffffff" fill-opacity="0.2"
+        text-anchor="end" letter-spacing="1">@norvzi</text>
+</svg>
