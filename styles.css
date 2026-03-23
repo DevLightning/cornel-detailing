@@ -2580,3 +2580,175 @@ body::after {
   *, *::before, *::after { animation: none !important; transition: none !important; }
   .reveal { opacity: 1; transform: none; }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   COOKIE CONSENT BANNER  — GDPR / TKG 2021
+   Slides up from bottom, glass card matches topbar aesthetic
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+#cookie-banner {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  z-index: 9999;
+  width: min(calc(100vw - 32px), 600px);
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.72);
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(28px) saturate(1.6);
+  -webkit-backdrop-filter: blur(28px) saturate(1.6);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.9),
+    0 2px 8px rgba(15,18,25,0.05),
+    0 12px 40px rgba(15,18,25,0.12),
+    0 32px 80px rgba(15,18,25,0.10);
+  padding: 20px 22px 16px;
+  /* Start below viewport */
+  transform: translateX(-50%) translateY(calc(100% + 32px));
+  opacity: 0;
+  transition:
+    transform 0.46s cubic-bezier(0.34, 1.15, 0.64, 1),
+    opacity   0.32s var(--ease);
+  will-change: transform, opacity;
+}
+
+/* Accent gradient line at top — same as topbar */
+#cookie-banner::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    rgba(59,106,212,0.4) 30%,
+    rgba(37,185,86,0.4)  70%,
+    transparent
+  );
+  border-radius: 1px;
+  pointer-events: none;
+}
+
+#cookie-banner.cb-visible {
+  transform: translateX(-50%) translateY(0);
+  opacity: 1;
+}
+
+#cookie-banner.cb-hiding {
+  transform: translateX(-50%) translateY(calc(100% + 32px));
+  opacity: 0;
+  pointer-events: none;
+}
+
+.cb-inner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* Shield icon — icon-badge style (38×38, radius 10) */
+.cb-icon {
+  flex-shrink: 0;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--blue-soft);
+  color: var(--blue-muted);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.cb-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Text block */
+.cb-text {
+  flex: 1;
+  min-width: 180px;
+}
+.cb-text strong {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--dark);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+.cb-text p {
+  font-size: 0.77rem;
+  color: var(--grey-400);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Buttons row */
+.cb-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.cb-btn {
+  height: 38px;
+  padding: 0 20px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  transition: background 0.16s var(--ease), color 0.16s var(--ease),
+              transform 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.cb-decline {
+  background: var(--grey-50);
+  color: var(--grey-600);
+}
+.cb-decline:hover {
+  background: var(--grey-100);
+  color: var(--grey-800);
+}
+.cb-accept {
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 3px 12px var(--green-glow);
+}
+.cb-accept:hover {
+  background: var(--green-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 18px var(--green-glow);
+}
+
+/* Footer link */
+.cb-link {
+  display: block;
+  width: 100%;
+  text-align: center;
+  font-size: 0.71rem;
+  color: var(--grey-400);
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  transition: color 0.15s;
+}
+.cb-link:hover { color: var(--blue); }
+
+/* ── Mobile ── */
+@media (max-width: 540px) {
+  #cookie-banner {
+    bottom: 10px;
+    padding: 16px 16px 13px;
+    border-radius: 16px;
+  }
+  .cb-icon { display: none; } /* save space on small screens */
+  .cb-text strong { font-size: 0.86rem; }
+  .cb-text p { font-size: 0.74rem; }
+  .cb-btn { height: 36px; padding: 0 14px; font-size: 0.8rem; }
+  .cb-actions { width: 100%; justify-content: stretch; }
+  .cb-btn { flex: 1; text-align: center; }
+}

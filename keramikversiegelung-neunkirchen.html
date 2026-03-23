@@ -2,11 +2,30 @@
 <html lang="de-AT">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
+    <!-- Google Consent Mode v2 — defaults denied until user accepts -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage:         'denied',
+        ad_user_data:       'denied',
+        ad_personalization: 'denied',
+        analytics_storage:  'denied',
+        wait_for_update:    500
+      });
+      /* Restore consent immediately for returning visitors */
+      if (localStorage.getItem('cornel_consent') === 'accepted') {
+        gtag('consent', 'update', {
+          ad_storage:         'granted',
+          ad_user_data:       'granted',
+          ad_personalization: 'granted',
+          analytics_storage:  'granted'
+        });
+      }
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
+    <script>
       gtag('js', new Date());
       gtag('config', 'AW-17936964522');
     </script>
@@ -134,6 +153,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="site-config.js" defer></script>
     <script src="script.js" defer></script>
+    <script src="consent.js" defer></script>
   </head>
   <body>
     <div class="site-shell">

@@ -2,11 +2,30 @@
 <html lang="de-AT">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
+    <!-- Google Consent Mode v2 — defaults denied until user accepts -->
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
+      gtag('consent', 'default', {
+        ad_storage:         'denied',
+        ad_user_data:       'denied',
+        ad_personalization: 'denied',
+        analytics_storage:  'denied',
+        wait_for_update:    500
+      });
+      /* Restore consent immediately for returning visitors */
+      if (localStorage.getItem('cornel_consent') === 'accepted') {
+        gtag('consent', 'update', {
+          ad_storage:         'granted',
+          ad_user_data:       'granted',
+          ad_personalization: 'granted',
+          analytics_storage:  'granted'
+        });
+      }
+    </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
+    <script>
       gtag('js', new Date());
       gtag('config', 'AW-17936964522');
     </script>
@@ -18,6 +37,7 @@
     <link rel="stylesheet" href="styles.css" />
     <script src="site-config.js" defer></script>
     <script src="legal.js" defer></script>
+    <script src="consent.js" defer></script>
   </head>
   <body class="legal-page">
     <div class="site-shell">
@@ -97,17 +117,43 @@
             </article>
 
             <article class="legal-card">
-              <h2>6. Cookies und Tracking</h2>
+              <h2>6. Cookies und Tracking (Google Ads)</h2>
               <p>
-                Diese Website verwendet im bereitgestellten Setup keine
-                nicht-essentiellen Cookies, keine Analyse-Tools und keine
-                Marketing-Pixel. Deshalb ist im aktuellen Aufbau kein
-                Cookie-Banner eingebunden.
+                Diese Website verwendet Google Ads Conversion-Tracking, einen
+                Dienst der Google LLC (1600 Amphitheatre Parkway, Mountain View,
+                CA 94043, USA). Dabei werden Cookies eingesetzt, um zu erfassen,
+                ob ein Nutzer nach dem Klick auf eine Google-Anzeige eine
+                bestimmte Aktion (z.&nbsp;B. Kontaktaufnahme per WhatsApp oder
+                Telefon) ausgeführt hat.
+              </p>
+              <p>
+                Die dadurch erzeugten Informationen werden an Server von Google
+                übertragen und dort gespeichert. Ihre IP-Adresse wird dabei
+                nicht mit anderen Daten von Google zusammengeführt.
+                Weitere Informationen:
+                <a href="https://policies.google.com/privacy" target="_blank"
+                   rel="noopener noreferrer">policies.google.com/privacy</a>.
+              </p>
+              <p>
+                Das Setzen von Cookies erfolgt nur mit Ihrer ausdrücklichen
+                Einwilligung über das Cookie-Banner beim ersten Besuch dieser
+                Website. Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>7. Speicherdauer</h2>
+              <h2>7. Widerruf der Cookie-Einwilligung</h2>
+              <p>
+                Sie können Ihre Einwilligung jederzeit widerrufen. Löschen Sie
+                dazu in Ihrem Browser den Eintrag <code>cornel_consent</code>
+                im lokalen Speicher (localStorage) – beim nächsten Seitenaufruf
+                erscheint das Banner erneut. Alternativ können Sie Cookies in
+                Ihren Browser-Einstellungen generell deaktivieren.
+              </p>
+            </article>
+
+            <article class="legal-card">
+              <h2>8. Speicherdauer</h2>
               <p>
                 Personenbezogene Daten aus Anfragen werden nur so lange
                 gespeichert, wie dies zur Bearbeitung der Anfrage, zur
@@ -117,7 +163,7 @@
             </article>
 
             <article class="legal-card">
-              <h2>8. Ihre Rechte</h2>
+              <h2>9. Ihre Rechte</h2>
               <p>
                 Ihnen stehen grundsätzlich die Rechte auf Auskunft,
                 Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit,
@@ -129,7 +175,7 @@
             </article>
 
             <article class="legal-card">
-              <h2>9. Beschwerdestelle</h2>
+              <h2>10. Beschwerdestelle</h2>
               <p>
                 Österreichische Datenschutzbehörde, Barichgasse 40-42,
                 1030 Wien, <a href="https://www.dsb.gv.at/" target="_blank" rel="noreferrer">www.dsb.gv.at</a>
@@ -137,7 +183,7 @@
             </article>
 
             <article class="legal-card">
-              <h2>10. Stand</h2>
+              <h2>11. Stand</h2>
               <p data-legal="privacyDate"></p>
             </article>
           </div>
