@@ -509,6 +509,12 @@ function renderPackages() {
   grid.innerHTML = `<div class="pkg-table">${groupsHtml}</div>`;
 }
 
+function fireConversionEvent() {
+  if (typeof gtag === "function") {
+    gtag("event", "conversion", { send_to: "AW-17936964522/DWGhCNenjI0cEKq3gelC" });
+  }
+}
+
 function setupActionLinks() {
   const phoneHref = getPhoneHref();
   const whatsappHref = getWhatsAppLink();
@@ -523,6 +529,7 @@ function setupActionLinks() {
       link.classList.add("is-disabled");
       link.setAttribute("aria-disabled", "true");
     }
+    link.addEventListener("click", fireConversionEvent);
   });
 
   document.querySelectorAll("[data-whatsapp-link]").forEach((link) => {
@@ -537,6 +544,7 @@ function setupActionLinks() {
       link.classList.add("is-disabled");
       link.setAttribute("aria-disabled", "true");
     }
+    link.addEventListener("click", fireConversionEvent);
   });
 }
 
