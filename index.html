@@ -1,2334 +1,664 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>norvzi — I make content go viral.</title>
-  <meta name="description" content="Professional short-form clipping specialist. 2.4B+ lifetime views. Worked with Telegram, in MrBeast's BeastGames clipping campaign." />
-
-  <!-- Open Graph / social embed -->
-  <meta property="og:type"        content="website" />
-  <meta property="og:url"         content="https://norvzi.com" />
-  <meta property="og:title"       content="norvzi — I make content go viral." />
-  <meta property="og:description" content="Professional short-form clipping specialist. 2.4B+ lifetime views." />
-  <meta property="og:image"       content="https://norvzi.com/assets/og-image.svg" />
-  <meta property="og:image:width"  content="1200" />
-  <meta property="og:image:height" content="630" />
-  <meta property="og:site_name"   content="norvzi" />
-
-  <!-- Twitter / X card -->
-  <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:site"        content="@norvzi" />
-  <meta name="twitter:title"       content="norvzi — I make content go viral." />
-  <meta name="twitter:description" content="Professional short-form clipping specialist. 2.4B+ lifetime views." />
-  <meta name="twitter:image"       content="https://norvzi.com/assets/og-image.svg" />
-
-  <!-- Favicon — real URL so Googlebot can index it (data: URIs are not indexed) -->
-  <link rel="icon"             type="image/svg+xml" href="/favicon.svg" />
-  <link rel="shortcut icon"    type="image/svg+xml" href="/favicon.svg" />
-  <link rel="apple-touch-icon" href="/favicon.svg" />
-  <meta name="theme-color" content="#000000" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet" />
-  <style>
-
-  /* ───────────────────────────────────────────
-     DESIGN TOKENS
-  ─────────────────────────────────────────── */
-  :root {
-    --bg:    #000;
-    --fg:    #fff;
-    --sub:   #999;      /* secondary text  */
-    --dim:   #555;      /* muted / labels  */
-    --b:     rgba(255,255,255,0.1);    /* border          */
-    --bh:    rgba(255,255,255,0.22);   /* hover border    */
-    --green: #22c55e;
-    --gg:    rgba(34,197,94,0.18);
-    --f:     'Inter', system-ui, -apple-system, sans-serif;
-    --mono:  'JetBrains Mono', monospace;
-    --nav-top: 12px;   /* gap between beta bar and nav capsule */
-    --nav-h:   62px;   /* capsule height */
-    --nav:     62px;   /* legacy alias used in hero padding */
-    --bar:     0px;    /* beta bar removed */
-    --px:    clamp(20px, 3.2vw, 52px); /* cell / content internal padding   */
-    --max-w: 1440px;                    /* content cap — active above 1440px  */
-    /* ── Type scale ──────────────────────────────────────
-       t-xs   0.65rem  → mono labels, step counters, micro caps
-       t-cap  0.72rem  → captions, badge text
-       t-sm   0.82rem  → secondary body, list items, card desc
-       t-body 0.92rem  → primary body (hero-p, cta-p)
-       t-card 1.00rem  → card titles, section list primaries
-       t-svc  1.05rem  → service card titles (slightly elevated)
-       t-sec  clamp(1.8rem,3.2vw,2.8rem)  → section h2
-       t-cta  clamp(2.8rem,7.5vw,6.5rem)  → CTA display heading
-       t-hero clamp(3.2rem,9vw,8rem)      → hero h1
-    ─────────────────────────────────────────────────── */
-    --mg:    max(var(--px), calc((100vw - var(--max-w)) / 2));
-    /*  --mg grows past --px on wide screens so outer margins
-        expand and content stays ≤ 1440px wide.
-        On screens ≤ 1440px  --mg = --px  (no change).         */
-    --gp:    calc(var(--mg) - var(--px));
-    /*  --gp is the extra left/right padding added to grid
-        containers so their inner cell content aligns flush
-        with section-header text at every viewport width.      */
-  }
-
-  /* ───────────────────────────────────────────
-     RESET
-  ─────────────────────────────────────────── */
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-  html  { scroll-behavior: smooth; }
-  body  {
-    font-family: var(--f);
-    background: var(--bg); color: var(--fg);
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-  a { color: inherit; text-decoration: none; }
-
-  /* ───────────────────────────────────────────
-     AMBIENT BACKGROUND (CSS only, no canvas)
-  ─────────────────────────────────────────── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 80% 60% at 10% -5%,  rgba(99,102,241,0.08) 0%, transparent 60%),
-      radial-gradient(ellipse 55% 45% at 90% 100%, rgba(99,102,241,0.06) 0%, transparent 60%);
-  }
-
-  /* ───────────────────────────────────────────
-     CURSOR (desktop only, no mix-blend-mode)
-  ─────────────────────────────────────────── */
-  @media (pointer: fine) {
-    body { cursor: none; }
-    #c-dot {
-      width: 5px; height: 5px; border-radius: 50%;
-      background: #fff; position: fixed; z-index: 9999;
-      top: 0; left: 0; pointer-events: none;
-      transform: translate(-50%,-50%);
-    }
-    #c-ring {
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 1px solid rgba(255,255,255,0.3);
-      position: fixed; z-index: 9998;
-      top: 0; left: 0; pointer-events: none;
-      transform: translate(-50%,-50%);
-      transition: width .18s, height .18s, border-color .18s;
-    }
-  }
-
-  /* ───────────────────────────────────────────
-     NAV BETA BADGE (right corner, next to @norvzi)
-  ─────────────────────────────────────────── */
-  .nav-beta-pill {
-    display: flex; align-items: center; gap: 5px;
-    height: 22px; padding: 0 9px;
-    border-radius: 100px;
-    background: rgba(245,158,11,0.08);
-    border: 1px solid rgba(245,158,11,0.22);
-    font-size: .62rem; font-weight: 700; letter-spacing: .07em;
-    text-transform: uppercase;
-    color: rgba(245,158,11,0.75);
-    box-shadow: 0 0 10px rgba(245,158,11,0.08);
-    transition: box-shadow 0.3s ease;
-  }
-  .nav-beta-pill::before {
-    content: '';
-    width: 4px; height: 4px; border-radius: 50%;
-    background: #f59e0b;
-    box-shadow: 0 0 5px rgba(245,158,11,0.8);
-    animation: beta-pulse 2.4s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-
-  /* Glass TikTok CTA button (hero) */
-  .btn-glass {
-    display: inline-flex; align-items: center; gap: 7px;
-    padding: 12px 24px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.20);
-    border-radius: 10px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: #fff; font-size: .84rem; font-weight: 600; letter-spacing: -0.01em;
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.18),
-      inset 0 -0.5px 0 rgba(0,0,0,0.08),
-      0 4px 18px rgba(0,0,0,0.22),
-      0 0 0 0.5px rgba(0,0,0,0.16);
-    transition: background 0.19s, border-color 0.19s, transform 0.19s, box-shadow 0.19s;
-  }
-  .btn-glass:hover {
-    background: rgba(255,255,255,0.14);
-    border-color: rgba(255,255,255,0.30);
-    transform: translateY(-1px);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.22),
-      0 8px 28px rgba(0,0,0,0.28);
-  }
-
-  /* ───────────────────────────────────────────
-     LIQUID GLASS NAV
-  ─────────────────────────────────────────── */
-
-  /* Outer positioner — full-width fixed shell, pointer-events passthrough */
-  #nav-shell {
-    position: fixed;
-    top: calc(var(--bar) + var(--nav-top));
-    left: 0; right: 0; z-index: 900;
-    display: flex; justify-content: center;
-    padding: 0 clamp(12px, 2vw, 20px);
-    pointer-events: none;
-    animation: nav-load 0.52s cubic-bezier(0.16,1,0.3,1) 0.1s both;
-  }
-  @keyframes nav-load {
-    from { opacity: 0; transform: translateY(-9px); }
-    to   { opacity: 1; transform: none; }
-  }
-
-  /* ── Layer 1: the floating glass capsule ── */
-  #nav {
-    pointer-events: all;
-    position: relative;
-    overflow: hidden;
-    width: 100%; max-width: 1180px;
-    height: var(--nav-h);
-    border-radius: 22px;
-
-    /* Translucent dark fill */
-    background: rgba(8,8,10,0.62);
-
-    /* Frosted material: blur + saturation, no brightness lift */
-    backdrop-filter: blur(28px) saturate(140%) brightness(0.96);
-    -webkit-backdrop-filter: blur(28px) saturate(140%) brightness(0.96);
-
-    /* Outer edge + inner rim highlights */
-    border: 1px solid rgba(255,255,255,0.11);
-    box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.18),   /* inner top rim */
-      inset 0 -0.5px 0 rgba(0,0,0,0.06),         /* inner bottom shade */
-      0 8px 40px rgba(0,0,0,0.30),               /* ambient lift shadow */
-      0 2px 10px rgba(0,0,0,0.18),               /* contact shadow */
-      0 0 0 0.5px rgba(0,0,0,0.20);              /* hairline outer edge */
-
-    display: flex; align-items: center;
-    padding: 0 clamp(14px, 1.8vw, 22px);
-
-    transition:
-      height             0.24s cubic-bezier(0.4,0,0.2,1),
-      border-radius      0.24s cubic-bezier(0.4,0,0.2,1),
-      border-color       0.24s ease,
-      box-shadow         0.24s ease,
-      background         0.24s ease,
-      backdrop-filter    0.24s ease;
-  }
-
-  /* Scrolled — denser material, slightly more compact */
-  #nav.scrolled {
-    background: rgba(6,6,8,0.76);
-    backdrop-filter: blur(36px) saturate(160%) brightness(0.94);
-    -webkit-backdrop-filter: blur(36px) saturate(160%) brightness(0.94);
-    border-color: rgba(255,255,255,0.14);
-    box-shadow:
-      inset 0 1.5px 0 rgba(255,255,255,0.22),
-      inset 0 -0.5px 0 rgba(0,0,0,0.08),
-      0 12px 52px rgba(0,0,0,0.44),
-      0 3px 14px rgba(0,0,0,0.26),
-      0 0 0 0.5px rgba(0,0,0,0.26);
-    height: 56px;
-    border-radius: 20px;
-  }
-
-  /* ── Layer 2: ::before — frosted inner optical refraction gradient ── */
-  #nav::before {
-    content: '';
-    position: absolute; inset: 0; z-index: 0;
-    border-radius: inherit; pointer-events: none;
-    background: linear-gradient(
-      178deg,
-      rgba(255,255,255,0.072) 0%,
-      rgba(255,255,255,0.018) 48%,
-      transparent 100%
-    );
-  }
-
-  /* ── Layer 3: ::after — specular top sheen (upper 30% only) ── */
-  #nav::after {
-    content: '';
-    position: absolute; inset: 0 10px auto; z-index: 0;
-    height: 30%; border-radius: 22px 22px 0 0;
-    pointer-events: none;
-    background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.11) 0%,
-      transparent 100%
-    );
-    transition: background 0.24s ease, border-radius 0.24s ease;
-  }
-  #nav.scrolled::after {
-    border-radius: 20px 20px 0 0;
-    background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.16) 0%,
-      transparent 100%
-    );
-  }
-
-  /* ── Nav inner layout ── */
-  .nav-in {
-    position: relative; z-index: 1;
-    width: 100%; height: 100%;
-    display: flex; align-items: center;
-    font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', Inter, system-ui, sans-serif;
-  }
-
-  /* Logo — left, fixed width */
-  .logo {
-    flex-shrink: 0; min-width: 110px;
-    font-size: 1.05rem; font-weight: 900;
-    letter-spacing: -0.05em;
-    display: flex; align-items: center; gap: 9px;
-  }
-  .logo-mark {
-    width: 28px; height: 28px; flex-shrink: 0;
-    border-radius: 7px; background: #fff;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.12), 0 2px 8px rgba(0,0,0,0.4);
-  }
-  .logo-mark svg { display: block; }
-  .logo span { color: var(--green); }
-
-  /* Nav links — centered, flex-1 */
-  .nav-ul {
-    flex: 1; display: flex; justify-content: center;
-    gap: 2px; list-style: none;
-  }
-  .nav-ul a {
-    display: flex; align-items: center;
-    height: 36px; padding: 0 13px;
-    border-radius: 10px;
-    font-size: 13.5px; font-weight: 500;
-    color: rgba(255,255,255,0.72);
-    letter-spacing: -0.012em;
-    transition: color 0.19s ease, background 0.19s ease, box-shadow 0.19s ease;
-    white-space: nowrap;
-  }
-  .nav-ul a:hover {
-    color: rgba(255,255,255,0.97);
-    background: rgba(255,255,255,0.09);
-  }
-  /* Active/current link — glass pill within glass bar */
-  .nav-ul a.active {
-    color: #fff;
-    background: rgba(255,255,255,0.12);
-    box-shadow:
-      inset 0 1px 0 rgba(255,255,255,0.18),
-      inset 0 -0.5px 0 rgba(0,0,0,0.06);
-  }
-
-  /* Right zone — fixed width, right-aligned */
-  .nav-right {
-    flex-shrink: 0; min-width: 110px;
-    display: flex; align-items: center;
-    gap: 10px; justify-content: flex-end;
-  }
-  .nav-cta {
-    height: 34px; padding: 0 15px;
-    background: rgba(255,255,255,0.1);
-    border: 1px solid rgba(255,255,255,0.18);
-    border-radius: 10px;
-    font-size: 13px; font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    display: flex; align-items: center;
-    white-space: nowrap;
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.15);
-    transition: background 0.19s, border-color 0.19s, transform 0.19s, box-shadow 0.19s;
-  }
-  .nav-cta:hover {
-    background: rgba(255,255,255,0.17);
-    border-color: rgba(255,255,255,0.28);
-    transform: translateY(-0.5px);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,0.22), 0 4px 12px rgba(0,0,0,0.18);
-  }
-
-  @keyframes beta-pulse {
-    0%, 100% { opacity: 1; }
-    50%       { opacity: 0.35; }
-  }
-
-  /* 3-dot hamburger */
-  #hbg {
-    display: none; gap: 5px; width: 36px; height: 36px;
-    flex-direction: column; align-items: flex-end; justify-content: center;
-    background: none; border: none; cursor: pointer; padding: 0;
-  }
-  #hbg span {
-    display: block; height: 1.5px; background: #fff; border-radius: 2px;
-    transition: transform .28s ease, opacity .28s, width .28s;
-  }
-  #hbg span:nth-child(1) { width: 22px; }
-  #hbg span:nth-child(2) { width: 15px; }
-  #hbg span:nth-child(3) { width:  9px; }
-  #hbg.on span:nth-child(1) { transform: translateY(6.5px) rotate(45deg);  width: 20px; }
-  #hbg.on span:nth-child(2) { opacity: 0; width: 20px; }
-  #hbg.on span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); width: 20px; margin-left: 0; }
-
-  /* Mobile menu */
-  #mob {
-    display: none; position: fixed;
-    inset: 0; z-index: 800;
-    background: rgba(0,0,0,0.97);
-    backdrop-filter: blur(16px);
-    flex-direction: column;
-    padding: calc(var(--bar) + var(--nav-top) + var(--nav-h) + 28px) var(--mg) 44px;
-    opacity: 0; pointer-events: none;
-    transition: opacity .22s ease;
-  }
-  #mob.on { opacity: 1; pointer-events: all; }
-  #mob a {
-    display: block; padding: 18px 0;
-    font-size: clamp(1.7rem, 6vw, 2.4rem);
-    font-weight: 800; letter-spacing: -0.04em;
-    color: var(--sub); border-bottom: 1px solid var(--b);
-    transition: color .15s;
-  }
-  #mob a:hover { color: #fff; }
-  .mob-cta {
-    display: inline-flex; margin-top: 36px;
-    padding: 14px 28px; background: #fff;
-    color: #000 !important; font-size: .88rem !important;
-    font-weight: 700 !important; border-radius: 5px;
-    width: fit-content; border: none !important;
-  }
-
-  @media (max-width: 860px) {
-    .nav-ul, .nav-cta { display: none; }
-    #hbg { display: flex; }
-    #mob  { display: flex; }
-    /* Capsule goes nearly full-width on mobile */
-    #nav-shell { padding: 0 10px; }
-    #nav { border-radius: 18px; }
-    #nav.scrolled { border-radius: 16px; }
-    #nav::after { border-radius: 18px 18px 0 0; }
-    #nav.scrolled::after { border-radius: 16px 16px 0 0; }
-    .logo { min-width: unset; }
-    .nav-right { min-width: unset; }
-  }
-
-  /* ───────────────────────────────────────────
-     HERO
-     Flex centering — hero grows to fit content,
-     no grid row clipping issues.
-  ─────────────────────────────────────────── */
-  #hero {
-    position: relative; z-index: 1;
-    display: flex; align-items: center; justify-content: center;
-    min-height: 100vh; min-height: 100svh;
-    border-bottom: 1px solid var(--b);
-    /* top pad clears fixed nav + breathing room; bottom clears scroll hint */
-    padding: calc(var(--bar) + var(--nav-top) + var(--nav-h) + 48px) var(--mg) 96px;
-    overflow: hidden;
-  }
-  @media (max-width: 860px) {
-    /* Bigger headline on mobile */
-    .h1 { font-size: clamp(3.6rem, 13vw, 5.5rem); margin-bottom: 20px; }
-    /* Tighter badge spacing */
-    .avail { margin-bottom: 28px; }
-    /* Sub-text full width */
-    .hero-p { max-width: 100%; font-size: .92rem; margin-bottom: 32px; }
-    /* Smaller buttons — stay side by side, just tighter */
-    .hero-btns .btn-w,
-    .hero-btns .btn-o { padding: 10px 18px; font-size: .78rem; }
-    /* Bottom fade — always visible, fixed to viewport bottom */
-    #hero-fade {
-      display: block;
-      height: 18vh;
-      background: linear-gradient(
-        to top,
-        rgba(0,0,0,0.72) 0%,
-        rgba(0,0,0,0.38) 40%,
-        rgba(0,0,0,0.08) 75%,
-        transparent      100%
-      );
-    }
-  }
-  /* Glow bloom centred on the headline — slow-drifting */
-  #hero::before {
-    content: '';
-    position: absolute; inset: -20%; z-index: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 52% 38% at 50% 50%, rgba(34,197,94,0.13)  0%, transparent 65%),
-      radial-gradient(ellipse 68% 52% at 50% 50%, rgba(99,102,241,0.07) 0%, transparent 70%);
-    filter: blur(28px);
-    animation: hero-drift 18s ease-in-out infinite;
-  }
-  @keyframes hero-drift {
-    0%   { transform: translate(  0%,   0%) scale(1);    }
-    25%  { transform: translate(  4%,  -5%) scale(1.05); }
-    50%  { transform: translate( -3%,   6%) scale(0.97); }
-    75%  { transform: translate(  5%,   3%) scale(1.03); }
-    100% { transform: translate(  0%,   0%) scale(1);    }
-  }
-  /* Grain overlay — fractal noise tile at low opacity */
-  #hero::after {
-    content: '';
-    position: absolute; inset: 0; z-index: 3; pointer-events: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='256' height='256'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='256' height='256' filter='url(%23g)'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 180px 180px;
-    opacity: 0.038;
-  }
-  .hero-body {
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center; width: 100%;
-    position: relative; z-index: 1;
-  }
-  /* Mobile bottom fade — hidden on desktop */
-  #hero-fade {
-    display: none;
-    position: fixed; bottom: 0; left: 0; right: 0;
-    pointer-events: none; z-index: 5;
-    transition: opacity 0.3s ease;
-  }
-  /* ── Scroll indicator — mouse outline with animated drop ── */
-  .hero-scroll {
-    position: absolute; bottom: 32px;
-    left: 50%; transform: translateX(-50%);
-    display: flex; flex-direction: column;
-    align-items: center; gap: 10px;
-    z-index: 4;
-  }
-
-  .scroll-mouse {
-    width: 26px; height: 42px;
-    border: 1.5px solid rgba(255,255,255,0.22);
-    border-radius: 13px;
-    display: flex; justify-content: center;
-    align-items: flex-start; padding-top: 8px;
-    position: relative;
-    background: rgba(255,255,255,0.025);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.04),
-      0 0 18px rgba(255,255,255,0.04),
-      inset 0 1px 0 rgba(255,255,255,0.08);
-  }
-  .scroll-ball {
-    width: 4px; height: 9px; border-radius: 2px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.2));
-    animation: scroll-drop 2s ease-in-out infinite;
-    box-shadow: 0 0 6px rgba(255,255,255,0.35);
-  }
-  @keyframes scroll-drop {
-    0%   { transform: translateY(0);    opacity: 0;   }
-    15%  { opacity: 1;                               }
-    75%  { opacity: 0.5;                             }
-    100% { transform: translateY(15px); opacity: 0;  }
-  }
-  @keyframes glass-glow {
-    0%   { transform: translate(  0%,   0%); }
-    18%  { transform: translate( 22%, -18%); }
-    38%  { transform: translate( 35%,  22%); }
-    55%  { transform: translate(  8%,  38%); }
-    72%  { transform: translate(-28%,  15%); }
-    88%  { transform: translate(-22%, -20%); }
-    100% { transform: translate(  0%,   0%); }
-  }
-  .hero-scroll span {
-    font-size: .54rem; letter-spacing: .18em;
-    text-transform: uppercase; color: rgba(255,255,255,0.25);
-  }
-
-  /* availability badge */
-  .avail {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 5px 14px 5px 8px; margin-bottom: 44px;
-    border: 1px solid var(--b); border-radius: 100px;
-    font-size: .72rem; font-weight: 600;
-    color: var(--sub); letter-spacing: .04em;
-    background: rgba(255,255,255,0.025);
-  }
-  .avail-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: var(--green); box-shadow: 0 0 8px var(--green);
-    animation: blink 2.6s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-  @keyframes blink {
-    0%,100% { opacity:1; transform:scale(1); }
-    50%     { opacity:.4; transform:scale(1.2); }
-  }
-
-  /* Hero headline — gradient text */
-  .h1 {
-    font-size: clamp(3.2rem, 9vw, 8rem);
-    font-weight: 900; letter-spacing: -0.052em; line-height: .92;
-    color: #fff; margin-bottom: 30px;
-    /*  padding-bottom extends the background box past the baseline so
-        background-clip:text can reach the descender of "g" in "go viral."
-        Without it, the tight line-height clips the background before
-        the descender ink, making the bottom of "g" invisible.         */
-    padding-bottom: 0.14em;
-    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.72) 70%, rgba(255,255,255,0.58) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .h1 em {
-    font-style: normal; display: block;
-    /* colour inherited via parent background-clip gradient */
-  }
-
-  .hero-p {
-    max-width: 460px;
-    font-size: clamp(.9rem, 1.6vw, 1.05rem);
-    color: var(--sub); line-height: 1.7; font-weight: 400;
-    margin-bottom: 44px;
-  }
-  .hero-btns {
-    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
-  }
-
-  /* ───────────────────────────────────────────
-     BUTTONS (used across site)
-  ─────────────────────────────────────────── */
-  .btn-w {
-    padding: 12px 26px; background: #fff; color: #000;
-    font-size: .82rem; font-weight: 700; border-radius: 10px;
-    border: 1px solid #fff; letter-spacing: .01em;
-    transition: opacity .18s, transform .18s;
-  }
-  .btn-w:hover { opacity: .88; transform: translateY(-1px); }
-
-  .btn-o {
-    padding: 12px 26px; background: transparent; color: #fff;
-    font-size: .82rem; font-weight: 600; border-radius: 10px;
-    border: 1px solid var(--bh); letter-spacing: .01em;
-    transition: background .18s, transform .18s;
-  }
-  .btn-o:hover { background: rgba(255,255,255,0.05); transform: translateY(-1px); }
-
-  /* ───────────────────────────────────────────
-     UNIFIED SECTION SYSTEM
-     Every section uses these same classes:
-       .sec-hd  — section header row (full-width, with padding)
-       .sec-hd-in — inner content (aligns label + description)
-       .s-tag   — green label above heading
-       .s-h2    — section heading
-       .s-note  — right-side description text
-  ─────────────────────────────────────────── */
-  section { position: relative; z-index: 10; }
-  /* Glass panel tint — each section gets a faint top-to-transparent wash
-     so they read as layered frosted panels rather than flat black slabs    */
-  section:not(#hero):not(#ticker) {
-    background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.018) 0%,
-      transparent             22%
-    );
-  }
-
-  .sec-hd {
-    padding: clamp(56px,7vw,84px) var(--mg) clamp(40px,5vw,56px);
-    border-bottom: 1px solid var(--b);
-    position: relative;
-    /* Glass gradient: faint top-light fades to transparent */
-    background: linear-gradient(
-      180deg,
-      rgba(255,255,255,0.032) 0%,
-      rgba(255,255,255,0.01)  55%,
-      transparent             100%
-    );
-  }
-  /* Specular highlight — thin bright line along the top of each header */
-  .sec-hd::before {
-    content: '';
-    position: absolute; inset: 0 0 auto; height: 1px;
-    background: linear-gradient(
-      90deg,
-      transparent               0%,
-      rgba(255,255,255,0.12)   20%,
-      rgba(255,255,255,0.07)   60%,
-      transparent              100%
-    );
-    pointer-events: none;
-  }
-  .sec-hd-in {
-    display: flex; align-items: flex-end;
-    justify-content: space-between; gap: 40px;
-  }
-  .s-tag {
-    font-size: .63rem; font-weight: 700;
-    letter-spacing: .14em; text-transform: uppercase;
-    color: var(--green); margin-bottom: 12px;
-  }
-  .s-h2 {
-    font-size: clamp(1.8rem, 3.2vw, 2.8rem);
-    font-weight: 800; letter-spacing: -0.04em; line-height: 1.06;
-    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.62) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .s-note {
-    font-size: .82rem; color: var(--sub);
-    line-height: 1.65; max-width: 290px;
-    flex-shrink: 0;
-  }
-  @media (max-width: 700px) {
-    .sec-hd-in { flex-direction: column; align-items: flex-start; gap: 14px; }
-    .s-note { max-width: 100%; }
-  }
-
-  /* ───────────────────────────────────────────
-     STATS  (full-width 4-col grid, no max-width)
-  ─────────────────────────────────────────── */
-  #stats {
-    display: grid; grid-template-columns: repeat(4,1fr);
-    border-bottom: 1px solid var(--b);
-    padding-left: var(--gp); padding-right: var(--gp);
-  }
-  .s-cell {
-    padding: 52px var(--px);
-    border-right: 1px solid var(--b);
-    border-bottom: 1px solid var(--b);
-    display: flex; flex-direction: column; gap: 10px;
-    background: linear-gradient(160deg, rgba(255,255,255,0.02) 0%, transparent 50%);
-    transition: background .22s;
-  }
-  .s-cell:last-child { border-right: none; }
-  .s-cell:hover { background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.01) 50%); }
-  .s-num {
-    font-size: clamp(2rem, 3.2vw, 2.8rem);
-    font-weight: 900; letter-spacing: -0.05em; line-height: 1;
-  }
-  .s-num.g { color: var(--green); }
-  .s-lbl { font-size: .82rem; color: var(--sub); line-height: 1.5; }
-
-  @media (max-width: 860px) {
-    #stats { grid-template-columns: repeat(2,1fr); }
-    .s-cell:nth-child(2) { border-right: none; }
-  }
-  @media (max-width: 460px) {
-    #stats { grid-template-columns: 1fr; }
-    .s-cell { border-right: none; padding: 36px var(--px); }
-  }
-
-  /* ───────────────────────────────────────────
-     GRAPH
-  ─────────────────────────────────────────── */
-  #graph { border-bottom: 1px solid var(--b); }
-
-  /* Counter block sits on the right of .sec-hd-in */
-  .g-ctr-block { text-align: right; flex-shrink: 0; }
-  @media (max-width: 700px) { .g-ctr-block { text-align: left; } }
-  .g-ctr-lbl {
-    font-size: .62rem; letter-spacing: .12em; text-transform: uppercase;
-    color: var(--dim); margin-bottom: 6px;
-  }
-  #g-ctr {
-    font-family: var(--mono); font-weight: 700;
-    font-size: clamp(1.8rem, 3.2vw, 2.6rem);
-    letter-spacing: -.02em; color: var(--green);
-    min-width: 6ch; display: inline-block;
-    will-change: transform, text-shadow;
-  }
-
-  /* Canvas — constrained to content width */
-  .g-canvas-wrap { padding: 32px var(--mg) 0; }
-  #g-cv { display: block; width: 100%; height: clamp(180px, 28vw, 320px); }
-
-  /* Milestone row — full width */
-  .ms-row {
-    display: flex; flex-wrap: wrap;
-    border-top: 1px solid var(--b);
-    margin-top: 32px;
-    padding-left: var(--gp); padding-right: var(--gp);
-  }
-  .ms-item {
-    flex: 1 1 140px;
-    padding: 24px var(--px);
-    border-right: 1px solid var(--b);
-    border-bottom: 1px solid var(--b);
-    display: flex; flex-direction: column; gap: 6px;
-    opacity: 0; transform: translateY(5px);
-    transition: opacity .4s ease, transform .4s ease;
-  }
-  .ms-item:last-child { border-right: none; }
-  .ms-item.lit { opacity: 1; transform: none; }
-  .ms-dot {
-    width: 7px; height: 7px; border-radius: 50%;
-    background: transparent; border: 1px solid var(--dim);
-    margin-bottom: 2px;
-    transition: background .35s, box-shadow .35s, border-color .35s;
-  }
-  .ms-item.lit .ms-dot {
-    background: var(--green); border-color: var(--green);
-    box-shadow: 0 0 8px var(--gg);
-  }
-  .ms-ttl { font-size: .78rem; font-weight: 700; }
-  .ms-sub { font-size: .72rem; color: var(--sub); line-height: 1.4; }
-
-  /* ───────────────────────────────────────────
-     GALLERY — SPLIT PANEL
-  ─────────────────────────────────────────── */
-  #gallery { border-bottom: 1px solid var(--b); }
-
-  /* Centered wrapper — same margin system as every other section */
-  .gal-wrap {
-    padding: 40px var(--mg) 56px;
-  }
-
-  /* Glass card matching .w-card design language */
-  .gal-split {
-    display: grid;
-    grid-template-columns: 44% 1fr;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.10);
-    overflow: hidden;
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    background:
-      linear-gradient(160deg, rgba(255,255,255,0.028) 0%, transparent 55%),
-      rgba(255,255,255,0.016);
-    box-shadow: 0 0 0 1px rgba(255,255,255,0.04), 0 20px 56px rgba(0,0,0,0.38);
-  }
-
-  /* ── Left: portrait slideshow ── */
-  .gal-left {
-    position: relative; overflow: hidden;
-    border-right: 1px solid rgba(255,255,255,0.08);
-    display: flex; flex-direction: column;
-  }
-
-  /* Progress bar */
-  .gal-progress {
-    position: absolute; top: 0; left: 0; height: 2px; z-index: 3; pointer-events: none;
-    background: linear-gradient(90deg, var(--green), rgba(34,197,94,0.4));
-    border-radius: 0 2px 2px 0;
-    transition: width .12s linear;
-  }
-
-  /* Slide track */
-  .gal-track {
-    flex: 1; display: flex;
-    will-change: transform;
-    transition: transform .58s cubic-bezier(.4,0,.2,1);
-  }
-
-  /* Individual slides */
-  .gal-slide {
-    flex: 0 0 100%;
-    display: flex; align-items: center; justify-content: center;
-    padding: 32px 28px; min-height: clamp(440px, 58vh, 620px);
-  }
-  .gal-slide img {
-    width: auto; height: auto; max-width: 100%;
-    max-height: clamp(380px, 52vh, 560px);
-    object-fit: contain; border-radius: 12px;
-    display: block; user-select: none; -webkit-user-drag: none;
-    filter: drop-shadow(0 10px 36px rgba(0,0,0,0.6));
-    transition: transform .4s ease;
-  }
-  .gal-slide.active img { transform: scale(1.015); }
-
-  /* Footer: caption + dots */
-  .gal-foot {
-    flex-shrink: 0; padding: 13px 20px;
-    border-top: 1px solid rgba(255,255,255,0.07);
-    background: rgba(0,0,0,0.18);
-    display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  }
-  .gal-cap-txt { font-size: .72rem; font-weight: 600; color: rgba(255,255,255,0.42); }
-  .gal-cap-txt strong { color: rgba(255,255,255,0.82); }
-  .gal-dots { display: flex; gap: 5px; align-items: center; }
-  .gal-dot {
-    width: 14px; height: 3px; border-radius: 2px;
-    background: rgba(255,255,255,0.18);
-    cursor: pointer; border: none; padding: 0;
-    transition: width .3s cubic-bezier(.4,0,.2,1), background .22s;
-  }
-  .gal-dot.active { width: 26px; background: rgba(255,255,255,0.70); }
-  .gal-dot:hover:not(.active) { background: rgba(255,255,255,0.34); }
-
-  /* Arrows */
-  .gal-arrow {
-    position: absolute; top: 46%; transform: translateY(-50%);
-    z-index: 10; cursor: pointer; border: none; padding: 0;
-    width: 34px; height: 34px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
-    background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.10);
-    backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
-    color: rgba(255,255,255,0.7); font-size: .88rem;
-    opacity: 0; transition: opacity .2s, background .16s, color .16s;
-  }
-  .gal-left:hover .gal-arrow { opacity: 1; }
-  .gal-arrow:hover { background: rgba(255,255,255,0.09); color: #fff; }
-  .gal-arrow.prev { left: 10px; }
-  .gal-arrow.next { right: 10px; }
-
-  /* ── Right: per-image stat ── */
-  .gal-right {
-    padding: clamp(48px, 5.5vw, 80px) clamp(36px, 4.5vw, 64px);
-    display: flex; flex-direction: column; justify-content: center;
-  }
-
-  /* Stat content wrapper — fades/slides on slide change */
-  .gal-stat-wrap {
-    display: flex; flex-direction: column; gap: 10px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-  }
-  .gal-right.swapping .gal-stat-wrap {
-    opacity: 0; transform: translateY(8px);
-  }
-
-  /* Big glowing number — the hero of the right panel */
-  .gal-sn {
-    font-size: clamp(3.8rem, 6vw, 6rem);
-    font-weight: 900; letter-spacing: -0.055em; line-height: 1;
-    color: #fff;
-    animation: stat-glow 3.8s ease-in-out infinite;
-  }
-  /* Platform / label */
-  .gal-sl {
-    font-size: .82rem; font-weight: 600;
-    color: var(--sub); letter-spacing: .01em;
-    margin-top: 2px;
-  }
-  /* Short description — muted, same style as .s-note */
-  .gal-sd {
-    font-size: .82rem; color: var(--dim);
-    line-height: 1.6; margin-top: 12px;
-    padding-top: 14px;
-    border-top: 1px solid rgba(255,255,255,0.07);
-  }
-
-  @keyframes stat-glow {
-    0%, 100% {
-      text-shadow:
-        0 0 20px rgba(255,255,255,0.12),
-        0 0 40px rgba(255,255,255,0.04);
-    }
-    50% {
-      text-shadow:
-        0 0 24px rgba(255,255,255,0.34),
-        0 0 52px rgba(255,255,255,0.14),
-        0 0 90px rgba(255,255,255,0.05);
-    }
-  }
-
-  /* Mobile: stack */
-  @media (max-width: 760px) {
-    .gal-wrap { padding: 32px var(--mg) 48px; }
-    .gal-split { grid-template-columns: 1fr; border-radius: 16px; }
-    .gal-left { border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .gal-slide { padding: 24px 20px; min-height: clamp(340px, 70vw, 500px); }
-    .gal-slide img { max-height: clamp(300px, 64vw, 460px); }
-    .gal-arrow { display: none; }
-    .gal-right { padding: 40px 28px; }
-    .gal-sn { font-size: clamp(2.8rem, 10vw, 4rem); }
-  }
-
-  /* ───────────────────────────────────────────
-     WORK CARDS  (full-width 3-col grid)
-  ─────────────────────────────────────────── */
-  #work { border-bottom: 1px solid var(--b); }
-  .work-g {
-    display: grid; grid-template-columns: repeat(3,1fr);
-    gap: 12px;
-    padding: 32px var(--mg) 56px;
-  }
-  @media (max-width: 760px) { .work-g { grid-template-columns: 1fr; } }
-  .w-card {
-    padding: 40px 32px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.10);
-    display: flex; flex-direction: column; gap: 18px;
-    position: relative; overflow: hidden;
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    background:
-      linear-gradient(160deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.008) 45%, transparent 100%),
-      radial-gradient(ellipse 100% 70% at 0% 0%, rgba(34,197,94,0.08) 0%, transparent 55%),
-      rgba(255,255,255,0.018);
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.06),
-      0 8px 32px rgba(0,0,0,0.45),
-      0 0 48px rgba(34,197,94,0.07),
-      0 0 96px rgba(34,197,94,0.03),
-      inset 0 1px 0 rgba(255,255,255,0.20),
-      inset 0 0 0 1px rgba(255,255,255,0.04);
-    transition: border-color .3s, box-shadow .3s, background .3s;
-  }
-  /* Glass specular edge — top rim catch */
-  .w-card::before {
-    content: '';
-    position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255,255,255,0.40) 25%,
-      rgba(34,197,94,0.30) 55%,
-      rgba(255,255,255,0.18) 80%,
-      transparent 100%);
-    border-radius: 1px; pointer-events: none;
-    opacity: 0.75; transition: opacity .3s;
-  }
-  .w-card:hover {
-    border-color: rgba(255,255,255,0.18);
-    background:
-      linear-gradient(160deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.014) 45%, transparent 100%),
-      radial-gradient(ellipse 100% 70% at 0% 0%, rgba(34,197,94,0.14) 0%, transparent 55%),
-      rgba(255,255,255,0.024);
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.12),
-      0 8px 48px rgba(0,0,0,0.5),
-      0 0 64px rgba(34,197,94,0.14),
-      0 0 120px rgba(34,197,94,0.06),
-      inset 0 1px 0 rgba(255,255,255,0.30),
-      inset 0 0 0 1px rgba(255,255,255,0.07);
-  }
-  .w-card:hover::before { opacity: 1; }
-  /* Moving glow blob behind glass */
-  .w-card::after {
-    content: '';
-    position: absolute;
-    width: 220%; height: 220%;
-    top: -60%; left: -60%;
-    background: radial-gradient(ellipse 32% 32% at 50% 50%,
-      rgba(34,197,94,0.18) 0%,
-      rgba(34,197,94,0.06) 38%,
-      transparent 65%);
-    animation: glass-glow 11s ease-in-out infinite;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
-  .w-card:nth-child(2)::after { animation-delay: -3.7s; }
-  .w-card:nth-child(3)::after { animation-delay: -7.3s; }
-  @media (max-width: 600px) { .w-card { padding: 32px 24px; } }
-
-  .w-icon {
-    width: 40px; height: 40px; font-size: 1.1rem;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--b); border-radius: 7px;
-    background: rgba(255,255,255,0.025);
-  }
-  .w-title { font-size: 1rem; font-weight: 700; letter-spacing: -0.02em; }
-  .w-desc  { font-size: .82rem; color: var(--sub); line-height: 1.65; flex: 1; }
-  .w-tag   {
-    display: inline-flex; padding: 3px 10px; border-radius: 100px;
-    border: 1px solid var(--b); font-size: .65rem;
-    font-weight: 600; color: var(--sub); letter-spacing: .03em;
-    width: fit-content;
-  }
-
-  /* ───────────────────────────────────────────
-     TICKER
-  ─────────────────────────────────────────── */
-  #ticker {
-    overflow: hidden; border-bottom: 1px solid var(--b);
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
-  }
-  .tick-t {
-    display: flex; width: max-content;
-    animation: tick 26s linear infinite;
-  }
-  .tick-t:hover { animation-play-state: paused; }
-  @keyframes tick { to { transform: translateX(-50%); } }
-  .ti {
-    padding: 20px 38px; font-size: .8rem; font-weight: 600;
-    color: var(--dim); border-right: 1px solid var(--b);
-    white-space: nowrap; letter-spacing: .04em;
-    cursor: default; transition: color .2s;
-  }
-  .ti:hover { color: var(--sub); }
-  .td {
-    padding: 20px 14px; color: var(--dim);
-    font-size: .65rem; border-right: 1px solid var(--b);
-    display: flex; align-items: center;
-  }
-
-  /* ───────────────────────────────────────────
-     SERVICES (full-width 2-col grid)
-  ─────────────────────────────────────────── */
-  #services { border-bottom: 1px solid var(--b); }
-  .svc-g {
-    display: grid; grid-template-columns: repeat(2,1fr);
-    gap: 12px;
-    padding: 32px var(--mg) 56px;
-  }
-  @media (max-width: 700px) { .svc-g { grid-template-columns: 1fr; } }
-  .svc-c {
-    padding: 40px 32px;
-    border-radius: 20px;
-    border: 1px solid rgba(255,255,255,0.10);
-    display: flex; flex-direction: column; gap: 14px;
-    position: relative; overflow: hidden;
-    backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-    background:
-      linear-gradient(150deg, rgba(255,255,255,0.055) 0%, rgba(255,255,255,0.008) 45%, transparent 100%),
-      radial-gradient(ellipse 100% 70% at 0% 0%, rgba(34,197,94,0.08) 0%, transparent 55%),
-      rgba(255,255,255,0.018);
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.06),
-      0 8px 32px rgba(0,0,0,0.45),
-      0 0 48px rgba(34,197,94,0.07),
-      0 0 96px rgba(34,197,94,0.03),
-      inset 0 1px 0 rgba(255,255,255,0.20),
-      inset 0 0 0 1px rgba(255,255,255,0.04);
-    transition: border-color .3s, box-shadow .3s, background .3s;
-  }
-  /* Glass specular rim */
-  .svc-c::before {
-    content: '';
-    position: absolute; top: 0; left: 15%; right: 15%; height: 1px;
-    background: linear-gradient(90deg,
-      transparent 0%,
-      rgba(255,255,255,0.40) 25%,
-      rgba(34,197,94,0.30) 55%,
-      rgba(255,255,255,0.18) 80%,
-      transparent 100%);
-    border-radius: 1px; pointer-events: none;
-    opacity: 0.75; transition: opacity .3s;
-  }
-  .svc-c:hover {
-    border-color: rgba(255,255,255,0.18);
-    background:
-      linear-gradient(150deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.014) 45%, transparent 100%),
-      radial-gradient(ellipse 100% 70% at 0% 0%, rgba(34,197,94,0.14) 0%, transparent 55%),
-      rgba(255,255,255,0.024);
-    box-shadow:
-      0 0 0 1px rgba(255,255,255,0.12),
-      0 8px 48px rgba(0,0,0,0.5),
-      0 0 64px rgba(34,197,94,0.14),
-      0 0 120px rgba(34,197,94,0.06),
-      inset 0 1px 0 rgba(255,255,255,0.30),
-      inset 0 0 0 1px rgba(255,255,255,0.07);
-  }
-  .svc-c:hover::before { opacity: 1; }
-  /* Moving glow blob behind glass */
-  .svc-c::after {
-    content: '';
-    position: absolute;
-    width: 220%; height: 220%;
-    top: -60%; left: -60%;
-    background: radial-gradient(ellipse 32% 32% at 50% 50%,
-      rgba(34,197,94,0.18) 0%,
-      rgba(34,197,94,0.06) 38%,
-      transparent 65%);
-    animation: glass-glow 11s ease-in-out infinite;
-    pointer-events: none;
-    mix-blend-mode: screen;
-  }
-  .svc-c:nth-child(2)::after { animation-delay: -5.5s; }
-  .svc-c:nth-child(3)::after { animation-delay: -2.2s; }
-  .svc-c:nth-child(4)::after { animation-delay: -8.8s; }
-  @media (max-width: 600px) { .svc-c { padding: 32px 24px; } }
-  .svc-n  { font-family: var(--mono); font-size: .65rem; color: var(--dim); letter-spacing: .1em; }
-  .svc-t  { font-size: 1.05rem; font-weight: 700; letter-spacing: -0.025em; }
-  .svc-d  { font-size: .82rem; color: var(--sub); line-height: 1.65; }
-  .svc-l  { list-style: none; display: flex; flex-direction: column; gap: 7px; }
-  .svc-l li {
-    display: flex; align-items: center; gap: 9px;
-    font-size: .82rem; color: var(--sub);
-  }
-  .svc-l li::before {
-    content: ''; flex-shrink: 0;
-    width: 3px; height: 3px; border-radius: 50%;
-    background: var(--green);
-  }
-
-  /* ───────────────────────────────────────────
-     PROCESS — vertical timeline
-  ─────────────────────────────────────────── */
-  #process { border-bottom: 1px solid var(--b); }
-
-  /* Container that holds thread + cards — centred, fixed internal padding */
-  .proc-body {
-    max-width: 680px;
-    margin: 0 auto;
-    padding: 64px 48px 80px;   /* fixed 48px — matches thread/dot alignment */
-    position: relative;
-  }
-  @media (max-width: 640px) { .proc-body { padding: 48px 28px 64px; } }
-
-  /* Vertical thread — left: 48px matches .proc-body padding-left */
-  .proc-thread {
-    position: absolute;
-    left: 48px;         /* = proc-body padding-left → dot centre = 48px + 0.5px */
-    top: 80px; bottom: 96px;
-    width: 1px;
-    background: rgba(255,255,255,0.08);
-    overflow: hidden;
-    pointer-events: none;
-  }
-  @media (max-width: 640px) {
-    .proc-thread { left: 28px; top: 60px; bottom: 80px; }
-  }
-  .proc-thread-fill {
-    position: absolute; top: 0; left: 0;
-    width: 100%; height: 0%;
-    background: linear-gradient(to bottom, var(--green) 0%, rgba(34,197,94,0.45) 100%);
-    box-shadow: 0 0 10px rgba(34,197,94,0.4);
-    will-change: height;
-  }
-
-  /* Individual step row */
-  .proc-step {
-    position: relative;
-    padding-left: 32px;   /* gap between thread dot and card */
-    padding-bottom: 28px;
-    opacity: 0;
-    transform: translateX(-14px);
-    transition: opacity .5s ease, transform .5s ease;
-  }
-  .proc-step:last-child { padding-bottom: 0; }
-  .proc-step.ps-in { opacity: 1; transform: none; }
-  /* stagger each step slightly */
-  .proc-step:nth-child(2) { transition-delay: .06s; }
-  .proc-step:nth-child(3) { transition-delay: .12s; }
-  .proc-step:nth-child(4) { transition-delay: .18s; }
-  .proc-step:nth-child(5) { transition-delay: .24s; }
-  .proc-step:nth-child(6) { transition-delay: .30s; }
-
-  /* Dot on thread for each step */
-  .proc-dot {
-    position: absolute;
-    left: -4px; top: 24px;
-    width: 9px; height: 9px; border-radius: 50%;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.18);
-    z-index: 3;
-    transition: background .45s ease, border-color .45s ease, box-shadow .45s ease;
-  }
-  .proc-dot.dot-lit {
-    background: var(--green);
-    border-color: var(--green);
-    box-shadow: 0 0 10px rgba(34,197,94,0.55), 0 0 0 3px rgba(34,197,94,0.12);
-  }
-
-  /* Card */
-  .proc-card {
-    border: 1px solid var(--b);
-    border-radius: 14px;
-    padding: 20px 24px;
-    background: rgba(255,255,255,0.02);
-    backdrop-filter: blur(6px);
-    -webkit-backdrop-filter: blur(6px);
-    position: relative; overflow: hidden;
-    transition: border-color .3s, background .3s, transform .25s;
-  }
-  .proc-card:hover {
-    border-color: rgba(255,255,255,0.18);
-    background: rgba(255,255,255,0.04);
-    transform: translateX(3px);
-  }
-  /* Animated green left accent */
-  .proc-card::before {
-    content: '';
-    position: absolute; top: 0; left: 0; bottom: 0; width: 2px;
-    background: linear-gradient(to bottom, var(--green), rgba(34,197,94,0.4));
-    transform: scaleY(0); transform-origin: top;
-    transition: transform .42s cubic-bezier(0.16,1,0.3,1);
-  }
-  .proc-card.card-lit::before { transform: scaleY(1); }
-  .proc-card.card-lit {
-    border-color: rgba(255,255,255,0.14);
-    background: rgba(34,197,94,0.03);
-  }
-
-  .proc-card-top {
-    display: flex; align-items: center;
-    justify-content: space-between;
-    margin-bottom: 9px;
-  }
-  .proc-step-num {
-    font-family: var(--mono); font-size: .65rem; font-weight: 700;
-    color: rgba(255,255,255,0.22); letter-spacing: .12em;
-  }
-  .proc-step-day {
-    font-size: .65rem; color: var(--dim);
-    padding: 3px 10px; border: 1px solid var(--b);
-    border-radius: 100px; letter-spacing: .02em;
-  }
-  .proc-card h3 {
-    font-size: 1rem; font-weight: 700;
-    letter-spacing: -0.02em; margin-bottom: 6px;
-  }
-  .proc-card p {
-    font-size: .82rem; color: var(--sub); line-height: 1.62;
-  }
-
-  /* ───────────────────────────────────────────
-     CTA
-  ─────────────────────────────────────────── */
-  #cta {
-    padding: 120px var(--mg); text-align: center;
-    position: relative; overflow: hidden;
-    border-bottom: 1px solid var(--b);
-  }
-  #cta::before {
-    content: '';
-    position: absolute; top: 50%; left: 50%;
-    transform: translate(-50%,-50%);
-    width: 700px; height: 350px;
-    background: radial-gradient(ellipse, rgba(99,102,241,0.1), transparent 65%);
-    pointer-events: none;
-  }
-  .cta-h {
-    font-size: clamp(2.8rem, 7.5vw, 6.5rem);
-    font-weight: 900; letter-spacing: -0.052em; line-height: .9;
-    /* padding-bottom extends background box past the baseline so
-       background-clip:text reaches descenders of "y" and "g"     */
-    padding-bottom: 0.14em;
-    margin-bottom: 20px; position: relative; z-index: 1;
-    background: linear-gradient(180deg, #fff 0%, rgba(255,255,255,0.6) 100%);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
-  .cta-p {
-    font-size: .88rem; color: var(--sub); line-height: 1.7;
-    max-width: 400px; margin: 0 auto 44px;
-    position: relative; z-index: 1;
-  }
-  .cta-btns {
-    display: flex; gap: 12px; justify-content: center;
-    flex-wrap: wrap; position: relative; z-index: 1;
-  }
-  @media (max-width: 600px) { #cta { padding: 80px var(--mg); } }
-
-  /* ───────────────────────────────────────────
-     FOOTER
-  ─────────────────────────────────────────── */
-  footer {
-    padding: 28px var(--mg);
-    display: flex; align-items: center;
-    justify-content: space-between; gap: 16px;
-    position: relative; z-index: 10;
-  }
-  @media (max-width: 540px) { footer { flex-direction: column; gap: 12px; text-align: center; } }
-  .f-logo { font-size: .9rem; font-weight: 900; letter-spacing: -0.05em; }
-  .f-logo em { font-style: normal; color: var(--green); }
-  .f-copy { font-size: .7rem; color: var(--dim); }
-  .f-lk   { font-size: .7rem; color: var(--dim); transition: color .15s; }
-  .f-lk:hover { color: #fff; }
-
-  /* ───────────────────────────────────────────
-     SCROLL REVEALS
-  ─────────────────────────────────────────── */
-  .rv {
-    opacity: 0; transform: translateY(16px);
-    transition: opacity .55s ease, transform .55s ease;
-  }
-  .rv.in { opacity: 1; transform: none; }
-  .d1 { transition-delay: .07s; }
-  .d2 { transition-delay: .14s; }
-  .d3 { transition-delay: .21s; }
-  .d4 { transition-delay: .28s; }
-
-  </style>
-</head>
-<body>
-
-<div id="c-dot"></div>
-<div id="c-ring"></div>
-<div id="hero-fade"></div>
-
-<!-- ════════ NAV ════════ -->
-<div id="nav-shell">
-<nav id="nav">
-  <div class="nav-in">
-    <a href="https://norvzi.com" class="logo">
-      <span class="logo-mark">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <text x="2" y="14" font-family="Inter,system-ui,sans-serif" font-size="13" font-weight="900" fill="#000" letter-spacing="-0.5">N</text>
-          <circle cx="15.5" cy="13" r="2.5" fill="#22c55e"/>
-        </svg>
-      </span>
-      norvzi<span>.</span>
-    </a>
-    <ul class="nav-ul">
-      <li><a href="#graph">Numbers</a></li>
-      <li><a href="#gallery">Gallery</a></li>
-      <li><a href="#work">Work</a></li>
-      <li><a href="#services">Services</a></li>
-      <li><a href="#process">Process</a></li>
-    </ul>
-    <div class="nav-right">
-      <span class="nav-beta-pill">Beta</span>
-      <a href="https://tiktok.com/@norvzi" target="_blank" class="nav-cta">@norvzi ↗</a>
-      <button id="hbg" aria-label="Open menu"><span></span><span></span><span></span></button>
-    </div>
-  </div>
-</nav>
-</div>
-
-<!-- Mobile menu -->
-<div id="mob">
-  <a href="#work"     class="mob-l">Work</a>
-  <a href="#gallery"  class="mob-l">Gallery</a>
-  <a href="#services" class="mob-l">Services</a>
-  <a href="#graph"    class="mob-l">Numbers</a>
-  <a href="#process"  class="mob-l">Process</a>
-  <a href="https://tiktok.com/@norvzi" target="_blank" class="mob-cta">@norvzi on TikTok ↗</a>
-</div>
-
-<!-- ════════ HERO ════════ -->
-<section id="hero">
-  <div class="hero-body">
-    <div class="avail">
-      <span class="avail-dot"></span>
-      Available for projects &nbsp;·&nbsp; @norvzi
-    </div>
-    <h1 class="h1">
-      I make content <em>go viral.</em>
-    </h1>
-    <p class="hero-p">
-      Professional short-form clipping specialist. 2.4B+ lifetime views.
-      Worked with Telegram, in MrBeast's BeastGames clipping campaign.
-    </p>
-    <div class="hero-btns">
-      <a href="https://tiktok.com/@norvzi" target="_blank" class="btn-glass">@norvzi on TikTok ↗</a>
-    </div>
-  </div>
-  <div class="hero-scroll">
-    <div class="scroll-mouse"><div class="scroll-ball"></div></div>
-    <span>Scroll</span>
-  </div>
-</section>
-
-<!-- ════════ STATS ════════ -->
-<section id="stats">
-  <div class="s-cell rv">
-    <div class="s-num g" id="st0">2.4B+</div>
-    <div class="s-lbl">Lifetime views across all content</div>
-  </div>
-  <div class="s-cell rv d1">
-    <div class="s-num" id="st1">200M+</div>
-    <div class="s-lbl">Views generated in a single week</div>
-  </div>
-  <div class="s-cell rv d2">
-    <div class="s-num">🥇</div>
-    <div class="s-lbl">MrBeast BeastGames clipping campaign</div>
-  </div>
-  <div class="s-cell rv d3">
-    <div class="s-num">3+</div>
-    <div class="s-lbl">Major brand &amp; platform collaborations</div>
-  </div>
-</section>
-
-<!-- ════════ GRAPH ════════ -->
-<section id="graph">
-  <!-- Unified section header — same structure as every other section -->
-  <div class="sec-hd">
-    <div class="sec-hd-in">
-      <div class="rv">
-        <div class="s-tag">Growth Trajectory</div>
-        <h2 class="s-h2">From zero to 2.4 billion.</h2>
-      </div>
-      <!-- Counter on right — same slot as .s-note -->
-      <div class="g-ctr-block rv d1">
-        <div class="g-ctr-lbl">Total views</div>
-        <div id="g-ctr">0.00B</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="g-canvas-wrap">
-    <canvas id="g-cv"></canvas>
-  </div>
-
-  <div class="ms-row">
-    <div class="ms-item" data-t="0">
-      <div class="ms-dot"></div>
-      <div class="ms-ttl">Starting Out</div>
-      <div class="ms-sub">First clips uploaded</div>
-    </div>
-    <div class="ms-item" data-t="0.28">
-      <div class="ms-dot"></div>
-      <div class="ms-ttl">200M in a Week</div>
-      <div class="ms-sub">First viral campaign</div>
-    </div>
-    <div class="ms-item" data-t="0.52">
-      <div class="ms-dot"></div>
-      <div class="ms-ttl">Telegram</div>
-      <div class="ms-sub">Global brand deal</div>
-    </div>
-    <div class="ms-item" data-t="0.76">
-      <div class="ms-dot"></div>
-      <div class="ms-ttl">MrBeast BeastGames</div>
-      <div class="ms-sub">Clipping campaign</div>
-    </div>
-    <div class="ms-item" data-t="1">
-      <div class="ms-dot"></div>
-      <div class="ms-ttl">2.4B+ Views</div>
-      <div class="ms-sub">And still growing</div>
-    </div>
-  </div>
-</section>
-
-<!-- ════════ GALLERY ════════ -->
-<section id="gallery">
-  <div class="sec-hd">
-    <div class="sec-hd-in">
-      <div class="rv">
-        <div class="s-tag">Gallery</div>
-        <h2 class="s-h2">Proof over promises.</h2>
-      </div>
-      <p class="sec-p rv d1">Screenshots don't lie. Every number here is real, earned through content, not ads.</p>
-    </div>
-  </div>
-  <div class="gal-wrap rv d2">
-    <div class="gal-split">
-
-      <!-- Left: portrait screenshot reel -->
-      <div class="gal-left" id="galStage">
-        <div class="gal-progress" id="galProgress"></div>
-        <div class="gal-track" id="galTrack">
-          <div class="gal-slide active">
-            <img src="Assets/Gallery/112m_tiktok.png" alt="112M TikTok Views" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/50m_tiktok.png" alt="50M TikTok Views" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/28m_views.png" alt="28M Views" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/18m_views.jpg" alt="18M Views" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/500k_subscribers.png" alt="500K Subscribers" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/400k_x.png" alt="400K on X" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/youtube_playbuttons.jpg" alt="YouTube Play Buttons" draggable="false">
-          </div>
-          <div class="gal-slide">
-            <img src="Assets/Gallery/audience.png" alt="Audience" draggable="false">
-          </div>
-        </div>
-        <!-- Footer: caption + dots -->
-        <div class="gal-foot">
-          <span class="gal-cap-txt" id="galCapTxt"><strong>112M</strong> TikTok Views</span>
-          <div class="gal-dots" id="galDots">
-            <button class="gal-dot active" data-i="0"></button>
-            <button class="gal-dot" data-i="1"></button>
-            <button class="gal-dot" data-i="2"></button>
-            <button class="gal-dot" data-i="3"></button>
-            <button class="gal-dot" data-i="4"></button>
-            <button class="gal-dot" data-i="5"></button>
-            <button class="gal-dot" data-i="6"></button>
-            <button class="gal-dot" data-i="7"></button>
-          </div>
-        </div>
-        <button class="gal-arrow prev" id="galPrev" aria-label="Previous">&#8592;</button>
-        <button class="gal-arrow next" id="galNext" aria-label="Next">&#8594;</button>
-      </div>
-
-      <!-- Right: per-image dynamic stat -->
-      <div class="gal-right" id="galRight">
-        <div class="gal-stat-wrap">
-          <div class="gal-sn" id="galNum">112M</div>
-          <div class="gal-sl" id="galTag">TikTok Views</div>
-          <div class="gal-sd" id="galDesc">Single video, organic viral reach</div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- ════════ WORK ════════ -->
-<section id="work">
-  <div class="sec-hd">
-    <div class="sec-hd-in">
-      <div class="rv">
-        <div class="s-tag">Notable Work</div>
-        <h2 class="s-h2">Proven at the highest level.</h2>
-      </div>
-      <p class="s-note rv d1">Global campaigns, record-breaking weeks, top-tier brand partnerships. The results are real.</p>
-    </div>
-  </div>
-  <div class="work-g">
-    <div class="w-card rv">
-      <div class="w-icon">🥇</div>
-      <h3 class="w-title">MrBeast BeastGames</h3>
-      <p class="w-desc">Part of MrBeast's BeastGames clipping campaign, one of the most competitive creator ecosystems on the internet, driving millions of views at peak velocity.</p>
-      <span class="w-tag">Campaign · Creator</span>
-    </div>
-    <div class="w-card rv d1">
-      <div class="w-icon">✦</div>
-      <h3 class="w-title">Telegram Partnership</h3>
-      <p class="w-desc">Partnered directly with Telegram to produce and clip short-form content at scale, amplifying their global brand across TikTok and short-form platforms worldwide.</p>
-      <span class="w-tag">Brand · Tech</span>
-    </div>
-    <div class="w-card rv d2">
-      <div class="w-icon">↑</div>
-      <h3 class="w-title">200M Views · One Week</h3>
-      <p class="w-desc">200 million views in 7 days across multiple campaigns, placing norvzi firmly in the top tier of short-form content operations globally.</p>
-      <span class="w-tag">Viral · Record</span>
-    </div>
-  </div>
-</section>
-
-<!-- ════════ TICKER ════════ -->
-<section id="ticker">
-  <div class="tick-t">
-    <span class="ti">MrBeast</span><span class="td">·</span>
-    <span class="ti">Telegram</span><span class="td">·</span>
-    <span class="ti">BeastGames</span><span class="td">·</span>
-    <span class="ti">TikTok</span><span class="td">·</span>
-    <span class="ti">2.4B+ Views</span><span class="td">·</span>
-    <span class="ti">@norvzi</span><span class="td">·</span>
-    <span class="ti">Viral Clipping</span><span class="td">·</span>
-    <span class="ti">200M / Week</span><span class="td">·</span>
-    <span class="ti">MrBeast</span><span class="td">·</span>
-    <span class="ti">Telegram</span><span class="td">·</span>
-    <span class="ti">BeastGames</span><span class="td">·</span>
-    <span class="ti">TikTok</span><span class="td">·</span>
-    <span class="ti">2.4B+ Views</span><span class="td">·</span>
-    <span class="ti">@norvzi</span><span class="td">·</span>
-    <span class="ti">Viral Clipping</span><span class="td">·</span>
-    <span class="ti">200M / Week</span><span class="td">·</span>
-  </div>
-</section>
-
-<!-- ════════ SERVICES ════════ -->
-<section id="services">
-  <div class="sec-hd">
-    <div class="sec-hd-in">
-      <div class="rv">
-        <div class="s-tag">Services</div>
-        <h2 class="s-h2">What I do for clients.</h2>
-      </div>
-      <p class="s-note rv d1">Every clip engineered to stop the scroll in under 2 seconds and hold attention to the end.</p>
-    </div>
-  </div>
-  <div class="svc-g">
-    <div class="svc-c rv">
-      <div class="svc-n">01</div>
-      <h3 class="svc-t">Viral Clipping</h3>
-      <p class="svc-d">Long-form content transformed into retention-engineered short clips. Every second is intentional.</p>
-      <ul class="svc-l">
-        <li>TikTok, YouTube Shorts &amp; Reels optimised</li>
-        <li>Hook-first editing &amp; retention-paced cuts</li>
-        <li>Captions, sound design &amp; colour grade</li>
-        <li>24–48 hr turnaround</li>
-      </ul>
-    </div>
-    <div class="svc-c rv d1">
-      <div class="svc-n">02</div>
-      <h3 class="svc-t">Campaign Strategy</h3>
-      <p class="svc-d">Full short-form strategy for brands targeting platform dominance, from brief to viral moment.</p>
-      <ul class="svc-l">
-        <li>Content calendar &amp; posting strategy</li>
-        <li>Trend identification &amp; rapid production</li>
-        <li>Platform-specific growth tactics</li>
-        <li>Weekly performance reporting</li>
-      </ul>
-    </div>
-    <div class="svc-c rv d2">
-      <div class="svc-n">03</div>
-      <h3 class="svc-t">Creator Retainer</h3>
-      <p class="svc-d">Ongoing clipping for creators who need consistent, high-quality output without slowing down.</p>
-      <ul class="svc-l">
-        <li>Dedicated editor, on-demand</li>
-        <li>Unlimited revisions per month</li>
-        <li>Monthly performance review</li>
-        <li>Priority turnaround guaranteed</li>
-      </ul>
-    </div>
-    <div class="svc-c rv d3">
-      <div class="svc-n">04</div>
-      <h3 class="svc-t">Brand Packages</h3>
-      <p class="svc-d">Custom clip packages for businesses building a presence that converts attention into growth.</p>
-      <ul class="svc-l">
-        <li>10, 20 or 30 clips per month</li>
-        <li>Brand tone of voice alignment</li>
-        <li>Multi-platform delivery ready</li>
-        <li>Dedicated account management</li>
-      </ul>
-    </div>
-  </div>
-</section>
-
-<!-- ════════ PROCESS ════════ -->
-<section id="process">
-
-  <!-- Section header — same system as Work / Services / Graph -->
-  <div class="sec-hd">
-    <div class="sec-hd-in">
-      <div class="rv">
-        <div class="s-tag">How It Works</div>
-        <h2 class="s-h2">Raw footage to millions of views.</h2>
-      </div>
-      <p class="s-note rv d1">A repeatable system refined across 200M+ views, built for speed without sacrificing quality.</p>
-    </div>
-  </div>
-
-  <!-- Timeline body -->
-  <div class="proc-body" id="proc-body">
-
-    <!-- Animated vertical thread -->
-    <div class="proc-thread" aria-hidden="true">
-      <div class="proc-thread-fill" id="proc-fill"></div>
-    </div>
-
-    <!-- Step 1 -->
-    <div class="proc-step" id="proc-s0">
-      <div class="proc-dot" id="proc-d0"></div>
-      <div class="proc-card" id="proc-c0">
-        <div class="proc-card-top">
-          <span class="proc-step-num">01</span>
-          <span class="proc-step-day">Day 1</span>
-        </div>
-        <h3>Discovery Call</h3>
-        <p>Goals, content type, platform targets. What going viral actually means for your brand.</p>
-      </div>
-    </div>
-
-    <!-- Step 2 -->
-    <div class="proc-step" id="proc-s1">
-      <div class="proc-dot" id="proc-d1"></div>
-      <div class="proc-card" id="proc-c1">
-        <div class="proc-card-top">
-          <span class="proc-step-num">02</span>
-          <span class="proc-step-day">Day 1–2</span>
-        </div>
-        <h3>Footage Intake</h3>
-        <p>Send footage or existing content. No prep needed. I handle everything from here.</p>
-      </div>
-    </div>
-
-    <!-- Step 3 -->
-    <div class="proc-step" id="proc-s2">
-      <div class="proc-dot" id="proc-d2"></div>
-      <div class="proc-card" id="proc-c2">
-        <div class="proc-card-top">
-          <span class="proc-step-num">03</span>
-          <span class="proc-step-day">Day 2–3</span>
-        </div>
-        <h3>Clip Production</h3>
-        <p>Identify the highest-potential moments. Craft them into platform-ready, retention-engineered clips.</p>
-      </div>
-    </div>
-
-    <!-- Step 4 -->
-    <div class="proc-step" id="proc-s3">
-      <div class="proc-dot" id="proc-d3"></div>
-      <div class="proc-card" id="proc-c3">
-        <div class="proc-card-top">
-          <span class="proc-step-num">04</span>
-          <span class="proc-step-day">Day 3–4</span>
-        </div>
-        <h3>Review &amp; Deliver</h3>
-        <p>You review. Feedback applied within 24 hrs. Final exports in platform-perfect formats, ready to post.</p>
-      </div>
-    </div>
-
-    <!-- Step 5 -->
-    <div class="proc-step" id="proc-s4">
-      <div class="proc-dot" id="proc-d4"></div>
-      <div class="proc-card" id="proc-c4">
-        <div class="proc-card-top">
-          <span class="proc-step-num">05</span>
-          <span class="proc-step-day">Ongoing</span>
-        </div>
-        <h3>Monitor &amp; Iterate</h3>
-        <p>Track performance, spot what's resonating, and continuously refine. Every cycle compounds.</p>
-      </div>
-    </div>
-
-  </div>
-</section>
-
-<!-- ════════ CTA ════════ -->
-<section id="cta">
-  <h2 class="cta-h rv">Ready to go viral?</h2>
-  <p class="cta-p rv d1">Let's turn your content into something the internet can't stop watching. Spots are limited.</p>
-  <div class="cta-btns rv d2">
-    <a href="https://tiktok.com/@norvzi" target="_blank" class="btn-w">See My TikTok ↗</a>
-    <a href="mailto:hi@norvzi.com" class="btn-o">Get in Touch →</a>
-  </div>
-</section>
-
-<!-- ════════ FOOTER ════════ -->
-<footer>
-  <a href="https://norvzi.com" class="f-logo">norvzi<em>.</em></a>
-  <span class="f-copy">© 2026 norvzi. All rights reserved.</span>
-  <a href="https://tiktok.com/@norvzi" target="_blank" class="f-lk">TikTok ↗</a>
-</footer>
-
-<script>
-/* ── CURSOR ─────────────────────────────────────────── */
-(function(){
-  if (!window.matchMedia('(pointer:fine)').matches) return;
-  const dot = document.getElementById('c-dot');
-  const ring = document.getElementById('c-ring');
-  if (!dot) return;
-  let mx = innerWidth/2, my = innerHeight/2, rx = mx, ry = my;
-  document.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
-  (function loop(){
-    dot.style.left  = mx + 'px'; dot.style.top  = my + 'px';
-    rx += (mx - rx) * .13;      ry += (my - ry) * .13;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(loop);
-  })();
-  document.querySelectorAll('a, button').forEach(el => {
-    el.addEventListener('mouseenter', () => {
-      ring.style.width = ring.style.height = '44px';
-      ring.style.borderColor = 'rgba(255,255,255,.5)';
-    });
-    el.addEventListener('mouseleave', () => {
-      ring.style.width = ring.style.height = '30px';
-      ring.style.borderColor = 'rgba(255,255,255,.3)';
-    });
-  });
-})();
-
-/* ── HAMBURGER ──────────────────────────────────────── */
-(function(){
-  const btn = document.getElementById('hbg');
-  const menu = document.getElementById('mob');
-  let open = false;
-  function set(v){
-    open = v;
-    btn.classList.toggle('on', open);
-    menu.classList.toggle('on', open);
-    document.body.style.overflow = open ? 'hidden' : '';
-  }
-  btn.addEventListener('click', () => set(!open));
-  document.querySelectorAll('.mob-l, .mob-cta').forEach(a => a.addEventListener('click', () => set(false)));
-})();
-
-/* ── LIQUID GLASS NAV — scroll density + active link ── */
-(function(){
-  const nav   = document.getElementById('nav');
-  const links = document.querySelectorAll('.nav-ul a');
-  const fade  = document.getElementById('hero-fade');
-  const cta   = document.getElementById('cta');
-
-  /* Scroll state: toggle .scrolled for denser material */
-  function onScroll(){
-    nav.classList.toggle('scrolled', scrollY > 20);
-
-    /* Hide bottom fade before it can touch CTA content */
-    if (fade && cta) {
-      const ctaTop = cta.getBoundingClientRect().top;
-      fade.style.opacity = ctaTop < window.innerHeight * 1.3 ? '0' : '1';
-    }
-
-    /* Active section highlight */
-    const sections = ['graph','gallery','work','services','process'];
-    let current = '';
-    for (const id of sections){
-      const el = document.getElementById(id);
-      if (el && el.getBoundingClientRect().top < window.innerHeight * 0.45) current = id;
-    }
-    links.forEach(a => {
-      a.classList.toggle('active', a.getAttribute('href') === '#' + current);
-    });
-  }
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
-})();
-
-/* ── SCROLL REVEALS ─────────────────────────────────── */
-(function(){
-  const obs = new IntersectionObserver(es => {
-    es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
-  }, { threshold: .07, rootMargin: '0px 0px -20px 0px' });
-  document.querySelectorAll('.rv').forEach(el => obs.observe(el));
-})();
-
-/* ── STAT COUNTERS (trigger on scroll into view) ────── */
-(function(){
-  const STATS = [
-    { id: 'st0', end: 2.4,  fmt: v => v.toFixed(1) + 'B+' },
-    { id: 'st1', end: 200,  fmt: v => Math.round(v)  + 'M+' },
-  ];
-  const obs = new IntersectionObserver(es => {
-    es.forEach(e => {
-      if (!e.isIntersecting) return;
-      const id = e.target.id;
-      const cfg = STATS.find(s => s.id === id);
-      if (!cfg) return;
-      const DUR = 1400, t0 = performance.now();
-      function step(now){
-        const p = Math.min((now - t0) / DUR, 1);
-        const ease = 1 - Math.pow(1 - p, 3);
-        e.target.textContent = cfg.fmt(ease * cfg.end);
-        if (p < 1) requestAnimationFrame(step);
-        else e.target.textContent = cfg.fmt(cfg.end);
-      }
-      requestAnimationFrame(step);
-      obs.unobserve(e.target);
-    });
-  }, { threshold: .5 });
-  STATS.forEach(s => { const el = document.getElementById(s.id); if (el) obs.observe(el); });
-})();
-
-/* ── VIEWS GRAPH ────────────────────────────────────── */
-(function(){
-  const canvas = document.getElementById('g-cv');
-  const ctr    = document.getElementById('g-ctr');
-  const items  = document.querySelectorAll('.ms-item');
-  if (!canvas || !ctr) return;
-
-  const ctx   = canvas.getContext('2d');
-  const TOTAL = 2.4e9;
-  const STEPS = 600;
-  const DUR   = 4200;   /* animation duration ms */
-  const MT    = [0, 0.28, 0.52, 0.76, 1.0]; /* milestone t-positions */
-  const PL = 58, PR = 12, PT = 14, PB = 38; /* canvas padding px    */
-  let W, H, aid = null, started = false, done = false;
-
-  /* ── setTransform (RESET each call — no accumulation bug) ── */
-  function resize(){
-    const r = canvas.getBoundingClientRect();
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = r.width; H = r.height;
-    canvas.width  = Math.round(W * dpr);
-    canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); /* reset + scale — NOT ctx.scale */
-  }
-
-  /* Exponential curve: x linear, y exponential */
-  function pt(t){ return [PL + t*(W-PL-PR), H-PB - Math.pow(t,1.8)*(H-PT-PB)]; }
-
-  /* Counter: always in X.XXB — zero unit switching */
-  function fmtCtr(v){
-    const b = v / 1e9;
-    if (b < 0.005) return '0.00B';
-    if (b < 0.1)   return b.toFixed(3) + 'B';
-    return b.toFixed(2) + 'B';
-  }
-  /* Y-axis labels */
-  function fmtAx(v){ return v === 0 ? '0' : v >= 1e9 ? (v/1e9).toFixed(1)+'B' : (v/1e6)+'M'; }
-
-  function drawBase(){
-    const vals = [0, 500e6, 1e9, 1.5e9, 2e9, 2.4e9];
-    ctx.font = `10px 'JetBrains Mono', monospace`;
-    ctx.textAlign = 'right';
-    vals.forEach(v => {
-      const y = H - PB - (v/TOTAL) * (H - PT - PB);
-      ctx.beginPath();
-      ctx.strokeStyle = 'rgba(255,255,255,0.045)';
-      ctx.lineWidth = 1; ctx.setLineDash([3, 8]);
-      ctx.moveTo(PL, y); ctx.lineTo(W - PR, y); ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.fillStyle = 'rgba(255,255,255,0.22)';
-      ctx.fillText(fmtAx(v), PL - 8, y + 4);
-    });
-    ctx.beginPath();
-    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = 1;
-    ctx.moveTo(PL, H - PB); ctx.lineTo(W - PR, H - PB); ctx.stroke();
-    ctx.beginPath();
-    ctx.moveTo(PL, PT); ctx.lineTo(PL, H - PB); ctx.stroke();
-  }
-
-  function animate(){
-    if (aid) cancelAnimationFrame(aid);
-    items.forEach(m => m.classList.remove('lit'));
-    ctr.textContent      = '0.00B';
-    ctr.style.textShadow = '';
-    ctr.style.transform  = '';
-    let t0 = null;
-
-    function frame(ts){
-      if (!t0) t0 = ts;
-      const prog = Math.min((ts - t0) / DUR, 1);
-
-      /* Live resize handling */
-      const rw = canvas.getBoundingClientRect().width;
-      if (Math.abs(rw - W) > 3) resize();
-
-      ctx.clearRect(0, 0, W, H);
-      drawBase();
-
-      const n = Math.floor(prog * STEPS);
-      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-
-      /* Draw line segment-by-segment (colour: white → green) */
-      for (let i = 0; i < n; i++){
-        const ta = i / STEPS, tb = (i+1) / STEPS;
-        const [x0, y0] = pt(ta), [x1, y1] = pt(tb);
-        const r = Math.round(255 + (34  - 255) * tb);
-        const g = Math.round(255 + (197 - 255) * tb);
-        const b = Math.round(255 + (94  - 255) * tb);
-        ctx.beginPath();
-        ctx.strokeStyle = `rgb(${r},${g},${b})`;
-        ctx.lineWidth   = 1.4 + tb * 3.6;
-        ctx.shadowColor = `rgba(34,197,94,${tb * 0.55})`;
-        ctx.shadowBlur  = tb * 16;
-        ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
-      }
-      ctx.shadowBlur = 0;
-
-      /* ── COMET TAIL (motion blur on leading edge) ── */
-      if (n > 0){
-        const TAIL = 10;
-        for (let g = TAIL; g > 0; g--){
-          const gt = Math.max(0, n/STEPS - g * (2/STEPS));
-          const [gx, gy] = pt(gt);
-          const alpha = ((TAIL - g + 1) / TAIL) * 0.45 * prog;
-          const radius = 1.5 + ((TAIL - g + 1) / TAIL) * 4.5;
-          ctx.beginPath();
-          ctx.arc(gx, gy, radius, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(34,197,94,${alpha})`;
-          ctx.shadowColor = 'rgba(34,197,94,0.6)';
-          ctx.shadowBlur  = (TAIL - g + 1) * 3;
-          ctx.fill();
-          ctx.shadowBlur = 0;
+<!doctype html>
+<html lang="de-AT">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- ═══ PRIMARY SEO ═══════════════════════════════════════════════════ -->
+    <title>Autoaufbereitung Würflach | Autoreinigung Neunkirchen – Cornel Detailing</title>
+    <meta name="description" content="Cornel Detailing – Autoaufbereitung &amp; Autoreinigung in Würflach bei Neunkirchen. Lackpolitur, Keramikversiegelung, Innenreinigung. Über 3 Jahre Erfahrung. Jetzt Termin anfragen!" />
+    <meta name="keywords" content="Autoaufbereitung Würflach, Autoreinigung Würflach, Autoaufbereitung Neunkirchen, Autoreinigung Neunkirchen, Lackpolitur Würflach, Keramikversiegelung Neunkirchen, Fahrzeugaufbereitung Niederösterreich, Innenreinigung Auto Neunkirchen, Auto polieren Neunkirchen, KFZ Aufbereitung Würflach, Detailing Niederösterreich, Autoaufbereitung Ternitz, Autoaufbereitung Gloggnitz, Cornel Detailing" />
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1" />
+    <meta name="author" content="Cornel Detailing" />
+    <link rel="canonical" href="https://corneldetailing.com/" />
+
+    <!-- ═══ GEO / LOCAL SEO ═══════════════════════════════════════════════ -->
+    <meta name="geo.region" content="AT-3" />
+    <meta name="geo.placename" content="Würflach, Neunkirchen, Niederösterreich" />
+    <meta name="geo.position" content="47.8222;16.0439" />
+    <meta name="ICBM" content="47.8222, 16.0439" />
+
+    <!-- ═══ OPEN GRAPH ════════════════════════════════════════════════════ -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://corneldetailing.com/" />
+    <meta property="og:title" content="Autoaufbereitung Würflach | Cornel Detailing" />
+    <meta property="og:description" content="Professionelle Autoaufbereitung &amp; Autoreinigung in Würflach bei Neunkirchen. Lackpolitur, Keramikversiegelung, Innenreinigung. Termin per WhatsApp!" />
+    <meta property="og:image" content="https://corneldetailing.com/assets/og-image.jpg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Cornel Detailing – Autoaufbereitung Würflach" />
+    <meta property="og:locale" content="de_AT" />
+    <meta property="og:site_name" content="Cornel Detailing" />
+
+    <!-- ═══ TWITTER CARD ══════════════════════════════════════════════════ -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Autoaufbereitung Würflach | Cornel Detailing" />
+    <meta name="twitter:description" content="Professionelle Autoaufbereitung in Würflach bei Neunkirchen. Lackpolitur, Keramikversiegelung, Innenreinigung." />
+    <meta name="twitter:image" content="https://corneldetailing.com/assets/og-image.jpg" />
+
+    <!-- ═══ STRUCTURED DATA ═══════════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "AutomotiveBusiness",
+          "@id": "https://corneldetailing.com/#business",
+          "name": "Cornel Detailing",
+          "alternateName": ["Cornel Autoaufbereitung", "Autoreinigung Würflach"],
+          "description": "Professionelle Autoaufbereitung und Autoreinigung in Würflach bei Neunkirchen. Leistungen: Außenreinigung, Innenreinigung, Lackpolitur, Keramikversiegelung. Über 3 Jahre Erfahrung.",
+          "url": "https://corneldetailing.com",
+          "telephone": "+43 676 4391253",
+          "email": "kontakt@corneldetailing.at",
+          "priceRange": "€€",
+          "image": "https://corneldetailing.com/assets/logo-cornel-detailing.png",
+          "logo": "https://corneldetailing.com/assets/logo-cornel-detailing.png",
+          "address": {
+            "@type": "PostalAddress",
+            "streetAddress": "Willendorferstraße 196",
+            "addressLocality": "Würflach",
+            "postalCode": "2732",
+            "addressRegion": "Niederösterreich",
+            "addressCountry": "AT"
+          },
+          "geo": {
+            "@type": "GeoCoordinates",
+            "latitude": 47.8222,
+            "longitude": 16.0439
+          },
+          "areaServed": [
+            {"@type": "City", "name": "Würflach"},
+            {"@type": "City", "name": "Neunkirchen"},
+            {"@type": "City", "name": "Ternitz"},
+            {"@type": "City", "name": "Gloggnitz"},
+            {"@type": "City", "name": "Wiener Neustadt"},
+            {"@type": "AdministrativeArea", "name": "Bezirk Neunkirchen"},
+            {"@type": "AdministrativeArea", "name": "Niederösterreich"}
+          ],
+          "openingHoursSpecification": {
+            "@type": "OpeningHoursSpecification",
+            "description": "Nur nach Terminvereinbarung – bitte vorab per WhatsApp oder Telefon kontaktieren"
+          },
+          "hasOfferCatalog": {
+            "@type": "OfferCatalog",
+            "name": "Autoaufbereitungs-Pakete",
+            "itemListElement": [
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Spezial-Außenreinigung",
+                  "description": "Lackschonende Handwäsche mit Keramiksprühversiegelung"
+                },
+                "price": "49", "priceCurrency": "EUR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Intensiv-Außenreinigung",
+                  "description": "Tiefenreinigung, Reinigungsknete und einstufige Lackpolitur"
+                },
+                "price": "199", "priceCurrency": "EUR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Spezial-Innenreinigung",
+                  "description": "Vollständige Innenraumreinigung mit Tornador Gun"
+                },
+                "price": "139", "priceCurrency": "EUR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Intensiv-Innenreinigung",
+                  "description": "Tiefe Innenaufbereitung inkl. Dachhimmel und Sitzpflege"
+                },
+                "price": "179", "priceCurrency": "EUR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Glanzpolitur",
+                  "description": "Zweistufige Lackpolitur zur Kratzerentfernung"
+                },
+                "price": "399", "priceCurrency": "EUR"
+              },
+              {
+                "@type": "Offer",
+                "itemOffered": {
+                  "@type": "Service",
+                  "name": "Keramikversiegelung bis 60 Monate",
+                  "description": "Zweischichtige Keramikversiegelung mit Langzeitschutz"
+                },
+                "price": "499", "priceCurrency": "EUR"
+              }
+            ]
+          },
+          "currenciesAccepted": "EUR",
+          "paymentAccepted": "Barzahlung, Banküberweisung",
+          "sameAs": []
+        },
+        {
+          "@type": "WebSite",
+          "@id": "https://corneldetailing.com/#website",
+          "url": "https://corneldetailing.com",
+          "name": "Cornel Detailing",
+          "description": "Autoaufbereitung Würflach – Autoreinigung, Lackpolitur und Keramikversiegelung",
+          "inLanguage": "de-AT",
+          "publisher": {"@id": "https://corneldetailing.com/#business"}
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://corneldetailing.com/#webpage",
+          "url": "https://corneldetailing.com/",
+          "name": "Autoaufbereitung Würflach | Autoreinigung Neunkirchen – Cornel Detailing",
+          "description": "Professionelle Autoaufbereitung in Würflach bei Neunkirchen. Lackpolitur, Keramikversiegelung, Innenreinigung.",
+          "isPartOf": {"@id": "https://corneldetailing.com/#website"},
+          "about": {"@id": "https://corneldetailing.com/#business"},
+          "inLanguage": "de-AT"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://corneldetailing.com/#autoaufbereitung-leistungen",
+          "url": "https://corneldetailing.com/#autoaufbereitung-leistungen",
+          "name": "Autoaufbereitung Leistungen Würflach – Außenreinigung, Innenreinigung, Lackpolitur",
+          "description": "Professionelle Autoaufbereitungs-Leistungen in Würflach: Außenreinigung, Innenreinigung, Lackpolitur und Keramikversiegelung.",
+          "isPartOf": {"@id": "https://corneldetailing.com/#website"},
+          "inLanguage": "de-AT"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://corneldetailing.com/#autoaufbereitung-pakete",
+          "url": "https://corneldetailing.com/#autoaufbereitung-pakete",
+          "name": "Autoaufbereitung Pakete & Preise Würflach – 9 Pakete ab €49",
+          "description": "9 Autoaufbereitungs-Pakete mit transparenten Preisen: von der Außenreinigung ab €49 bis zur Keramikversiegelung.",
+          "isPartOf": {"@id": "https://corneldetailing.com/#website"},
+          "inLanguage": "de-AT"
+        },
+        {
+          "@type": "WebPage",
+          "@id": "https://corneldetailing.com/#faq-autoaufbereitung-wuerflach",
+          "url": "https://corneldetailing.com/#faq-autoaufbereitung-wuerflach",
+          "name": "FAQ Autoaufbereitung Würflach – Häufige Fragen",
+          "description": "Häufig gestellte Fragen zur Autoaufbereitung, Keramikversiegelung und Lackpolitur in Würflach bei Neunkirchen.",
+          "isPartOf": {"@id": "https://corneldetailing.com/#website"},
+          "inLanguage": "de-AT"
+        },
+        {
+          "@type": "BreadcrumbList",
+          "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Startseite", "item": "https://corneldetailing.com/"},
+            {"@type": "ListItem", "position": 2, "name": "Leistungen", "item": "https://corneldetailing.com/#autoaufbereitung-leistungen"},
+            {"@type": "ListItem", "position": 3, "name": "Pakete & Preise", "item": "https://corneldetailing.com/#autoaufbereitung-pakete"},
+            {"@type": "ListItem", "position": 4, "name": "Galerie", "item": "https://corneldetailing.com/galerie.html"},
+            {"@type": "ListItem", "position": 5, "name": "Kontakt", "item": "https://corneldetailing.com/#kontakt"},
+            {"@type": "ListItem", "position": 6, "name": "Standort Würflach", "item": "https://corneldetailing.com/#standort-wuerflach-neunkirchen"},
+            {"@type": "ListItem", "position": 7, "name": "FAQ", "item": "https://corneldetailing.com/#faq-autoaufbereitung-wuerflach"}
+          ]
+        },
+        {
+          "@type": "FAQPage",
+          "mainEntity": [
+            {
+              "@type": "Question",
+              "name": "Wie finde ich das richtige Autoaufbereitungs-Paket?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Jedes Paket zeigt Kategorie, Preis und Nutzen auf einen Blick. Mit 'Mehr Infos' öffnet sich die vollständige Leistungsübersicht."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wie kontaktiere ich Cornel Detailing in Würflach?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Direkt über WhatsApp oder per Telefon. Einfach Paket auswählen und Termin anfragen – schnell und unkompliziert."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Bietet Cornel Detailing Fahrzeug-Abholung an?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja – innerhalb des Bezirkes Neunkirchen holen wir Ihr Fahrzeug ab und stellen es Ihnen nach der Aufbereitung wieder retour."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Warum empfehlen Sie eine Keramikversiegelung?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Keramikversiegelung verbindet sich direkt mit dem Klarlack und wirkt wie eine eigene Schutzschicht. Das Ergebnis: unverkennbarer Glanz, Langzeitschutz bis 60 Monate und Easy-to-clean-Effekt. Geeignet für Klarlack, Mattlack und folierte Fahrzeuge."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wie oft benötige ich eine Lackaufbereitung?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Je nach Beanspruchung und Umwelteinflüssen empfehlen wir eine Lackaufbereitung spätestens alle 12 Monate."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Was bringt eine Lackaufbereitung?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Sie schützt den Lack vor UV-Strahlen, Umwelteinflüssen und Verschmutzungen – und sorgt dauerhaft für tieferen Glanz."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Wie lange dauert eine Innenaufbereitung?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Mindestens 4 Stunden. Je nach Verschmutzungsgrad kann die Aufbereitung auch länger dauern."
+              }
+            },
+            {
+              "@type": "Question",
+              "name": "Gibt es Aufschläge bei starker Verschmutzung?",
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": "Ja. Bei den Innenpaketen 4 und 5 kann bei extremer Verschmutzung ein Aufschlag von bis zu €50,- anfallen."
+              }
+            }
+          ]
         }
-        /* Bright tip */
-        const [ex, ey] = pt(n / STEPS);
-        const pulse = 0.5 + 0.5 * Math.sin(ts * 0.008);
-        ctx.beginPath(); ctx.arc(ex, ey, 4.5, 0, Math.PI * 2);
-        ctx.fillStyle = '#22c55e';
-        ctx.shadowColor = '#22c55e'; ctx.shadowBlur = 16; ctx.fill(); ctx.shadowBlur = 0;
-        ctx.beginPath(); ctx.arc(ex, ey, 9 + pulse * 4, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(34,197,94,${0.22 * prog})`;
-        ctx.lineWidth = 1; ctx.stroke();
-      }
-
-      /* Milestone dots */
-      MT.forEach((mt, idx) => {
-        if (prog < mt) return;
-        const [mx, my] = pt(mt);
-        const r = Math.round(255 + (34 - 255) * mt);
-        const g = Math.round(255 + (197 - 255) * mt);
-        const b = Math.round(255 + (94  - 255) * mt);
-        ctx.beginPath(); ctx.arc(mx, my, 4, 0, Math.PI*2);
-        ctx.fillStyle = `rgb(${r},${g},${b})`;
-        ctx.shadowColor = '#22c55e'; ctx.shadowBlur = 10; ctx.fill(); ctx.shadowBlur = 0;
-        ctx.beginPath(); ctx.arc(mx, my, 7, 0, Math.PI*2);
-        ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`;
-        ctx.lineWidth = 1; ctx.stroke();
-        if (items[idx]) items[idx].classList.add('lit');
-      });
-
-      /* ── Counter: linear progress, clean directional motion blur.
-             Uses vertical text-shadow + subtle translateY to simulate
-             a slot-machine upward counting feel — fades out last 15%. ── */
-      ctr.textContent = prog >= 1 ? '2.40B' : fmtCtr(TOTAL * prog);
-      const mbI = prog < 0.85 ? 1 : (1 - prog) / 0.15;   /* 1 → 0 */
-      if (mbI > 0.015) {
-        const ofs  = (mbI * 6).toFixed(1);
-        const blow = (mbI * 14).toFixed(1);
-        const up   = (mbI * 2.5).toFixed(1);
-        const ubl  = (mbI * 7).toFixed(1);
-        ctr.style.textShadow =
-          `0 ${ofs}px ${blow}px rgba(34,197,94,${(mbI * 0.55).toFixed(2)}),` +
-          `0 -${up}px ${ubl}px rgba(34,197,94,${(mbI * 0.22).toFixed(2)})`;
-        ctr.style.transform = `translateY(-${(mbI * 3.5).toFixed(1)}px)`;
-      } else {
-        ctr.style.textShadow = '';
-        ctr.style.transform  = '';
-      }
-
-      if (prog < 1) {
-        aid = requestAnimationFrame(frame);
-      } else {
-        ctr.textContent      = '2.40B';
-        ctr.style.textShadow = '';
-        ctr.style.transform  = '';
-        done = true;
-      }
+      ]
     }
-    aid = requestAnimationFrame(frame);
-  }
+    </script>
 
-  /* Draw final state without re-animating (used after animation completes) */
-  function drawStatic(){
-    resize();
-    ctx.clearRect(0, 0, W, H);
-    drawBase();
-    ctx.lineCap = 'round'; ctx.lineJoin = 'round';
-    for (let i = 0; i < STEPS; i++){
-      const ta = i/STEPS, tb = (i+1)/STEPS;
-      const [x0,y0] = pt(ta), [x1,y1] = pt(tb);
-      const r = Math.round(255+(34 -255)*tb);
-      const g = Math.round(255+(197-255)*tb);
-      const b = Math.round(255+(94 -255)*tb);
-      ctx.beginPath();
-      ctx.strokeStyle = `rgb(${r},${g},${b})`;
-      ctx.lineWidth   = 1.4 + tb * 3.6;
-      ctx.shadowColor = `rgba(34,197,94,${tb*0.55})`;
-      ctx.shadowBlur  = tb * 16;
-      ctx.moveTo(x0,y0); ctx.lineTo(x1,y1); ctx.stroke();
-    }
-    ctx.shadowBlur = 0;
-    /* Static comet (tail frozen at end) */
-    const TAIL = 10;
-    for (let gi = TAIL; gi > 0; gi--){
-      const gt = Math.max(0, 1 - gi*(2/STEPS));
-      const [gx,gy] = pt(gt);
-      const alpha  = ((TAIL-gi+1)/TAIL)*0.45;
-      const radius = 1.5 + ((TAIL-gi+1)/TAIL)*4.5;
-      ctx.beginPath(); ctx.arc(gx,gy,radius,0,Math.PI*2);
-      ctx.fillStyle = `rgba(34,197,94,${alpha})`;
-      ctx.shadowColor = 'rgba(34,197,94,0.6)';
-      ctx.shadowBlur  = (TAIL-gi+1)*3;
-      ctx.fill(); ctx.shadowBlur = 0;
-    }
-    const [ex,ey] = pt(1);
-    ctx.beginPath(); ctx.arc(ex,ey,4.5,0,Math.PI*2);
-    ctx.fillStyle = '#22c55e'; ctx.shadowColor='#22c55e'; ctx.shadowBlur=16; ctx.fill(); ctx.shadowBlur=0;
-    ctx.beginPath(); ctx.arc(ex,ey,11,0,Math.PI*2);
-    ctx.strokeStyle='rgba(34,197,94,0.22)'; ctx.lineWidth=1; ctx.stroke();
-    /* Milestone dots */
-    MT.forEach((mt,idx) => {
-      const [mx,my] = pt(mt);
-      const r = Math.round(255+(34 -255)*mt);
-      const g = Math.round(255+(197-255)*mt);
-      const b = Math.round(255+(94 -255)*mt);
-      ctx.beginPath(); ctx.arc(mx,my,4,0,Math.PI*2);
-      ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.shadowColor='#22c55e'; ctx.shadowBlur=10; ctx.fill(); ctx.shadowBlur=0;
-      ctx.beginPath(); ctx.arc(mx,my,7,0,Math.PI*2);
-      ctx.strokeStyle=`rgba(${r},${g},${b},0.3)`; ctx.lineWidth=1; ctx.stroke();
-      if (items[idx]) items[idx].classList.add('lit');
-    });
-    ctr.textContent='2.40B'; ctr.style.textShadow=''; ctr.style.transform='';
-  }
+    <!-- ═══ PERFORMANCE HINTS ════════════════════════════════════════════ -->
+    <link rel="preconnect" href="https://www.google.com" />
+    <link rel="preconnect" href="https://maps.googleapis.com" />
+    <link rel="dns-prefetch" href="https://maps.gstatic.com" />
 
-  /* Trigger only when graph section scrolls into view — fires exactly once */
-  const obs = new IntersectionObserver(es => {
-    es.forEach(e => {
-      if (e.isIntersecting && !started){
-        started = true;
-        resize();
-        animate();
-        obs.unobserve(e.target);
-      }
-    });
-  }, { threshold: .08 });
-  obs.observe(document.getElementById('graph'));
+    <meta name="theme-color" content="#16181c" />
+    <link rel="icon" type="image/png" href="assets/favicon.png" />
+    <link rel="stylesheet" href="styles.css" />
+    <script src="site-config.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="site-shell">
 
-  /* On resize: RAF loop handles it mid-animation; drawStatic handles it post-completion.
-     Never restart animate() — that was causing the mobile re-trigger bug. */
-  window.addEventListener('resize', () => {
-    if (!started) return;
-    if (done) drawStatic();
-    /* else: the running RAF loop detects width change and calls resize() inline */
-  });
-})();
+      <header class="topbar">
+        <a class="brand" href="#top" aria-label="Cornel Detailing Startseite">
+          <img src="assets/logo-cornel-detailing.png" alt="Cornel Detailing Logo" />
+          <span>
+            <strong>Cornel Detailing</strong>
+            <small>Premium Detailing nähe Neunkirchen</small>
+          </span>
+        </a>
 
-/* ── PROCESS TIMELINE ───────────────────────────────── */
-(function(){
-  const body  = document.getElementById('proc-body');
-  const fill  = document.getElementById('proc-fill');
-  if (!body || !fill) return;
+        <nav class="topnav" id="topnav" aria-label="Hauptnavigation">
+          <span class="nav-pill" aria-hidden="true" id="navPill"></span>
+          <a href="#autoaufbereitung-leistungen">Leistungen</a>
+          <a href="#autoaufbereitung-pakete">Pakete</a>
+          <a href="galerie.html">Galerie</a>
+          <a href="#kontakt">Kontakt</a>
+          <span class="topnav-divider" aria-hidden="true"></span>
+          <a class="topnav-cta" data-whatsapp-link href="#kontakt" aria-label="Termin via WhatsApp anfragen">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+            Termin anfragen
+          </a>
+        </nav>
 
-  const N     = 5;
-  const steps = [];
-  const dots  = [];
-  const cards = [];
-  for (let i = 0; i < N; i++){
-    steps.push(document.getElementById('proc-s' + i));
-    dots.push(document.getElementById('proc-d' + i));
-    cards.push(document.getElementById('proc-c' + i));
-  }
+        <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
+      </header>
 
-  /* ── 1. Reveal cards as they enter viewport (slide in from left) ── */
-  const revObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('ps-in');
-        revObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.18 });
-  steps.forEach(s => s && revObs.observe(s));
+      <main id="top">
+        <section class="hero reveal">
+          <div class="hero-bg"></div>
+          <div class="hero-content">
+            <span class="hero-location">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+              Würflach · Neunkirchen
+            </span>
+            <h1>Professionelle Autoaufbereitung.</h1>
+            <p class="hero-sub">Lackpolitur · Keramikversiegelung · Innenreinigung.</p>
 
-  /* ── 2. Scroll-driven thread fill + dot / card activation ── */
-  function update(){
-    const rect  = body.getBoundingClientRect();
-    const bodyH = body.offsetHeight;
-    const vh    = window.innerHeight;
+            <div class="hero-actions">
+              <a class="button button-whatsapp hero-cta-primary" data-whatsapp-link href="#kontakt">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z" />
+                </svg>
+                <span>Termin anfragen</span>
+              </a>
+              <a class="hero-link hero-link--pulse" href="#autoaufbereitung-pakete">
+                <span>9 Pakete ab</span>
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+              </a>
+            </div>
 
-    /* fill: 0 when top of body is at 70vh, 1 when bottom of body is at 70vh */
-    const progress = Math.max(0, Math.min(1,
-      (vh * 0.70 - rect.top) / bodyH
-    ));
-    fill.style.height = (progress * 100).toFixed(2) + '%';
+            <div class="hero-divider"></div>
+            <p class="hero-note">Termine nur nach Vereinbarung – bitte vorab kontaktieren</p>
+          </div>
+        </section>
 
-    /* Activate each dot + card when the dot itself passes 65vh */
-    dots.forEach((dot, i) => {
-      if (!dot || !steps[i]) return;
-      const sr   = steps[i].getBoundingClientRect();
-      const dotY = sr.top + 24;   /* offset to dot centre */
-      const lit  = dotY < vh * 0.65;
-      dot.classList.toggle('dot-lit',  lit);
-      cards[i] && cards[i].classList.toggle('card-lit', lit);
-    });
-  }
+        <section class="section reveal" id="autoaufbereitung-leistungen" aria-label="Autoaufbereitung Leistungen Würflach">
+          <div class="section-heading">
+            <span class="section-tag">Leistungen</span>
+            <h2>Was wir für Ihr Fahrzeug tun.</h2>
+          </div>
 
-  window.addEventListener('scroll',  update, { passive: true });
-  window.addEventListener('resize',  update, { passive: true });
-  update(); /* run once on load */
-})();
+          <div class="value-grid">
+            <article class="value-card">
+              <span class="icon-badge icon-accent">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M12 2L6 10a6 6 0 1 0 12 0L12 2z"/>
+                </svg>
+              </span>
+              <h3>Außen- und Innenreinigung</h3>
+              <p>Handwäsche, Felgen, Innenraum – komplett sauber aufbereitet.</p>
+            </article>
 
-/* ── GALLERY SLIDESHOW ──────────────────────────────── */
-(function(){
-  const track    = document.getElementById('galTrack');
-  const dots     = document.querySelectorAll('#galDots .gal-dot');
-  const slides   = document.querySelectorAll('#galTrack .gal-slide');
-  const capTxt   = document.getElementById('galCapTxt');
-  const countEl  = document.getElementById('galCount');
-  const progress = document.getElementById('galProgress');
-  const stage    = document.getElementById('galStage');
-  const rightEl  = document.getElementById('galRight');
-  const galNum   = document.getElementById('galNum');
-  const galTag   = document.getElementById('galTag');
-  const galDesc  = document.getElementById('galDesc');
-  if (!track || !slides.length) return;
+            <article class="value-card">
+              <span class="icon-badge icon-gold">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="3"/>
+                  <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4"/>
+                </svg>
+              </span>
+              <h3>Lackpolitur und Versiegelung</h3>
+              <p>Kratzerentfernung und Keramikschutz mit bis zu 60 Monaten Standzeit.</p>
+            </article>
 
-  const TOTAL    = slides.length;
-  const INTERVAL = 4800;  /* ms between auto-advance */
+            <article class="value-card">
+              <span class="icon-badge icon-dark">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="17" rx="2"/>
+                  <path d="M3 9h18M8 2v4M16 2v4"/>
+                </svg>
+              </span>
+              <h3>Termin in wenigen Minuten</h3>
+              <p>Per WhatsApp oder Telefon – direkt, ohne Formular, ohne Wartezeit.</p>
+            </article>
+          </div>
+        </section>
 
-  /* Per-image stat data matching slide order */
-  const stats = [
-    { num: '112M',  tag: 'TikTok Views',     desc: 'Single video, organic viral reach'         },
-    { num: '50M',   tag: 'TikTok Views',     desc: 'Viral short-form clip'                     },
-    { num: '28M',   tag: 'Views',            desc: 'Across platforms, one campaign'            },
-    { num: '18M',   tag: 'Views',            desc: 'Clip campaign milestone'                   },
-    { num: '500K',  tag: 'Subscribers',      desc: 'YouTube channel growth'                   },
-    { num: '400K',  tag: 'Followers on X',   desc: 'Twitter / X audience'                     },
-    { num: '2',     tag: 'Play Buttons',     desc: 'YouTube Silver and Gold earned'            },
-    { num: '263K',  tag: 'TikTok Followers', desc: 'Organic audience growth'                  },
-  ];
+        <section class="section section-packages reveal" id="autoaufbereitung-pakete" aria-label="Autoaufbereitung Pakete Preise Würflach">
+          <div class="section-heading section-heading-inline">
+            <div>
+              <span class="section-tag">Pakete</span>
+              <h2>Klare Pakete. Transparente Preise.</h2>
+            </div>
+            <p class="section-note" id="priceNote">
+              Alle Preise in EUR. Kleinunternehmerregelung gemäß § 6 Abs. 1 Z 27 UStG.
+            </p>
+          </div>
 
-  /* Caption data (footer bar) */
-  const captions = [
-    { strong: '112M',  label: 'TikTok Views'      },
-    { strong: '50M',   label: 'TikTok Views'       },
-    { strong: '28M',   label: 'Views'              },
-    { strong: '18M',   label: 'Views'              },
-    { strong: '500K',  label: 'Subscribers'        },
-    { strong: '400K',  label: 'on X'               },
-    { strong: '',      label: 'YouTube Play Buttons'},
-    { strong: '',      label: 'Audience'            },
-  ];
+          <div class="package-grid" id="packagesGrid" aria-live="polite"></div>
+        </section>
 
-  let current  = 0;
-  let timer    = null;
-  let progRaf  = null;
-  let progStart= null;
-  let paused   = false;
-  let inView   = false;
+        <!-- ── REVIEWS ─────────────────────────────────── -->
+        <section class="section reviews-section reveal" id="kundenbewertungen" aria-label="Kundenbewertungen Google">
+          <div class="section-heading">
+            <span class="section-tag">Bewertungen</span>
+            <h2>Das sagen unsere Kunden.</h2>
+            <p>Echte Google-Bewertungen aus Würflach und Neunkirchen.</p>
+            <div class="reviews-rating-summary" aria-label="Durchschnittsbewertung">
+              <span class="reviews-stars-big" aria-hidden="true">★★★★★</span>
+              <strong>5,0</strong>
+              <span>auf Google</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex-shrink:0">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+            </div>
+          </div>
+          <div class="reviews-marquee" aria-hidden="true">
+            <div class="reviews-track" id="reviewsTrack"></div>
+          </div>
+          <div class="reviews-cta">
+            <a class="button button-secondary reviews-leave-btn" href="https://g.page/r/CR0HTrLjFzNJEAE/review" target="_blank" rel="noopener noreferrer">
+              <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+              </svg>
+              Bewertung hinterlassen
+            </a>
+          </div>
+        </section>
 
-  /* ── Render active slide ── */
-  function goTo(idx, resetTimer){
-    slides[current].classList.remove('active');
-    current = (idx + TOTAL) % TOTAL;
-    slides[current].classList.add('active');
-    track.style.transform = `translateX(-${current * 100}%)`;
-    /* Dots */
-    dots.forEach((d, i) => d.classList.toggle('active', i === current));
-    /* Footer caption */
-    const c = captions[current];
-    if (capTxt) capTxt.innerHTML = c.strong
-      ? `<strong>${c.strong}</strong> ${c.label}`
-      : c.label;
-    /* Counter (removed from UI — guard for safety) */
-    if (countEl) countEl.textContent =
-      String(current + 1).padStart(2, '0') + ' / ' + String(TOTAL).padStart(2, '0');
-    /* Right panel stat swap */
-    if (rightEl && galNum) {
-      rightEl.classList.add('swapping');
-      setTimeout(() => {
-        const s = stats[current];
-        galNum.textContent  = s.num;
-        galTag.textContent  = s.tag;
-        galDesc.textContent = s.desc;
-        rightEl.classList.remove('swapping');
-      }, 220);
-    }
-    if (resetTimer !== false) restartTimer();
-  }
+        <!-- ── VIDEO SHOWCASE ──────────────────────────────── -->
+        <section class="video-showcase reveal" id="video-showcase" aria-label="Cornel Detailing – Fahrzeugaufbereitung im Einsatz">
+          <div class="video-showcase-layout">
 
-  /* ── Progress bar animation ── */
-  function startProgress(){
-    cancelAnimationFrame(progRaf);
-    progress.style.transition = 'none';
-    progress.style.width = '0%';
-    progStart = performance.now();
-    function tick(now){
-      const pct = Math.min((now - progStart) / INTERVAL * 100, 100);
-      progress.style.width = pct + '%';
-      if (pct < 100) progRaf = requestAnimationFrame(tick);
-    }
-    progRaf = requestAnimationFrame(tick);
-  }
+            <!-- Video — LEFT -->
+            <div class="video-showcase-inner">
+              <video
+                class="video-showcase-player"
+                id="showcaseVideo"
+                src="assets/gallery/neunkirchen_video_2026-03-18.mp4"
+                muted
+                loop
+                playsinline
+                preload="none"
+                aria-hidden="true"
+              ></video>
+              <div class="video-showcase-overlay" aria-hidden="true"></div>
+              <div class="video-showcase-content">
+                <span class="section-tag">In Aktion</span>
+                <h2>Professionelle Aufbereitung –<br>sichtbares Ergebnis.</h2>
+                <p>Aus unserer Aufbereitungsstation in Würflach.</p>
+              </div>
+              <button class="video-toggle-btn" id="videoToggle" aria-label="Video pausieren" type="button">
+                <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+              </button>
+            </div>
 
-  function stopProgress(){
-    cancelAnimationFrame(progRaf);
-    progress.style.transition = 'width .2s ease';
-    progress.style.width = '0%';
-  }
+            <!-- All process steps — RIGHT: vertical timeline -->
+            <aside class="video-process-panel">
 
-  /* ── Timer ── */
-  function restartTimer(){
-    clearInterval(timer);
-    startProgress();
-    if (!paused && inView){
-      timer = setInterval(() => goTo(current + 1), INTERVAL);
-    }
-  }
+              <div class="video-process-step vps-1">
+                <div class="vps-dot" aria-hidden="true"></div>
+                <div class="vps-card">
+                  <div class="vps-card-top">
+                    <span class="vps-num">01</span>
+                    <span class="vps-stage">Vorher</span>
+                  </div>
+                  <h3 class="vps-title">Verschmutzt &amp; zerkratzt</h3>
+                  <p class="vps-desc">Salz, Swirls und Kratzer im Lack.</p>
+                </div>
+              </div>
 
-  function pauseFor(ms){
-    paused = true;
-    stopProgress();
-    clearInterval(timer);
-    setTimeout(() => {
-      paused = false;
-      if (inView) restartTimer();
-    }, ms);
-  }
+              <div class="video-process-step vps-2">
+                <div class="vps-dot" aria-hidden="true"></div>
+                <div class="vps-card">
+                  <div class="vps-card-top">
+                    <span class="vps-num">02</span>
+                    <span class="vps-stage">Aufbereitung</span>
+                  </div>
+                  <h3 class="vps-title">Poliert &amp; gereinigt</h3>
+                  <p class="vps-desc">Tiefenreinigung, Politur und Maschine.</p>
+                </div>
+              </div>
 
-  /* ── Dot / arrow controls ── */
-  dots.forEach(d => {
-    d.addEventListener('click', () => {
-      goTo(+d.dataset.i);
-      pauseFor(6000);
-    });
-  });
-  document.getElementById('galPrev').addEventListener('click', () => {
-    goTo(current - 1); pauseFor(6000);
-  });
-  document.getElementById('galNext').addEventListener('click', () => {
-    goTo(current + 1); pauseFor(6000);
-  });
+              <div class="video-process-step vps-3">
+                <div class="vps-dot" aria-hidden="true"></div>
+                <div class="vps-card">
+                  <div class="vps-card-top">
+                    <span class="vps-num">03</span>
+                    <span class="vps-stage">Nachher</span>
+                  </div>
+                  <h3 class="vps-title">Versiegelt &amp; geschützt</h3>
+                  <p class="vps-desc">Bis zu 3 Jahre Keramikschutz.</p>
+                </div>
+              </div>
 
-  /* ── Touch / swipe ── */
-  let tx0 = null;
-  stage.addEventListener('touchstart', e => { tx0 = e.touches[0].clientX; }, { passive: true });
-  stage.addEventListener('touchend',   e => {
-    if (tx0 === null) return;
-    const dx = e.changedTouches[0].clientX - tx0;
-    tx0 = null;
-    if (Math.abs(dx) < 38) return;
-    goTo(dx < 0 ? current + 1 : current - 1);
-    pauseFor(6000);
-  }, { passive: true });
+              <div class="vps-benefit">
+                <div class="vps-benefit__stars" aria-hidden="true">★★★★★</div>
+                <div class="vps-benefit__row">
+                  <strong>5,0</strong>
+                  <span>auf Google</span>
+                </div>
+                <span class="vps-benefit__sub">3+ Jahre · Bezirk&nbsp;Neunkirchen</span>
+              </div>
 
-  /* ── Start only when section enters viewport ── */
-  const obs = new IntersectionObserver(es => {
-    es.forEach(e => {
-      inView = e.isIntersecting;
-      if (inView && !paused) restartTimer();
-      else { clearInterval(timer); stopProgress(); }
-    });
-  }, { threshold: 0.25 });
-  obs.observe(document.getElementById('gallery'));
-})();
-</script>
-</body>
+            </aside>
+
+          </div>
+        </section>
+
+        <section class="glass-row reveal">
+          <div class="glass-card glass-card-half">
+            <span class="section-tag">Galerie</span>
+            <h2>Referenzarbeiten und Ergebnisse.</h2>
+            <p>Lackpolitur, Innenreinigung, Versiegelung – in Bildern.</p>
+            <a class="button button-secondary" href="galerie.html">Galerie öffnen</a>
+          </div>
+
+          <div class="glass-card glass-card-half" id="kontakt" aria-label="Termin anfragen Autoaufbereitung Würflach">
+            <span class="section-tag">Kontakt</span>
+            <h2>Termin anfragen.</h2>
+            <p>Einfach melden – wir antworten schnell und unkompliziert.</p>
+            <div class="glass-actions">
+              <a class="button button-whatsapp" data-whatsapp-link href="#kontakt">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z" />
+                </svg>
+                <span>Per WhatsApp anfragen</span>
+              </a>
+              <a class="button button-secondary" data-call-link href="#kontakt">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z" />
+                </svg>
+                <span>Jetzt anrufen</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <section class="section-glass reveal" id="standort-wuerflach-neunkirchen" aria-label="Standort Autoaufbereitung Würflach Neunkirchen">
+          <div class="glass-card location-card">
+            <div class="location-info">
+              <span class="section-tag">Standort</span>
+              <h2>Würflach bei Neunkirchen.</h2>
+              <p>Willendorferstraße 196, 2732 Würflach</p>
+              <p class="location-area">Kunden aus dem gesamten <strong>Bezirk Neunkirchen</strong> – inkl. Abholung.</p>
+              <a class="button button-secondary" href="https://share.google/4xZbkb4mKg28uwl6d" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;fill:currentColor;flex-shrink:0">
+                  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
+                </svg>
+                <span>In Google Maps öffnen</span>
+              </a>
+            </div>
+            <div class="location-map">
+              <iframe
+                src="https://www.google.com/maps?q=Willendorferstra%C3%9Fe+196,+2732+W%C3%BCrflach,+%C3%96sterreich&output=embed"
+                width="100%" height="100%" style="border:0;border-radius:var(--r-lg);" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+              </iframe>
+            </div>
+          </div>
+        </section>
+
+        <section class="section reveal" id="faq-autoaufbereitung-wuerflach" aria-label="FAQ Autoaufbereitung Würflach">
+          <div class="section-heading">
+            <span class="section-tag">FAQ</span>
+            <h2>Häufige Fragen.</h2>
+          </div>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>Wie finde ich das richtige Paket?</summary>
+              <p>
+                Die erste Ebene zeigt Kategorie, Preis und Nutzen. Mit
+                „Mehr Infos“ öffnet sich direkt die komplette Leistungsübersicht
+                des jeweiligen Pakets.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Wie kontaktiere ich Cornel Detailing am schnellsten?</summary>
+              <p>
+                Direkt über WhatsApp oder per Telefon. Einfach Paket
+                auswählen und Termin anfragen – schnell und unkompliziert.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Gibt es Aufschläge bei starker Verschmutzung?</summary>
+              <p>
+                Ja. Bei den Innenpaketen 4 und 5 kann bei extremer Verschmutzung
+                ein Aufschlag von bis zu €50,- anfallen.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Bieten Sie Fahrzeug-Abholung an?</summary>
+              <p>
+                Ja – innerhalb des Bezirkes Neunkirchen holen wir Ihr Fahrzeug ab
+                und stellen es Ihnen nach der Aufbereitung wieder retour.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Warum empfehlen Sie eine Keramikversiegelung?</summary>
+              <p>
+                Keramikversiegelung verbindet sich direkt mit dem Klarlack und wirkt
+                wie eine eigene Schutzschicht. Das Ergebnis: unverkennbarer Glanz,
+                Langzeitschutz bis 60 Monate und ein Easy-to-clean-Effekt.
+                Geeignet für Klarlack, Mattlack und folierte Fahrzeuge.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Wie oft benötige ich eine Lackaufbereitung?</summary>
+              <p>
+                Je nach Beanspruchung und Umwelteinflüssen empfehlen wir eine
+                Lackaufbereitung spätestens alle 12 Monate.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Was bringt eine Lackaufbereitung?</summary>
+              <p>
+                Sie schützt den Lack vor UV-Strahlen, Umwelteinflüssen und
+                Verschmutzungen – und sorgt dauerhaft für tieferen Glanz.
+              </p>
+            </details>
+
+            <details class="faq-item">
+              <summary>Wie lange dauert eine Innenaufbereitung?</summary>
+              <p>
+                Mindestens 4 Stunden. Je nach Verschmutzungsgrad kann die
+                Aufbereitung auch länger dauern.
+              </p>
+            </details>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <div>
+          <strong>Cornel Detailing</strong>
+          <p id="footerText">Professionelle Autoaufbereitung in Würflach, Neunkirchen und Umgebung.</p>
+        </div>
+
+        <div class="footer-links">
+          <a href="/">Startseite</a>
+          <a href="galerie.html">Galerie</a>
+          <a href="impressum.html">Impressum</a>
+          <a href="datenschutz.html">Datenschutz</a>
+        </div>
+      </footer>
+
+      <div class="mobile-cta-backdrop" aria-hidden="true"></div>
+      <div class="mobile-cta"></div>
+    </div>
+  </body>
 </html>
