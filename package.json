@@ -1,0 +1,20 @@
+{
+  "name": "cornel-detailing",
+  "version": "1.0.0",
+  "description": "Cornel Detailing - Autoaufbereitung Website",
+  "type": "module",
+  "scripts": {
+    "dev": "npx http-server -p 3000",
+    "build": "echo 'Static site - no build required'"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.1"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "autoaufbereitung",
+    "car-detailing"
+  ],
+  "author": "Cornel Detailing",
+  "license": "ISC"
+}
