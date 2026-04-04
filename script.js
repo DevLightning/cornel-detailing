@@ -264,68 +264,67 @@ const projects = [
 
 const reviews = [
   {
-    name: "Harald Altmann",
-    initial: "H",
-    color: "#3b82c8",
+    name: "daf ktm",
+    photo: "https://lh3.googleusercontent.com/a-/ALV-UjX3YfHQBdYpNrNBfux_QISZmF8qyVTXfmRepKicSumiJxUPtCM=w96-h96-p-rp-mo-br100",
     rating: 5,
-    text: "Ich habe für das Auto meiner Tochter eine Innen- und Außenreinigung durchführen lassen und bin wirklich sehr zufrieden mit dem Ergebnis. Das Fahrzeug sah danach aus wie neu – innen gründlich gereinigt, frisch duftend und außen perfekt aufbereitet. Besonders positiv hervorheben möchte ich die Sorgfalt und die Liebe zum Detail. Der Service war freundlich, zuverlässig und professionell. Ich kann diesen Reinigungsservice auf jeden Fall weiterempfehlen und komme gerne wieder!",
-    date: "vor 1 Tag",
-  },
-  {
-    name: "Marius Silviu Anghelache",
-    initial: "M",
-    color: "#25b956",
-    rating: 5,
-    text: "The best !",
-    date: "vor 2 Tagen",
-  },
-  {
-    name: "Deian Mihai",
-    initial: "D",
-    color: "#e05c44",
-    rating: 5,
-    text: "Professionell und schnell 👍",
-    date: "vor 2 Tagen",
-  },
-  {
-    name: "Stefan Gruber",
-    initial: "S",
-    color: "#7c5cbf",
-    rating: 5,
-    text: "Absolute Empfehlung! Mein BMW sah nach der Keramikversiegelung aus wie frisch aus dem Showroom. Man merkt sofort, dass hier jemand mit echter Leidenschaft arbeitet – jedes Detail stimmt.",
+    text: "Tolle Arbeit!",
     date: "vor 1 Woche",
   },
   {
-    name: "Anna Berger",
-    initial: "A",
-    color: "#e07c3b",
+    name: "Anula Dev",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocJbUibow_E72CizO_dQ-0fDTv6e6nV1tTOirdHunNGgVXMPUA=w96-h96-p-rp-mo-br100",
     rating: 5,
-    text: "Super zufrieden mit der Innenreinigung! Der Geruch war weg, alles makellos sauber. Habe meinen Golf noch nie so frisch erlebt. Preis-Leistung ist wirklich top.",
+    text: "Super Aufbereitung!",
+    date: "vor 1 Woche",
+  },
+  {
+    name: "Marius Silviu Anghelache",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocL9jyeE70SCd0BV3ZArDGU8OddSioYkrvowzvv9QlTsQzohyw=w96-h96-p-rp-mo-br100",
+    rating: 5,
+    text: "Das Beste!",
     date: "vor 2 Wochen",
   },
   {
-    name: "Thomas Reiter",
-    initial: "T",
-    color: "#2196a8",
+    name: "Liviu Cazacu",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocLtbJRqEfbh6kS7BiQTWo-drT0dUkBAlUVy_SE1NrAF2DWZFA=w96-h96-p-rp-mo-br100",
     rating: 5,
-    text: "Hatte einen hartnäckigen Kratzer im Lack – nach der Politur kaum noch zu sehen. Saubere Arbeit, pünktlich, unkomplizierte Terminvereinbarung per WhatsApp. Gerne wieder!",
-    date: "vor 3 Wochen",
+    text: "corneldetailing arbeitet sehr sauber und leistet wirklich hervorragende Arbeit mit großer Liebe zum Detail. Ich kann ihn wärmstens empfehlen und komme definitiv wieder! 🎉",
+    date: "vor 5 Tagen",
   },
   {
-    name: "Markus Hofer",
-    initial: "M",
-    color: "#c84b7a",
+    name: "Alina Maldea",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocKnpyTwB-hjD_60J3doBehE5a2Lj75SnIMhUOAg1nPdQ2V1Vw=w96-h96-p-rp-mo-br100",
     rating: 5,
-    text: "Komplettaufbereitung innen und außen – Ergebnis war beeindruckend. Mein Auto ist 8 Jahre alt und sieht jetzt wieder richtig gut aus. Danke für die tolle Arbeit!",
-    date: "vor 1 Monat",
+    text: "Mein Auto ist wieder frisch, riecht toll und sieht aus wie neu. Cornel Detailing ist erstklassig.",
+    date: "vor 5 Tagen",
   },
   {
-    name: "Lisa Stangl",
-    initial: "L",
-    color: "#3b8a4f",
+    name: "Claudia Strommer",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocJec7E1PmMFWf08o6n6Y44_bWJWKlOqLhoVakAXaaWji7R6dA=w96-h96-p-rp-mo-br100",
     rating: 5,
-    text: "Sehr professionell und gewissenhaft. Ich bin extra aus Ternitz hergefahren und es hat sich definitiv gelohnt. Das Auto glänzt wie am ersten Tag. Vielen Dank!",
-    date: "vor 1 Monat",
+    text: "Mein Auto sieht nach jahrelangem Gebrauch wieder wie neu aus! Alles ist absolut perfekt! Vielen Dank!",
+    date: "vor 6 Tagen",
+  },
+  {
+    name: "Alex Iancu",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocJmJzaHaAGUrJquC8zK1O2Ud-VM_W6sWr26sxLbcB_JSC6yHw=w96-h96-p-rp-mo-br100",
+    rating: 5,
+    text: "Er hat mein Auto sehr professionell aufbereitet. Der Beste.",
+    date: "vor 6 Tagen",
+  },
+  {
+    name: "Legacy P",
+    photo: "https://lh3.googleusercontent.com/a-/ALV-UjVXlHyXnWGRlgfgiY2vv9NmI4AzmyHE-ja_q2omZuIQLiuHK8aS=w96-h96-p-rp-mo-br100",
+    rating: 5,
+    text: "Beste Autoaufbereitung!",
+    date: "vor 1 Woche",
+  },
+  {
+    name: "Teodor Codrin Murariu",
+    photo: "https://lh3.googleusercontent.com/a-/ALV-UjX0Jzug8VTe3SG3IkG1EPX0g7Ig5WPVMnGRmFWglTEl4YlZnww=w96-h96-p-rp-mo-br100",
+    rating: 5,
+    text: "Danke für die Autowäsche. Ein echter Profi.",
+    date: "vor 1 Woche",
   },
 ];
 
@@ -462,7 +461,8 @@ function renderPackages() {
     const groupClass = catClass[cat] || "";
 
     const rowsHtml = pkgs.map((pkg) => {
-      const items = pkg.items.map((item) => `<li><span class="pkg-check" aria-hidden="true">✓</span>${item}</li>`).join("");
+      const checkSvg = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
+      const items = pkg.items.map((item) => `<li><span class="pkg-check" aria-hidden="true">${checkSvg}</span>${item}</li>`).join("");
       const note = pkg.note ? `<p class="package-note">${pkg.note}</p>` : "";
 
       return `
@@ -629,7 +629,7 @@ function renderReviews() {
   const cardHtml = (r) => `
     <div class="review-card">
       <div class="review-card-top">
-        <div class="review-avatar" style="background:${r.color}">${r.initial}</div>
+        <img class="review-avatar" src="${r.photo}" alt="${r.name}" loading="lazy">
         <div class="review-meta">
           <strong>${r.name}</strong>
           <span class="review-date">${r.date}</span>
@@ -936,6 +936,12 @@ function setupVideoShowcase() {
   });
 }
 
+function setupReviewCount() {
+  document.querySelectorAll("#heroReviewCount, #reviewStatCount").forEach((el) => {
+    el.textContent = "30+";
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   showDevBanner();
   renderFeaturedProjects();
@@ -954,4 +960,5 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNavPill();
   setupGalleryFilter();
   setupVideoShowcase();
+  setupReviewCount();
 });

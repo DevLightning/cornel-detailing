@@ -79,8 +79,8 @@
           "telephone": "+43 676 4391253",
           "email": "kontakt@corneldetailing.at",
           "priceRange": "€€",
-          "image": "https://corneldetailing.com/assets/logo-cornel-detailing.png",
-          "logo": "https://corneldetailing.com/assets/logo-cornel-detailing.png",
+          "image": "https://corneldetailing.com/assets/logocornel_new.png",
+          "logo": "https://corneldetailing.com/assets/logocornel_new.png",
           "address": {
             "@type": "PostalAddress",
             "streetAddress": "Willendorferstraße 196",
@@ -322,7 +322,7 @@
 
       <header class="topbar">
         <a class="brand" href="#top" aria-label="Cornel Detailing Startseite">
-          <img src="assets/logo-cornel-detailing.png" alt="Cornel Detailing Logo" />
+          <img src="assets/logocornel_new.png" alt="Cornel Detailing Logo" />
           <span>
             <strong>Cornel Detailing</strong>
             <small>Premium Detailing nähe Neunkirchen</small>
@@ -366,19 +366,22 @@
                 <span>Termin anfragen</span>
               </a>
               <a class="hero-link hero-link--pulse" href="#autoaufbereitung-pakete">
-                <span>9 Pakete ab</span>
+                <span>Alle Pakete ansehen</span>
                 <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
               </a>
             </div>
 
             <div class="hero-trust-row" aria-label="Vertrauenssignale">
-              <span class="htb"><span class="htb-stars" aria-hidden="true">★★★★★</span>&nbsp;5,0 Google</span>
+              <span class="htb"><span class="htb-stars" aria-hidden="true">★★★★★</span>&nbsp;5,0 · <span id="heroReviewCount">30+</span>&nbsp;Bewertungen</span>
               <span class="htb-sep" aria-hidden="true"></span>
               <span class="htb">60 Mon. Schutz</span>
               <span class="htb-sep" aria-hidden="true"></span>
               <span class="htb">Abholung inkl.</span>
             </div>
-            <p class="hero-note">Nur nach Vereinbarung – bitte vorab kontaktieren</p>
+            <div class="hero-availability" aria-live="polite">
+              <span class="availability-dot" aria-hidden="true"></span>
+              Termine verfügbar – jetzt anfragen
+            </div>
           </div>
         </section>
 
@@ -437,12 +440,22 @@
           <div class="package-grid" id="packagesGrid" aria-live="polite"></div>
         </section>
 
+        <!-- ── MID-PAGE CTA ──────────────────────────── -->
+        <div class="mid-cta reveal">
+          <p class="mid-cta-text">Paket gefunden?</p>
+          <a class="button button-whatsapp mid-cta-btn" data-whatsapp-link href="#kontakt">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+            <span>Termin per WhatsApp anfragen</span>
+          </a>
+          <span class="mid-cta-note">Antwort in wenigen Stunden · Keine Verpflichtung</span>
+        </div>
+
         <!-- ── REVIEWS ─────────────────────────────────── -->
         <section class="section reviews-section reveal" id="kundenbewertungen" aria-label="Kundenbewertungen Google">
           <div class="section-heading">
             <span class="section-tag">Bewertungen</span>
             <h2>Das sagen unsere Kunden.</h2>
-            <p>Echte Google-Bewertungen aus Würflach und Neunkirchen.</p>
+            <p>Über <strong id="reviewStatCount">30+</strong> zufriedene Kunden – echte Bewertungen aus dem Bezirk Neunkirchen.</p>
             <div class="reviews-rating-summary" aria-label="Durchschnittsbewertung">
               <span class="reviews-stars-big" aria-hidden="true">★★★★★</span>
               <strong>5,0</strong>
@@ -534,7 +547,7 @@
                     <span class="vps-stage">Nachher</span>
                   </div>
                   <h3 class="vps-title">Versiegelt &amp; geschützt</h3>
-                  <p class="vps-desc">Bis zu 3 Jahre Keramikschutz.</p>
+                  <p class="vps-desc">Bis zu 60 Monate Keramikschutz.</p>
                 </div>
               </div>
 
@@ -563,7 +576,7 @@
           <div class="glass-card glass-card-half" id="kontakt" aria-label="Termin anfragen Autoaufbereitung Würflach">
             <span class="section-tag">Kontakt</span>
             <h2>Termin anfragen.</h2>
-            <p>Einfach melden – wir antworten schnell und unkompliziert.</p>
+            <p>Wir melden uns innerhalb weniger Stunden mit Termin und Preis.</p>
             <div class="glass-actions">
               <a class="button button-whatsapp" data-whatsapp-link href="#kontakt">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -578,6 +591,7 @@
                 <span>Jetzt anrufen</span>
               </a>
             </div>
+            <p class="glass-micro">Kein Formular · Keine Verpflichtung · Antwort in Stunden</p>
           </div>
         </section>
 
@@ -588,7 +602,7 @@
               <h2>Würflach bei Neunkirchen.</h2>
               <p>Willendorferstraße 196, 2732 Würflach</p>
               <p class="location-area">Kunden aus dem gesamten <strong>Bezirk Neunkirchen</strong> – inkl. Abholung.</p>
-              <a class="button button-secondary" href="https://share.google/4xZbkb4mKg28uwl6d" target="_blank" rel="noreferrer">
+              <a class="button button-secondary" href="https://www.google.com/maps/dir/?api=1&destination=Willendorferstra%C3%9Fe+196,+2732+W%C3%BCrflach,+Austria" target="_blank" rel="noreferrer">
                 <svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;fill:currentColor;flex-shrink:0">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
                 </svg>
@@ -687,6 +701,10 @@
           <p id="footerText">Professionelle Autoaufbereitung in Würflach, Neunkirchen und Umgebung.</p>
         </div>
 
+        <a href="tel:+436764391253" class="footer-phone">
+          <svg viewBox="0 0 24 24" width="13" height="13" fill="currentColor" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+          +43 676 439 12 53
+        </a>
         <div class="footer-links">
           <a href="/">Startseite</a>
           <a href="galerie.html">Galerie</a>
