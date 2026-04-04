@@ -578,8 +578,8 @@ function setupMobileCta() {
     : `<a class="button button-secondary is-disabled" href="#kontakt" aria-disabled="true">${icons.phone}<span>Anrufen</span></a>`;
 
   const whatsappButton = whatsappHref
-    ? `<a class="button button-primary cta-pulse" href="${whatsappHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>WhatsApp</span></a>`
-    : `<a class="button button-primary is-disabled" href="#kontakt" aria-disabled="true">${icons.whatsapp}<span>WhatsApp</span></a>`;
+    ? `<a class="button button-whatsapp" href="${whatsappHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>WhatsApp</span></a>`
+    : `<a class="button button-whatsapp is-disabled" href="#kontakt" aria-disabled="true">${icons.whatsapp}<span>WhatsApp</span></a>`;
 
   container.innerHTML = `${callButton}${whatsappButton}`;
 }
