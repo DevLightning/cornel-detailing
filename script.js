@@ -515,6 +515,16 @@ function fireConversionEvent() {
   }
 }
 
+function fireWhatsAppConversion() {
+  if (typeof gtag === "function") {
+    gtag("event", "conversion", {
+      send_to: "AW-17936964522/OR2ZCKmthZ8cEKq3gelC",
+      value: 1.0,
+      currency: "EUR",
+    });
+  }
+}
+
 function setupActionLinks() {
   const phoneHref = getPhoneHref();
   const whatsappHref = getWhatsAppLink();
@@ -545,6 +555,7 @@ function setupActionLinks() {
       link.setAttribute("aria-disabled", "true");
     }
     link.addEventListener("click", fireConversionEvent);
+    link.addEventListener("click", fireWhatsAppConversion);
   });
 }
 
@@ -588,6 +599,9 @@ function setupMobileCta() {
   container.querySelectorAll(".button").forEach((btn) => {
     btn.addEventListener("click", fireConversionEvent);
   });
+  // WhatsApp-specific Contact conversion
+  const waBtn = container.querySelector(".button-whatsapp");
+  if (waBtn) waBtn.addEventListener("click", fireWhatsAppConversion);
 }
 
 function setupPackageDetails() {
