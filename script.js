@@ -511,7 +511,7 @@ function renderPackages() {
 
 function fireConversionEvent() {
   if (typeof gtag === "function") {
-    gtag("event", "conversion", { send_to: "AW-17936964522/DWGhCNenjI0cEKq3gelC" });
+    gtag("event", "conversion", { send_to: "AW-17936964522/klS0CJWzgZ8cEKq3gelC" });
   }
 }
 
@@ -582,6 +582,12 @@ function setupMobileCta() {
     : `<a class="button button-whatsapp is-disabled" href="#kontakt" aria-disabled="true">${icons.whatsapp}<span>WhatsApp</span></a>`;
 
   container.innerHTML = `${callButton}${whatsappButton}`;
+
+  // Attach conversion events to both mobile CTA buttons
+  // (setupActionLinks runs before this function so we attach listeners here directly)
+  container.querySelectorAll(".button").forEach((btn) => {
+    btn.addEventListener("click", fireConversionEvent);
+  });
 }
 
 function setupPackageDetails() {
