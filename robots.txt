@@ -1,5 +1,7 @@
 User-agent: *
 Allow: /
+Allow: /favicon.ico
+Allow: /favicon.png
 
 # Disallow unimportant assets from crawl budget
 Disallow: /assets/favicon.png
