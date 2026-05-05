@@ -260,6 +260,53 @@ const projects = [
     layout: "full",
     category: "Exterieur",
   },
+  {
+    slug: "bmw-m3-yellow-side",
+    title: "BMW M3 Competition",
+    label: "Keramikversiegelung",
+    description: "Sao-Paulo-Gelb, tiefer Glanz und keramisch versiegelt – jedes Detail unter Hexagon-Licht inszeniert.",
+    asset: "assets/gallery/bmw1.jpeg",
+    layout: "tall",
+    featured: true,
+    category: "Exterieur",
+  },
+  {
+    slug: "bmw-m3-yellow-front",
+    title: "BMW M3 Competition",
+    label: "Front Detail",
+    description: "Kräftiges Gelb mit Spiegelreflexionen – Lack wie am ersten Tag, optimal vorbereitet auf den Keramikschutz.",
+    asset: "assets/gallery/bmw2.jpeg",
+    layout: "tall",
+    featured: true,
+    category: "Exterieur",
+  },
+  {
+    slug: "bmw-m3-carbon-roof",
+    title: "BMW M3 Competition",
+    label: "Carbondach Detail",
+    description: "Hexagon-Reflexionen auf Carbon und Heckflügel – Beweis für eine perfekt versiegelte Oberfläche.",
+    asset: "assets/gallery/bmw3.jpeg",
+    layout: "tall",
+    category: "Detail",
+  },
+  {
+    slug: "bmw-m3-carbon-mirror",
+    title: "BMW M3 Competition",
+    label: "Carbon Spiegel",
+    description: "Carbongewebe und Lack treffen sich – beides hochglänzend versiegelt für langen Schutz.",
+    asset: "assets/gallery/bmw4.jpeg",
+    layout: "square",
+    category: "Detail",
+  },
+  {
+    slug: "bmw-m3-yellow-wheel",
+    title: "BMW M3 Competition",
+    label: "Felgen & Bremse",
+    description: "Schmiederäder, blaue Bremssättel und Lack im Hexagon-Spiegelbild – Detailing auf Showroom-Niveau.",
+    asset: "assets/gallery/bmw5.jpeg",
+    layout: "wide",
+    category: "Exterieur",
+  },
 ];
 
 const reviews = [
@@ -861,13 +908,13 @@ function setupNavPill() {
 }
 
 /* ── VIDEO SHOWCASE ─────────────────────────────────────── */
-function setupVideoShowcase() {
-  var section = document.getElementById("video-showcase");
-  var video   = document.getElementById("showcaseVideo");
-  var btn     = document.getElementById("videoToggle");
+function setupAutoPlayVideo(opts) {
+  var section = opts.section;
+  var video   = opts.video;
+  var btn     = opts.btn;
+  var inner   = opts.inner || section;
   if (!section || !video || !btn) return;
 
-  var inner      = section.querySelector(".video-showcase-inner");
   var userPaused = false;
   var hasLoaded  = false;
 
@@ -953,6 +1000,24 @@ function setupVideoShowcase() {
   });
   video.addEventListener("canplay", function () {
     if (inner) inner.classList.remove("is-loading");
+  });
+}
+
+function setupVideoShowcase() {
+  var section = document.getElementById("video-showcase");
+  setupAutoPlayVideo({
+    section: section,
+    video:   document.getElementById("showcaseVideo"),
+    btn:     document.getElementById("videoToggle"),
+    inner:   section ? section.querySelector(".video-showcase-inner") : null,
+  });
+
+  var ceramicSection = document.getElementById("keramik-schutz");
+  setupAutoPlayVideo({
+    section: ceramicSection,
+    video:   document.getElementById("keramicVideo"),
+    btn:     document.getElementById("keramicVideoToggle"),
+    inner:   ceramicSection ? ceramicSection.querySelector(".ceramic-video-frame") : null,
   });
 }
 
