@@ -57,15 +57,14 @@
             '<path d="M9 12l2 2 4-4"/>' +
           '</svg>' +
         '</div>' +
-        '<div class="cb-text">' +
-          '<strong>Cookies &amp; Datenschutz</strong>' +
-          '<p>Wir nutzen Google Ads Conversion&#8209;Tracking, um den Erfolg unserer Werbung zu messen. Kein Tracking ohne Ihre Zustimmung.</p>' +
-        '</div>' +
+        '<p class="cb-text">' +
+          'Cookies fürs Conversion-Tracking. ' +
+          '<a class="cb-link" href="/datenschutz.html">Mehr</a>' +
+        '</p>' +
         '<div class="cb-actions">' +
           '<button class="cb-btn cb-decline" id="cbDecline" type="button">Ablehnen</button>' +
-          '<button class="cb-btn cb-accept"  id="cbAccept"  type="button">Akzeptieren</button>' +
+          '<button class="cb-btn cb-accept"  id="cbAccept"  type="button">OK</button>' +
         '</div>' +
-        '<a class="cb-link" href="/datenschutz.html">Datenschutzerklärung lesen</a>' +
       '</div>';
 
     document.body.appendChild(el);
