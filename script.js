@@ -219,7 +219,7 @@ const projects = [
     slug: "mercedes-vito-exterieur",
     title: "Mercedes-Benz V-Klasse",
     label: "Exterieur Finish",
-    description: "Tiefschwarzer Lack, poliert und versiegelt – ein Minivan auf Premium-Niveau.",
+    description: "Tiefschwarzer Lack, poliert und versiegelt · ein Minivan auf Premium-Niveau.",
     asset: "assets/gallery/mercedes-vito-exterieur.jpg",
     layout: "wide",
     category: "Exterieur",
@@ -246,7 +246,7 @@ const projects = [
     slug: "aston-martin-motorraum-detail",
     title: "Aston Martin Vantage",
     label: "Motor Aufbereitung",
-    description: "Jedes Detail zählt – aufbereiteter Motorraum für ein lückenloses Premium-Ergebnis.",
+    description: "Jedes Detail zählt · aufbereiteter Motorraum für ein lückenloses Premium-Ergebnis.",
     asset: "assets/gallery/aston-martin-motorraum-detail.jpg",
     layout: "square",
     category: "Detail",
@@ -255,7 +255,7 @@ const projects = [
     slug: "audi-rs3-exterieur-heck",
     title: "Audi RS3 Sportback",
     label: "Exterieur Finish",
-    description: "Tiefschwarzer Lack, poliert und versiegelt – sportliche Präzision auf einem anderen Level.",
+    description: "Tiefschwarzer Lack, poliert und versiegelt · sportliche Präzision auf einem anderen Level.",
     asset: "assets/gallery/Screenshot_1.png",
     layout: "full",
     category: "Exterieur",
@@ -264,7 +264,7 @@ const projects = [
     slug: "bmw-m3-yellow-side",
     title: "BMW M3 Competition",
     label: "Keramikversiegelung",
-    description: "Sao-Paulo-Gelb, tiefer Glanz und keramisch versiegelt – jedes Detail unter Hexagon-Licht inszeniert.",
+    description: "Sao-Paulo-Gelb, tiefer Glanz und keramisch versiegelt · jedes Detail unter Hexagon-Licht inszeniert.",
     asset: "assets/gallery/bmw1.jpeg",
     layout: "tall",
     featured: true,
@@ -274,7 +274,7 @@ const projects = [
     slug: "bmw-m3-yellow-front",
     title: "BMW M3 Competition",
     label: "Front Detail",
-    description: "Kräftiges Gelb mit Spiegelreflexionen – Lack wie am ersten Tag, optimal vorbereitet auf den Keramikschutz.",
+    description: "Kräftiges Gelb mit Spiegelreflexionen · Lack wie am ersten Tag, optimal vorbereitet auf den Keramikschutz.",
     asset: "assets/gallery/bmw2.jpeg",
     layout: "tall",
     featured: true,
@@ -284,7 +284,7 @@ const projects = [
     slug: "bmw-m3-carbon-roof",
     title: "BMW M3 Competition",
     label: "Carbondach Detail",
-    description: "Hexagon-Reflexionen auf Carbon und Heckflügel – Beweis für eine perfekt versiegelte Oberfläche.",
+    description: "Hexagon-Reflexionen auf Carbon und Heckflügel · Beweis für eine perfekt versiegelte Oberfläche.",
     asset: "assets/gallery/bmw3.jpeg",
     layout: "tall",
     category: "Detail",
@@ -293,7 +293,7 @@ const projects = [
     slug: "bmw-m3-carbon-mirror",
     title: "BMW M3 Competition",
     label: "Carbon Spiegel",
-    description: "Carbongewebe und Lack treffen sich – beides hochglänzend versiegelt für langen Schutz.",
+    description: "Carbongewebe und Lack treffen sich · beides hochglänzend versiegelt für langen Schutz.",
     asset: "assets/gallery/bmw4.jpeg",
     layout: "square",
     category: "Detail",
@@ -302,7 +302,7 @@ const projects = [
     slug: "bmw-m3-yellow-wheel",
     title: "BMW M3 Competition",
     label: "Felgen & Bremse",
-    description: "Schmiederäder, blaue Bremssättel und Lack im Hexagon-Spiegelbild – Detailing auf Showroom-Niveau.",
+    description: "Schmiederäder, blaue Bremssättel und Lack im Hexagon-Spiegelbild · Detailing auf Showroom-Niveau.",
     asset: "assets/gallery/bmw5.jpeg",
     layout: "wide",
     category: "Exterieur",
@@ -432,7 +432,7 @@ function projectMarkup(project, extraClass = "") {
       <img
         class="project-media"
         src="${project.asset}"
-        alt="${project.title} – ${project.label}"
+        alt="${project.title} · ${project.label}"
         loading="lazy"
       />
       <span class="media-badge">${project.label}</span>
@@ -450,6 +450,60 @@ function renderFeaturedProjects() {
 
   const featured = projects.filter((project) => project.featured).slice(0, 3);
   target.innerHTML = featured.map((project) => projectMarkup(project, "media-card--featured")).join("");
+}
+
+function renderShowcaseStrip() {
+  const target = document.getElementById("showcaseStripTrack");
+  if (!target) return;
+
+  // Hand-picked, conversion-strong sequence: variety of brands + body styles
+  const wantedSlugs = [
+    "bmw-m3-yellow-side",
+    "porsche-cabrio-finish",
+    "audi-rs3-exterieur-heck",
+    "aston-martin-rot-exterieur",
+    "mercedes-vito-exterieur",
+    "porsche-heck",
+    "bmw-m3-yellow-front",
+    "citroen-reflexion",
+  ];
+  const selected = wantedSlugs
+    .map((slug) => projects.find((p) => p.slug === slug))
+    .filter(Boolean);
+
+  const cardsHtml = selected
+    .map(
+      (p, i) => `
+        <a class="ss-card reveal" href="galerie.html#${p.slug}" style="--i:${i}" data-category="${p.category || ""}" aria-label="${p.title} · ${p.label}">
+          <div class="ss-card-media">
+            <img src="${p.asset}" alt="${p.title}" loading="lazy" decoding="async" />
+          </div>
+          <div class="ss-card-overlay" aria-hidden="true"></div>
+          <div class="ss-card-info">
+            <span class="ss-card-label">${p.label}</span>
+            <h3 class="ss-card-title">${p.title}</h3>
+          </div>
+        </a>
+      `
+    )
+    .join("");
+
+  const total = projects.length;
+  const allCardHtml = `
+    <a class="ss-card ss-card--all reveal" href="galerie.html" style="--i:${selected.length}" aria-label="Alle ${total}+ Aufbereitungen ansehen">
+      <div class="ss-card-all-inner">
+        <span class="ss-card-all-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M5 12h14M13 5l7 7-7 7"/>
+          </svg>
+        </span>
+        <span class="ss-card-all-label">Alle Referenzen</span>
+        <span class="ss-card-all-count">${total}+ Aufbereitungen</span>
+      </div>
+    </a>
+  `;
+
+  target.innerHTML = cardsHtml + allCardHtml;
 }
 
 function renderGallery() {
@@ -909,10 +963,11 @@ function setupNavPill() {
 
 /* ── VIDEO SHOWCASE ─────────────────────────────────────── */
 function setupAutoPlayVideo(opts) {
-  var section = opts.section;
-  var video   = opts.video;
-  var btn     = opts.btn;
-  var inner   = opts.inner || section;
+  var section   = opts.section;
+  var video     = opts.video;
+  var btn       = opts.btn;
+  var inner     = opts.inner || section;
+  var tapTarget = opts.tapTarget || section;  // Element that triggers tap-to-toggle
   if (!section || !video || !btn) return;
 
   var userPaused = false;
@@ -967,21 +1022,38 @@ function setupAutoPlayVideo(opts) {
     }
   });
 
-  // Touch-to-toggle for mobile (tap anywhere on the section)
-  section.addEventListener("touchend", function (e) {
-    // Only if tap is NOT on the button itself
-    if (!btn.contains(e.target)) {
-      if (video.paused) {
-        userPaused = false;
-        tryPlay();
-      } else {
-        userPaused = true;
-        video.pause();
-        btn.classList.add("is-paused");
-        btn.setAttribute("aria-label", "Video abspielen");
-      }
+  // Touch-to-toggle on the configured tap target (section by default,
+  // or just the video element for sections where we don't want surrounding
+  // copy / CTAs to count as a tap)
+  tapTarget.addEventListener("touchend", function (e) {
+    // Ignore if the tap landed on the play/pause button itself
+    if (btn.contains(e.target)) return;
+    if (video.paused) {
+      userPaused = false;
+      tryPlay();
+    } else {
+      userPaused = true;
+      video.pause();
+      btn.classList.add("is-paused");
+      btn.setAttribute("aria-label", "Video abspielen");
     }
   }, { passive: true });
+
+  // Mouse click for desktop on the same tap target
+  tapTarget.addEventListener("click", function (e) {
+    if (btn.contains(e.target)) return;
+    // Only toggle if the click target is actually inside the tap target
+    if (e.target !== tapTarget && !tapTarget.contains(e.target)) return;
+    if (video.paused) {
+      userPaused = false;
+      tryPlay();
+    } else {
+      userPaused = true;
+      video.pause();
+      btn.classList.add("is-paused");
+      btn.setAttribute("aria-label", "Video abspielen");
+    }
+  });
 
   // Sync icon state with actual video events
   video.addEventListener("play", function () {
@@ -1013,11 +1085,15 @@ function setupVideoShowcase() {
   });
 
   var ceramicSection = document.getElementById("keramik-schutz");
+  var ceramicFrame   = ceramicSection ? ceramicSection.querySelector(".ceramic-video-frame") : null;
   setupAutoPlayVideo({
-    section: ceramicSection,
-    video:   document.getElementById("keramicVideo"),
-    btn:     document.getElementById("keramicVideoToggle"),
-    inner:   ceramicSection ? ceramicSection.querySelector(".ceramic-video-frame") : null,
+    section:   ceramicSection,
+    video:     document.getElementById("keramicVideo"),
+    btn:       document.getElementById("keramicVideoToggle"),
+    inner:     ceramicFrame,
+    // Tap-to-toggle ONLY on the video frame, not the whole section —
+    // avoids accidental pauses when scrolling past benefits/copy
+    tapTarget: ceramicFrame,
   });
 }
 
@@ -1030,6 +1106,7 @@ function setupReviewCount() {
 document.addEventListener("DOMContentLoaded", () => {
   showDevBanner();
   renderFeaturedProjects();
+  renderShowcaseStrip();
   renderGallery();
   renderPackages();
   renderReviews();

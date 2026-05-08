@@ -2767,88 +2767,212 @@ body::after {
 
 /* ===================== MOBILE ===================== */
 
+/* ════════════════════════════════════════════════════════════════════════════
+   MOBILE — bigger, cleaner, conversion-oriented
+   ════════════════════════════════════════════════════════════════════════════ */
 @media (max-width: 720px) {
   body::before, body::after { display: none; }
-  .site-shell { padding: 6px 8px 88px; }
-  .topbar { top: 5px; padding: 0 8px 0 14px; height: 50px; border-radius: 18px; }
-  .brand img { height: 34px; }
+  .site-shell { padding: 8px 10px 96px; }
+  .topbar { top: 6px; padding: 0 8px 0 14px; height: 56px; border-radius: 20px; }
+  .brand img { height: 36px; }
   .brand small { display: none; }
+  .brand strong { font-size: 1rem; }
 
-  .hero { min-height: 440px; border-radius: var(--r-xl); }
-  .hero-content { padding: clamp(36px, 6vw, 56px) 20px; }
-  .hero h1 { font-size: clamp(1.8rem, 8vw, 2.4rem); }
-  .hero-sub { font-size: 0.84rem; }
-  .hero-actions { max-width: 240px; }
+  /* ── Hero — larger, bolder, conversion-focused ── */
+  .hero { min-height: 540px; border-radius: var(--r-xl); }
+  .hero-content { padding: clamp(40px, 7vw, 64px) 22px; gap: 14px; }
+  .hero h1 { font-size: clamp(2.2rem, 9.5vw, 3rem); line-height: 1.05; letter-spacing: -0.025em; }
+  .hero-sub { font-size: 1rem; line-height: 1.55; }
+  .hero-location { font-size: 0.78rem; padding: 7px 14px; }
+  .hero-actions { max-width: 320px; gap: 14px; }
+  .hero-actions .button {
+    width: 100%; font-size: 1rem; padding: 0 18px;
+    height: 56px; border-radius: 16px;
+  }
+  .hero-link { font-size: 0.95rem; padding: 10px 14px; }
+  .hero-trust-row { gap: 10px; flex-wrap: wrap; justify-content: center; }
+  .htb { font-size: 0.78rem; }
+  .hero-availability { font-size: 0.8rem; margin-top: 18px; }
 
+  /* ── Section structural ── */
   .section, .footer, .cta-card, .value-card,
   .legal-card, .preview-panel, .faq-item,
   .glass-card { border-radius: var(--r-lg); }
+  .section { padding: clamp(28px, 6vw, 36px) clamp(18px, 4.5vw, 24px); }
 
-  .glass-card { padding: clamp(24px, 5vw, 36px); }
-  .glass-actions { display: grid; }
+  /* Section headings — bigger and more confident */
+  .section-tag {
+    font-size: 0.78rem; padding: 6px 14px;
+    letter-spacing: 0.1em;
+  }
+  .section-heading h1, .section-heading h2,
+  .preview-panel h2, .cta-card h2 {
+    font-size: clamp(1.7rem, 7vw, 2.2rem);
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+  }
+  .section-heading p { font-size: 0.95rem; line-height: 1.6; }
+
+  /* ── Value cards — bigger icons & text ── */
+  .value-card { padding: 22px 20px; }
+  .value-card .icon-badge { width: 52px; height: 52px; border-radius: 14px; }
+  .value-card .icon-badge svg { width: 26px; height: 26px; }
+  .value-card h3 { font-size: 1.1rem; }
+  .value-card p { font-size: 0.95rem; line-height: 1.55; }
+
+  /* ── Buttons — taller and more confident ── */
+  .button { height: 52px; font-size: 0.94rem; padding: 0 22px; border-radius: 16px; }
+  .button-small { height: 44px; font-size: 0.86rem; }
+
+  /* CTA pulse stays prominent */
+  .button-whatsapp { box-shadow: 0 5px 20px var(--green-glow), 0 0 0 0 var(--green-glow); }
+
+  .glass-card { padding: clamp(26px, 5.5vw, 36px); }
+  .glass-card h2 { font-size: clamp(1.5rem, 6.5vw, 1.95rem); }
+  .glass-card p { font-size: 0.96rem; line-height: 1.6; }
+  .glass-actions { display: grid; gap: 10px; }
   .glass-actions .button { width: 100%; }
   .glass-row { grid-template-columns: 1fr; gap: 14px; }
   .location-card { grid-template-columns: 1fr; }
-  .location-info { padding: 22px; }
-  .location-map { min-height: 200px; border-radius: 0 0 var(--r-lg) var(--r-lg); }
+  .location-info { padding: 26px 22px; }
+  .location-info h2 { font-size: clamp(1.5rem, 6.5vw, 1.95rem); }
+  .location-info p { font-size: 0.95rem; }
+  .location-map { min-height: 220px; border-radius: 0 0 var(--r-lg) var(--r-lg); }
 
-  .section-heading h1, .section-heading h2,
-  .preview-panel h2, .cta-card h2 {
-    font-size: clamp(1.4rem, 5.5vw, 1.85rem);
-  }
-
-  .hero-actions .button { width: 100%; font-size: 0.82rem; padding: 0 10px; }
   .cta-actions, .package-content-actions,
-  .footer, .preview-panel-actions { display: grid; }
-
-  .hero-actions .button { width: 100%; font-size: 0.82rem; padding: 0 10px; }
+  .footer, .preview-panel-actions { display: grid; gap: 10px; }
   .cta-actions .button,
   .preview-panel-actions .button, .package-content-actions .button { width: 100%; }
+  .cta-card { padding: 26px 22px; }
+  .cta-card p { font-size: 0.96rem; line-height: 1.6; }
 
-  .button { height: 48px; }
-  .pkg-row-summary { flex-wrap: wrap; padding: 14px 16px; gap: 8px 10px; align-items: flex-start; }
+  /* ── Package section — edge-to-edge on mobile for max real estate ── */
+  .section-packages {
+    padding-left: 8px;
+    padding-right: 8px;
+  }
+  /* Heading & price disclaimer keep internal padding so they aren't flush */
+  .section-packages .section-heading,
+  .section-packages .section-heading-inline,
+  .section-packages .section-note {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+
+  /* ── Package rows — bigger hit area, clearer prices ── */
+  .pkg-row-summary {
+    flex-wrap: wrap;
+    padding: 16px 14px;
+    gap: 10px 10px;
+    align-items: flex-start;
+  }
   .pkg-row-icon { display: none; }
   .pkg-row-info { flex: 1 1 0; min-width: 0; overflow: hidden; }
-  .pkg-row-info h3 { font-size: 0.95rem; overflow-wrap: break-word; word-break: break-word; white-space: normal; }
-  .pkg-row-teaser { overflow-wrap: break-word; word-break: break-word; white-space: normal; }
-  .pkg-row-prices { width: 100%; gap: 4px; flex-wrap: wrap; }
-  .pkg-price { flex: 1 1 70px; min-width: 0; padding: 6px 4px; }
-  .pkg-price strong { font-size: 0.8rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .pkg-price span { font-size: 0.68rem; }
-  .pkg-toggle { align-self: flex-start; margin-top: 2px; flex-shrink: 0; }
-  .pkg-items { padding: 12px 16px 16px; }
-  .pkg-items ul { grid-template-columns: 1fr; }
-  .pkg-items ul li { overflow-wrap: break-word; word-break: break-word; }
-  .pkg-group-header { padding: 10px 16px; }
-  .pkg-group-name { white-space: normal; overflow-wrap: break-word; }
+  .pkg-row-num { font-size: 0.74rem; }
+  .pkg-row-info h3 {
+    font-size: 1.08rem;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+  .pkg-row-teaser {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    white-space: normal;
+  }
+  .pkg-row-prices { width: 100%; gap: 6px; flex-wrap: wrap; }
+  .pkg-price {
+    flex: 1 1 80px;
+    min-width: 0;
+    padding: 9px 6px;
+    border-radius: 12px;
+  }
+  .pkg-price strong {
+    font-size: 0.94rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .pkg-price span { font-size: 0.74rem; font-weight: 600; }
+  .pkg-toggle {
+    width: 36px; height: 36px;
+    align-self: flex-start;
+    margin-top: 4px;
+    flex-shrink: 0;
+  }
+  .pkg-toggle svg { width: 16px; height: 16px; }
+  .pkg-items { padding: 16px 14px 20px; }
+  .pkg-items ul { grid-template-columns: 1fr; gap: 10px 0; }
+  .pkg-items ul li {
+    font-size: 0.92rem;
+    line-height: 1.55;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .pkg-check { width: 22px; height: 22px; min-width: 22px; }
+  .pkg-group-header { padding: 12px 14px; }
+  .pkg-group-name { font-size: 0.78rem; white-space: normal; overflow-wrap: break-word; }
+  .pkg-group-icon { width: 34px; height: 34px; }
+  .pkg-group-icon svg { width: 17px; height: 17px; }
+
   .cta-meta { grid-template-columns: 1fr; }
-  .gallery-hero-stats { gap: 6px; }
-  .gallery-stat { padding: 12px 18px; min-width: 80px; }
+  .gallery-hero-stats { gap: 8px; }
+  .gallery-stat { padding: 14px 20px; min-width: 90px; }
   .footer { align-items: start; }
   .mobile-cta { display: grid; }
   .mobile-cta-backdrop { display: block; }
-  .section { padding: clamp(16px, 4vw, 24px); }
-  .cta-card, .preview-panel { padding: 18px; }
+  .preview-panel { padding: 22px 20px; }
+
+  /* FAQ — bigger touch targets */
+  .faq-item summary { padding: 16px 18px; font-size: 0.98rem; }
+  .faq-item p { font-size: 0.92rem; line-height: 1.6; padding: 0 18px 18px; }
+
+  /* Mid-page CTA — bigger and more prominent */
+  .mid-cta { padding: 26px 22px; gap: 14px; }
+  .mid-cta-text { font-size: 1.1rem; }
+  .mid-cta-btn { height: 56px !important; font-size: 1rem !important; }
+  .mid-cta-note { font-size: 0.82rem; }
+
+  /* Reviews — bigger, easier to read */
+  .review-card { padding: 18px 20px; min-width: 280px; }
+  .review-card p { font-size: 0.94rem; line-height: 1.55; }
+  .review-card .review-name { font-size: 0.92rem; }
+  .review-avatar { width: 44px; height: 44px; }
+  .reviews-rating-summary { padding: 14px 22px; font-size: 0.95rem; }
+  .reviews-rating-summary strong { font-size: 1.4rem; }
 }
 
+/* ── Smaller phones (≤480px) ── */
 @media (max-width: 480px) {
-  .site-shell { padding-inline: 5px; }
-  .hero-content { padding: 24px 14px; }
-  .hero { min-height: 400px; }
+  .site-shell { padding-inline: 4px; }
+  .hero-content { padding: 32px 18px; }
+  .hero { min-height: 480px; }
   .section, .preview-panel, .cta-card, .value-card, .legal-card {
+    padding-left: 16px; padding-right: 16px;
+  }
+  /* Packages — fully edge to edge on small phones */
+  .section-packages { padding-left: 4px; padding-right: 4px; }
+  .section-packages .section-heading,
+  .section-packages .section-heading-inline,
+  .section-packages .section-note {
     padding-left: 12px; padding-right: 12px;
   }
-  .pkg-row-summary { padding: 12px 12px; }
-  .pkg-items { padding: 10px 12px 14px; }
-  .pkg-group-header { padding: 10px 12px; }
-  .pkg-price { padding: 5px 4px; }
+  .pkg-row-summary { padding: 14px 12px; }
+  .pkg-items { padding: 14px 12px 18px; }
+  .pkg-group-header { padding: 11px 12px; }
+  .pkg-price { padding: 8px 4px; flex: 1 1 72px; }
+  .pkg-price strong { font-size: 0.88rem; }
+  .pkg-price span { font-size: 0.7rem; }
+  .pkg-price strong { font-size: 0.9rem; }
   .gallery-tile--wide, .gallery-tile--tall, .gallery-tile--square,
-  .gallery-tile--full { min-height: 200px; }
-  .media-overlay { padding: 12px; }
-  .gallery-hero { min-height: 300px; padding: clamp(40px, 7vw, 60px) 16px clamp(32px, 5vw, 48px); }
-  .gallery-stat strong { font-size: 1.3rem; }
-  .gallery-filter-section { padding: 16px 8px 0; }
-  .mobile-cta { width: calc(100% - 10px); padding: 4px; gap: 4px; }
+  .gallery-tile--full { min-height: 220px; }
+  .media-overlay { padding: 14px; }
+  .gallery-hero { min-height: 320px; padding: clamp(44px, 8vw, 64px) 18px clamp(36px, 6vw, 52px); }
+  .gallery-stat strong { font-size: 1.4rem; }
+  .gallery-filter-section { padding: 18px 8px 0; }
+  .mobile-cta { width: calc(100% - 12px); padding: 5px; gap: 5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3496,5 +3620,278 @@ body::after {
   }
   .ceramic-video-toggle { width: 38px; height: 38px; bottom: 10px; right: 10px; }
   .ceramic-video-badge { top: 10px; left: 10px; padding: 5px 9px; font-size: 0.65rem; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SHOWCASE STRIP — horizontal scroll of recent work (proof above the fold)
+   Sits right after the hero. Same border-radius / shadow language as .section.
+   ════════════════════════════════════════════════════════════════════════════ */
+.showcase-strip {
+  margin-top: 24px;
+  padding: clamp(28px, 4vw, 44px) 0;
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border);
+  background:
+    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(59,106,212,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 60% 40% at 0% 100%, rgba(22,163,74,0.04) 0%, transparent 60%),
+    linear-gradient(180deg, var(--white) 0%, rgba(245,247,250,0.7) 100%);
+  box-shadow: var(--shadow-section);
+  overflow: hidden;
+  position: relative;
+}
+
+.showcase-strip-header {
+  padding: 0 clamp(28px, 4vw, 44px);
+  margin-bottom: clamp(20px, 3vw, 28px);
+  text-align: center;
+}
+.showcase-strip-header .section-tag { margin-bottom: 12px; }
+.showcase-strip-header h2 {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.12;
+  color: var(--dark);
+}
+.showcase-strip-header p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: var(--grey-500);
+  line-height: 1.55;
+}
+
+/* Wrapper holds edge-fade pseudo-elements without blocking touch on track */
+.showcase-strip-wrap {
+  position: relative;
+}
+
+/* Edge fades (desktop only — too distracting on small phones) */
+.showcase-strip-wrap::before,
+.showcase-strip-wrap::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0;
+  width: clamp(20px, 4vw, 56px);
+  pointer-events: none;
+  z-index: 2;
+}
+.showcase-strip-wrap::before {
+  left: 0;
+  background: linear-gradient(90deg, var(--white) 0%, rgba(255,255,255,0) 100%);
+}
+.showcase-strip-wrap::after {
+  right: 0;
+  background: linear-gradient(270deg, var(--white) 0%, rgba(255,255,255,0) 100%);
+}
+
+/* The actual scrolling track */
+.showcase-strip-track {
+  display: flex;
+  gap: 14px;
+  padding: 4px clamp(28px, 4vw, 44px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: clamp(28px, 4vw, 44px);
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+.showcase-strip-track::-webkit-scrollbar { display: none; }
+
+/* ── Card ── */
+.ss-card {
+  position: relative;
+  flex: 0 0 280px;
+  aspect-ratio: 4 / 5;
+  border-radius: 18px;
+  overflow: hidden;
+  scroll-snap-align: start;
+  text-decoration: none;
+  background: var(--grey-50);
+  box-shadow:
+    0 1px 2px rgba(15,20,34,0.05),
+    0 6px 16px rgba(15,20,34,0.07),
+    0 16px 36px rgba(15,20,34,0.06);
+  transition: transform 0.32s var(--ease), box-shadow 0.32s var(--ease);
+  isolation: isolate;
+}
+.ss-card:hover,
+.ss-card:focus-visible {
+  transform: translateY(-4px);
+  box-shadow:
+    0 2px 6px rgba(15,20,34,0.08),
+    0 12px 28px rgba(15,20,34,0.12),
+    0 28px 56px rgba(15,20,34,0.10);
+}
+.ss-card:active { transform: translateY(-1px) scale(0.99); }
+
+.ss-card-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+.ss-card-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s var(--ease);
+}
+.ss-card:hover .ss-card-media img { transform: scale(1.06); }
+
+/* Gradient overlay for text legibility */
+.ss-card-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(180deg, transparent 40%, rgba(5,8,15,0.18) 60%, rgba(5,8,15,0.78) 100%);
+}
+
+.ss-card-info {
+  position: absolute;
+  z-index: 2;
+  inset: auto 0 0 0;
+  padding: 16px 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.ss-card-label {
+  display: inline-flex;
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.28);
+  backdrop-filter: blur(10px) saturate(1.4);
+  -webkit-backdrop-filter: blur(10px) saturate(1.4);
+  color: rgba(255,255,255,0.92);
+  font-family: var(--font-heading);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.ss-card-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 1.06rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  line-height: 1.2;
+}
+
+/* ── "Alle ansehen" terminal card ── */
+.ss-card--all {
+  background:
+    linear-gradient(150deg, rgba(22,163,74,0.07) 0%, rgba(59,106,212,0.06) 100%),
+    var(--white);
+  border: 1.5px dashed rgba(22,163,74,0.32);
+  box-shadow:
+    0 1px 2px rgba(15,20,34,0.04),
+    0 4px 12px rgba(15,20,34,0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ss-card--all:hover {
+  border-color: rgba(22,163,74,0.55);
+  background:
+    linear-gradient(150deg, rgba(22,163,74,0.12) 0%, rgba(59,106,212,0.08) 100%),
+    var(--white);
+}
+.ss-card--all .ss-card-overlay,
+.ss-card--all .ss-card-info { display: none; }
+
+.ss-card-all-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 24px;
+  text-align: center;
+}
+.ss-card-all-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 14px var(--green-glow);
+  transition: transform 0.25s var(--ease);
+}
+.ss-card-all-arrow svg { width: 22px; height: 22px; }
+.ss-card--all:hover .ss-card-all-arrow {
+  transform: translateX(3px) scale(1.05);
+  box-shadow: 0 6px 20px var(--green-glow);
+}
+.ss-card-all-label {
+  font-family: var(--font-heading);
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--dark);
+  letter-spacing: -0.01em;
+}
+.ss-card-all-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--grey-500);
+  letter-spacing: 0.02em;
+}
+
+/* ── Tablet & mobile ── */
+@media (max-width: 720px) {
+  .showcase-strip {
+    margin-top: 16px;
+    padding: clamp(28px, 6vw, 36px) 0;
+    border-radius: var(--r-lg);
+  }
+  .showcase-strip-header {
+    padding: 0 18px;
+    margin-bottom: 18px;
+    text-align: left;
+  }
+  .showcase-strip-header h2 {
+    font-size: clamp(1.6rem, 6.5vw, 2rem);
+  }
+  .showcase-strip-header p {
+    font-size: 0.92rem;
+  }
+  .showcase-strip-track {
+    gap: 12px;
+    padding: 4px 18px;
+    scroll-padding-left: 18px;
+  }
+  .ss-card {
+    flex: 0 0 240px;
+    border-radius: 16px;
+  }
+  .ss-card-info { padding: 14px 14px 16px; gap: 5px; }
+  .ss-card-title { font-size: 1rem; }
+  .ss-card-label { font-size: 0.62rem; padding: 3px 8px; }
+  /* Hide edge-fades on mobile so cards aren't dimmed at edges */
+  .showcase-strip-wrap::before,
+  .showcase-strip-wrap::after { display: none; }
+  /* Terminal card */
+  .ss-card-all-arrow { width: 44px; height: 44px; }
+  .ss-card-all-label { font-size: 1rem; }
+}
+
+@media (max-width: 480px) {
+  .ss-card { flex: 0 0 220px; }
+  .showcase-strip-track { padding: 4px 14px; scroll-padding-left: 14px; }
+  .showcase-strip-header { padding: 0 14px; }
 }
 
