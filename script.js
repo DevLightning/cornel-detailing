@@ -626,6 +626,80 @@ function fireWhatsAppConversion() {
   }
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   WhatsApp Conversion Tracking — "Contact (lead)"
+   ──────────────────────────────────────────────────────────────────────────
+   Conversion ID:    AW-17936964522
+   Conversion label: 2dR7CKrLoawcEKq3geIC
+   Value: €1 (configured server-side)
+
+   Fires a Google Ads conversion event on every WhatsApp link click.
+   Uses event_callback to delay navigation until the conversion ping has
+   been sent (or a ~1s gtag timeout), so we don't lose conversions to fast
+   page-aways.
+
+   Attached as a single delegated click listener on document — any anchor
+   whose href matches a WhatsApp URL pattern is auto-tracked. No manual
+   tagging required for new WhatsApp links.
+   ────────────────────────────────────────────────────────────────────────── */
+function reportWhatsAppConversion(url) {
+  if (typeof gtag === "function") {
+    gtag("event", "conversion", {
+      send_to: "AW-17936964522/2dR7CKrLoawcEKq3geIC",
+      event_callback: function () {
+        if (typeof url !== "undefined" && url) {
+          window.location = url;
+        }
+      },
+    });
+  } else if (typeof url !== "undefined" && url) {
+    // No gtag available — navigate immediately so the link still works
+    window.location = url;
+  }
+  return false;
+}
+
+(function setupWhatsAppConversionDelegation() {
+  if (window.__waConversionDelegated) return;
+  window.__waConversionDelegated = true;
+
+  function isWhatsAppHref(href) {
+    if (!href) return false;
+    return /^https?:\/\/wa\.me\//i.test(href)
+        || /^https?:\/\/api\.whatsapp\.com\//i.test(href)
+        || /^whatsapp:/i.test(href);
+  }
+
+  function onDocumentClick(e) {
+    // Let the browser handle modifier-click / middle-click (new tab/window)
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    if (e.button !== undefined && e.button !== 0) return;
+
+    var link = e.target && e.target.closest && e.target.closest("a[href]");
+    if (!link) return;
+
+    // Match by href pattern — this is the auto-tag step
+    var rawHref = link.getAttribute("href") || link.href;
+    if (!isWhatsAppHref(rawHref)) return;
+
+    // Resolved absolute URL (handles relative/protocol-relative)
+    var url = link.href;
+
+    e.preventDefault();
+    reportWhatsAppConversion(url);
+  }
+
+  function attach() {
+    document.addEventListener("click", onDocumentClick);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", attach);
+  } else {
+    attach();
+  }
+})();
+
 function setupActionLinks() {
   const phoneHref = getPhoneHref();
   const whatsappHref = getWhatsAppLink();
@@ -1103,6 +1177,169 @@ function setupReviewCount() {
   });
 }
 
+/* ════════════════════════════════════════════════════════════════════════════
+   GALLERY LIGHTBOX — full-size image viewer
+   ════════════════════════════════════════════════════════════════════════════ */
+
+function setupGalleryStats() {
+  const aufnahmen = document.getElementById("statAufnahmen");
+  const fahrzeuge = document.getElementById("statFahrzeuge");
+  const kategorien = document.getElementById("statKategorien");
+  if (!aufnahmen) return; // not on gallery page
+
+  // Count distinct vehicles (by title) and categories
+  const vehicleSet = new Set(projects.map((p) => p.title));
+  const catSet = new Set(projects.map((p) => p.category).filter(Boolean));
+
+  aufnahmen.textContent = projects.length;
+  fahrzeuge.textContent = vehicleSet.size;
+  kategorien.textContent = catSet.size;
+}
+
+function setupLightbox() {
+  const lb = document.getElementById("lightbox");
+  if (!lb) return;
+
+  const lbImg     = document.getElementById("lbImg");
+  const lbLabel   = document.getElementById("lbLabel");
+  const lbTitle   = document.getElementById("lbTitle");
+  const lbDesc    = document.getElementById("lbDesc");
+  const lbCounter = document.getElementById("lbCounter");
+  const lbLoader  = document.getElementById("lbLoader");
+  const lbPrev    = document.getElementById("lbPrev");
+  const lbNext    = document.getElementById("lbNext");
+  const grid      = document.getElementById("galleryGrid");
+  if (!grid) return;
+
+  // Filtered list — what's currently shown in the grid (matches active filter)
+  let currentList = projects.slice();
+  let currentIndex = 0;
+  let touchStartX = 0;
+  let touchStartY = 0;
+
+  function getActiveList() {
+    const filterBtn = document.querySelector(".gallery-filter-btn.is-active");
+    const filter = filterBtn ? filterBtn.dataset.filter : "all";
+    return filter === "all"
+      ? projects.slice()
+      : projects.filter((p) => p.category === filter);
+  }
+
+  function open(index) {
+    currentList = getActiveList();
+    if (index < 0 || index >= currentList.length) return;
+    currentIndex = index;
+    render();
+    lb.setAttribute("aria-hidden", "false");
+    lb.classList.add("is-open");
+    document.body.classList.add("lb-locked");
+    document.addEventListener("keydown", onKey);
+    // Update URL hash (deep link)
+    const slug = currentList[currentIndex].slug;
+    if (slug) history.replaceState(null, "", "#" + slug);
+  }
+
+  function close() {
+    lb.setAttribute("aria-hidden", "true");
+    lb.classList.remove("is-open");
+    document.body.classList.remove("lb-locked");
+    document.removeEventListener("keydown", onKey);
+    // Clear hash
+    if (location.hash) history.replaceState(null, "", location.pathname);
+  }
+
+  function next() {
+    if (currentList.length < 2) return;
+    currentIndex = (currentIndex + 1) % currentList.length;
+    render();
+  }
+
+  function prev() {
+    if (currentList.length < 2) return;
+    currentIndex = (currentIndex - 1 + currentList.length) % currentList.length;
+    render();
+  }
+
+  function render() {
+    const p = currentList[currentIndex];
+    if (!p) return;
+    lbLoader.classList.add("is-loading");
+    lbImg.style.opacity = "0";
+    const img = new Image();
+    img.onload = () => {
+      lbImg.src = p.asset;
+      lbImg.alt = p.title + " · " + p.label;
+      lbImg.style.opacity = "1";
+      lbLoader.classList.remove("is-loading");
+    };
+    img.onerror = () => {
+      lbLoader.classList.remove("is-loading");
+    };
+    img.src = p.asset;
+    lbLabel.textContent = p.label || "";
+    lbTitle.textContent = p.title || "";
+    lbDesc.textContent = p.description || "";
+    lbCounter.textContent = `${currentIndex + 1} / ${currentList.length}`;
+    // Update hash
+    if (p.slug) history.replaceState(null, "", "#" + p.slug);
+  }
+
+  function onKey(e) {
+    if (e.key === "Escape") close();
+    else if (e.key === "ArrowRight") next();
+    else if (e.key === "ArrowLeft") prev();
+  }
+
+  // Click any gallery tile to open
+  grid.addEventListener("click", (e) => {
+    const tile = e.target.closest(".gallery-tile");
+    if (!tile) return;
+    e.preventDefault();
+    const list = getActiveList();
+    // Find by matching the image src to the project asset
+    const img = tile.querySelector("img");
+    if (!img) return;
+    const src = img.getAttribute("src");
+    const idx = list.findIndex((p) => p.asset === src);
+    if (idx >= 0) open(idx);
+  });
+
+  // Close handlers
+  lb.querySelectorAll("[data-lb-close]").forEach((el) => {
+    el.addEventListener("click", close);
+  });
+  lbNext.addEventListener("click", next);
+  lbPrev.addEventListener("click", prev);
+
+  // Swipe support
+  lb.addEventListener("touchstart", (e) => {
+    if (e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: true });
+
+  lb.addEventListener("touchend", (e) => {
+    if (e.changedTouches.length !== 1) return;
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const dy = e.changedTouches[0].clientY - touchStartY;
+    // Only trigger if horizontal swipe is dominant and >50px
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+      if (dx < 0) next(); else prev();
+    }
+  }, { passive: true });
+
+  // Open from URL hash on load
+  if (location.hash) {
+    const slug = location.hash.replace("#", "");
+    const list = getActiveList();
+    const idx = list.findIndex((p) => p.slug === slug);
+    if (idx >= 0) {
+      // Wait one frame for grid to render
+      requestAnimationFrame(() => requestAnimationFrame(() => open(idx)));
+    }
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   showDevBanner();
   renderFeaturedProjects();
@@ -1111,6 +1348,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPackages();
   renderReviews();
   renderGalleryFilters();
+  setupGalleryStats();
   setupStaticText();
   setupActionLinks();
   setupMobileCta();
@@ -1121,6 +1359,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupActiveNav();
   setupNavPill();
   setupGalleryFilter();
+  setupLightbox();
   setupVideoShowcase();
   setupReviewCount();
 });

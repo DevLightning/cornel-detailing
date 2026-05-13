@@ -108,10 +108,10 @@
     <link rel="icon" type="image/png" sizes="512x512" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
     
-    <link rel="stylesheet" href="styles.css" />
-    <script src="site-config.js" defer></script>
-    <script src="script.js" defer></script>
-    <script src="consent.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=11" />
+    <script src="site-config.js?v=4" defer></script>
+    <script src="script.js?v=5" defer></script>
+    <script src="consent.js?v=4" defer></script>
   </head>
   <body>
     <div class="site-shell">
@@ -131,11 +131,19 @@
           <a href="galerie.html" class="is-active">Galerie</a>
           <a href="/#kontakt">Kontakt</a>
           <span class="topnav-divider" aria-hidden="true"></span>
+          <a class="topnav-call" data-call-link href="tel:+436764391253" aria-label="Anrufen +43 676 4391253">
+            <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+            <span>+43 676 4391253</span>
+          </a>
           <a class="topnav-cta" data-whatsapp-link href="/#kontakt" aria-label="Termin via WhatsApp anfragen">
             <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
-            Termin anfragen
+            <span>WhatsApp</span>
           </a>
         </nav>
+
+        <a class="topbar-phone" data-call-link href="tel:+436764391253" aria-label="Anrufen +43 676 4391253">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+        </a>
 
         <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -161,17 +169,17 @@
               <p>Einblicke in abgeschlossene Projekte · Innenreinigung, Lackpolitur, Versiegelung und Komplettaufbereitungen aus unserer Werkstatt.</p>
             </div>
 
-            <div class="gallery-hero-stats">
+            <div class="gallery-hero-stats" id="galleryHeroStats">
               <div class="gallery-stat">
-                <strong>13</strong>
+                <strong id="statAufnahmen">19</strong>
                 <span>Aufnahmen</span>
               </div>
               <div class="gallery-stat">
-                <strong>5</strong>
+                <strong id="statFahrzeuge">9</strong>
                 <span>Fahrzeuge</span>
               </div>
               <div class="gallery-stat">
-                <strong>3</strong>
+                <strong id="statKategorien">4</strong>
                 <span>Kategorien</span>
               </div>
             </div>
@@ -315,6 +323,57 @@
       <div class="mobile-cta-backdrop" aria-hidden="true"></div>
       <div class="mobile-cta"></div>
 
+    </div>
+
+    <!-- ── LIGHTBOX (gallery image viewer) ──────────────────── -->
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Bildvorschau">
+      <div class="lightbox-backdrop" data-lb-close></div>
+      <div class="lightbox-shell">
+        <button class="lightbox-close" id="lbClose" type="button" aria-label="Schließen" data-lb-close>
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M18 6L6 18M6 6l12 12"/>
+          </svg>
+        </button>
+
+        <button class="lightbox-nav lightbox-prev" id="lbPrev" type="button" aria-label="Vorheriges Bild">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15 18l-6-6 6-6"/>
+          </svg>
+        </button>
+        <button class="lightbox-nav lightbox-next" id="lbNext" type="button" aria-label="Nächstes Bild">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 6l6 6-6 6"/>
+          </svg>
+        </button>
+
+        <figure class="lightbox-frame">
+          <div class="lightbox-img-wrap" id="lbImgWrap">
+            <img class="lightbox-img" id="lbImg" alt="" />
+            <div class="lightbox-loader" id="lbLoader" aria-hidden="true"></div>
+          </div>
+          <figcaption class="lightbox-caption">
+            <span class="lightbox-label" id="lbLabel"></span>
+            <h2 class="lightbox-title" id="lbTitle"></h2>
+            <p class="lightbox-desc" id="lbDesc"></p>
+            <div class="lightbox-actions">
+              <a class="button button-whatsapp lightbox-cta" data-whatsapp-link href="/#kontakt">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/>
+                </svg>
+                <span>So ein Ergebnis · Termin</span>
+              </a>
+              <a class="button button-secondary lightbox-cta-call" data-call-link href="tel:+436764391253">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+                  <path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/>
+                </svg>
+                <span>Anrufen</span>
+              </a>
+            </div>
+          </figcaption>
+        </figure>
+
+        <div class="lightbox-counter" id="lbCounter" aria-hidden="true">1 / 1</div>
+      </div>
     </div>
   </body>
 </html>
