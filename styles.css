@@ -58,31 +58,31 @@ body {
   overflow-x: clip;
 }
 
-/* Ambient edge glow — slow-moving blurred orbs */
+/* Ambient edge glow — subtle blurred orbs, less prominent on wide screens */
 body::before,
 body::after {
   content: "";
   position: fixed;
   z-index: 0;
-  width: 50vw;
-  height: 70vh;
+  width: 36vw;
+  height: 56vh;
   border-radius: 50%;
   pointer-events: none;
-  filter: blur(100px);
-  opacity: 0.5;
+  filter: blur(120px);
+  opacity: 0.30;
 }
 
 body::before {
-  top: 5%;
-  left: -16vw;
-  background: radial-gradient(circle, rgba(59,106,212,0.6), rgba(37,185,86,0.25) 55%, transparent 80%);
+  top: 8%;
+  left: -22vw;
+  background: radial-gradient(circle, rgba(59,106,212,0.50), rgba(37,185,86,0.18) 55%, transparent 80%);
   animation: ambientLeft 14s ease-in-out infinite alternate;
 }
 
 body::after {
-  bottom: 0%;
-  right: -16vw;
-  background: radial-gradient(circle, rgba(37,185,86,0.5), rgba(59,106,212,0.2) 55%, transparent 80%);
+  bottom: -6%;
+  right: -22vw;
+  background: radial-gradient(circle, rgba(37,185,86,0.40), rgba(59,106,212,0.16) 55%, transparent 80%);
   animation: ambientRight 16s ease-in-out infinite alternate;
 }
 
@@ -102,9 +102,9 @@ body::after {
 .site-shell {
   position: relative;
   z-index: 1;
-  max-width: 1400px;
+  max-width: 1560px;
   margin: 0 auto;
-  padding: 12px 28px 88px;
+  padding: 12px 24px 88px;
 }
 
 .dev-banner {
@@ -2669,8 +2669,8 @@ body::after {
 
 /* ===================== 1600+ ===================== */
 @media (min-width: 1600px) {
-  .site-shell { max-width: 1520px; }
-  .hero { min-height: 560px; }
+  .site-shell { max-width: 1720px; padding-left: 32px; padding-right: 32px; }
+  .hero { min-height: 580px; }
   .gallery-tile--wide { min-height: 400px; }
   .gallery-tile--tall { min-height: 500px; }
   .gallery-tile--full { min-height: 380px; }
@@ -2678,9 +2678,9 @@ body::after {
 
 /* ===================== 2560+ ===================== */
 @media (min-width: 2560px) {
-  .site-shell { max-width: 1680px; }
+  .site-shell { max-width: 1920px; padding-left: 48px; padding-right: 48px; }
   body { font-size: 16px; }
-  .hero { min-height: 600px; }
+  .hero { min-height: 640px; }
 }
 
 /* ===================== TABLET ===================== */

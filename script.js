@@ -578,7 +578,7 @@ function renderPackages() {
               </div>
               <div class="pkg-row-prices" aria-label="Preisübersicht">
                 <div class="pkg-price"><strong>${pkg.prices.pkw}</strong><span>PKW</span></div>
-                <div class="pkg-price"><strong>${pkg.prices.suv}</strong><span>SUV</span></div>
+                <div class="pkg-price"><strong>${pkg.prices.suv}</strong><span>SUV / Kombi</span></div>
                 <div class="pkg-price"><strong>${pkg.prices.van}</strong><span>Van</span></div>
               </div>
               <span class="pkg-toggle" aria-hidden="true">${icons.chevron}</span>
