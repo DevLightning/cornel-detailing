@@ -274,7 +274,7 @@ body::after {
   transform-origin: center center;
   transition: transform 0.28s var(--ease), opacity 0.22s var(--ease);
 }
-.menu-toggle span:nth-child(2) { width: 13px; margin-left: auto; }
+.menu-toggle span:nth-child(2) { width: 13px; align-self: center; }
 .menu-toggle span + span { margin-top: 5px; }
 
 /* X state */
