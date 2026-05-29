@@ -610,64 +610,68 @@ function renderPackages() {
   grid.innerHTML = `<div class="pkg-table">${groupsHtml}</div>`;
 }
 
-function fireConversionEvent() {
-  if (typeof gtag === "function") {
-    gtag("event", "conversion", { send_to: "AW-17936964522/klS0CJWzgZ8cEKq3gelC" });
-  }
-}
+/* ──────────────────────────────────────────────────────────────────────────
+   Google Ads conversion tracking — 2 actions, both under AW-17936964522
+   ──────────────────────────────────────────────────────────────────────────
+   1) Call           label: -_FGCIXd37UcEKq3ge1C   (value €1)
+   2) WhatsApp Click label: fOZQCIjd37UcEKq3ge1C   (value €1)
 
-function fireWhatsAppConversion() {
+   The helper functions match the Google-provided snippet exactly so they
+   can be used inline:
+     <a onclick="return gtag_report_conversion('tel:+...')">…</a>
+     <a onclick="return gtag_report_conversion_whatsapp('https://wa.me/…')">…</a>
+
+   They're also wired up via a single delegated click listener so any
+   anchor with a tel: / wa.me / api.whatsapp.com / whatsapp: href is
+   auto-tracked — no per-button tagging needed.
+   ────────────────────────────────────────────────────────────────────────── */
+function gtag_report_conversion(url) {
+  var callback = function () {
+    if (typeof url !== "undefined") { window.location = url; }
+  };
   if (typeof gtag === "function") {
     gtag("event", "conversion", {
-      send_to: "AW-17936964522/OR2ZCKmthZ8cEKq3gelC",
+      send_to: "AW-17936964522/-_FGCIXd37UcEKq3ge1C",
       value: 1.0,
       currency: "EUR",
+      event_callback: callback,
     });
-  }
-}
-
-/* ──────────────────────────────────────────────────────────────────────────
-   WhatsApp Conversion Tracking — "Contact (lead)"
-   ──────────────────────────────────────────────────────────────────────────
-   Conversion ID:    AW-17936964522
-   Conversion label: 2dR7CKrLoawcEKq3geIC
-   Value: €1 (configured server-side)
-
-   Fires a Google Ads conversion event on every WhatsApp link click.
-   Uses event_callback to delay navigation until the conversion ping has
-   been sent (or a ~1s gtag timeout), so we don't lose conversions to fast
-   page-aways.
-
-   Attached as a single delegated click listener on document — any anchor
-   whose href matches a WhatsApp URL pattern is auto-tracked. No manual
-   tagging required for new WhatsApp links.
-   ────────────────────────────────────────────────────────────────────────── */
-function reportWhatsAppConversion(url) {
-  if (typeof gtag === "function") {
-    gtag("event", "conversion", {
-      send_to: "AW-17936964522/2dR7CKrLoawcEKq3geIC",
-      event_callback: function () {
-        if (typeof url !== "undefined" && url) {
-          window.location = url;
-        }
-      },
-    });
-  } else if (typeof url !== "undefined" && url) {
-    // No gtag available — navigate immediately so the link still works
-    window.location = url;
+  } else {
+    callback();
   }
   return false;
 }
 
-(function setupWhatsAppConversionDelegation() {
-  if (window.__waConversionDelegated) return;
-  window.__waConversionDelegated = true;
+function gtag_report_conversion_whatsapp(url) {
+  var callback = function () {
+    if (typeof url !== "undefined") { window.location = url; }
+  };
+  if (typeof gtag === "function") {
+    gtag("event", "conversion", {
+      send_to: "AW-17936964522/fOZQCIjd37UcEKq3ge1C",
+      value: 1.0,
+      currency: "EUR",
+      event_callback: callback,
+    });
+  } else {
+    callback();
+  }
+  return false;
+}
+
+(function setupConversionDelegation() {
+  if (window.__convDelegated) return;
+  window.__convDelegated = true;
 
   function isWhatsAppHref(href) {
     if (!href) return false;
     return /^https?:\/\/wa\.me\//i.test(href)
         || /^https?:\/\/api\.whatsapp\.com\//i.test(href)
         || /^whatsapp:/i.test(href);
+  }
+  function isCallHref(href) {
+    if (!href) return false;
+    return /^tel:/i.test(href);
   }
 
   function onDocumentClick(e) {
@@ -678,15 +682,16 @@ function reportWhatsAppConversion(url) {
     var link = e.target && e.target.closest && e.target.closest("a[href]");
     if (!link) return;
 
-    // Match by href pattern — this is the auto-tag step
     var rawHref = link.getAttribute("href") || link.href;
-    if (!isWhatsAppHref(rawHref)) return;
-
-    // Resolved absolute URL (handles relative/protocol-relative)
     var url = link.href;
 
-    e.preventDefault();
-    reportWhatsAppConversion(url);
+    if (isWhatsAppHref(rawHref)) {
+      e.preventDefault();
+      gtag_report_conversion_whatsapp(url);
+    } else if (isCallHref(rawHref)) {
+      e.preventDefault();
+      gtag_report_conversion(url);
+    }
   }
 
   function attach() {
@@ -714,7 +719,8 @@ function setupActionLinks() {
       link.classList.add("is-disabled");
       link.setAttribute("aria-disabled", "true");
     }
-    link.addEventListener("click", fireConversionEvent);
+    // Conversion tracking handled by the unified delegated listener at the
+    // top of this file (gtag_report_conversion / _whatsapp).
   });
 
   document.querySelectorAll("[data-whatsapp-link]").forEach((link) => {
@@ -729,8 +735,7 @@ function setupActionLinks() {
       link.classList.add("is-disabled");
       link.setAttribute("aria-disabled", "true");
     }
-    link.addEventListener("click", fireConversionEvent);
-    link.addEventListener("click", fireWhatsAppConversion);
+    // Conversion tracking handled by the unified delegated listener.
   });
 }
 
@@ -769,14 +774,8 @@ function setupMobileCta() {
 
   container.innerHTML = `${callButton}${whatsappButton}`;
 
-  // Attach conversion events to both mobile CTA buttons
-  // (setupActionLinks runs before this function so we attach listeners here directly)
-  container.querySelectorAll(".button").forEach((btn) => {
-    btn.addEventListener("click", fireConversionEvent);
-  });
-  // WhatsApp-specific Contact conversion
-  const waBtn = container.querySelector(".button-whatsapp");
-  if (waBtn) waBtn.addEventListener("click", fireWhatsAppConversion);
+  // Conversion tracking handled by the unified delegated listener at the
+  // top of this file. No per-button listeners needed.
 }
 
 function setupPackageDetails() {
