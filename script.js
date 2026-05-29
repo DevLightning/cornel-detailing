@@ -614,7 +614,7 @@ function renderPackages() {
    Google Ads conversion tracking — 2 actions, both under AW-17936964522
    ──────────────────────────────────────────────────────────────────────────
    1) Call           label: -_FGCIXd37UcEKq3geIC   (value €1)
-   2) WhatsApp Click label: fOZQCIjd37UcEKq3geIC   (value €1)
+   2) WhatsApp Click label: fOZQCIjd37UcEKq3gelC   (value €1)
 
    The helper functions match the Google-provided snippet exactly so they
    can be used inline:
@@ -648,7 +648,7 @@ function gtag_report_conversion_whatsapp(url) {
   };
   if (typeof gtag === "function") {
     gtag("event", "conversion", {
-      send_to: "AW-17936964522/fOZQCIjd37UcEKq3geIC",
+      send_to: "AW-17936964522/fOZQCIjd37UcEKq3gelC",
       value: 1.0,
       currency: "EUR",
       event_callback: callback,
