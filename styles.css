@@ -737,9 +737,10 @@ body::after {
     linear-gradient(180deg, var(--white) 0%, #f7f9fc 100%);
   box-shadow: var(--shadow-section);
   border-top: 3px solid var(--green);
-  /* clip-path instead of overflow:hidden — clips the decorative corner glows
-     WITHOUT breaking position:sticky for the vehicle selector inside */
-  clip-path: inset(0 round var(--r-xl));
+  /* overflow: clip clips overflow like hidden, but (unlike hidden) does NOT
+     create a scroll container — so it contains the decorative glows AND keeps
+     position:sticky working for the vehicle selector inside. */
+  overflow: clip;
   position: relative;
 }
 
@@ -3129,17 +3130,34 @@ body::after {
 }
 .cb-accept:hover { background: var(--grey-800); }
 
-/* ── ≤720px: sit above the floating CTA bar ── */
+/* ── ≤720px: cookie banner OCCUPIES the bottom CTA slot ──────────────────
+   Same bottom offset, width and max-width as .mobile-cta so the two line up
+   pixel-for-pixel. While the banner is up, body.cookie-active hides the bar;
+   on dismiss the bar slides in to take its place (smooth swap). ───────────── */
 @media (max-width: 720px) {
   #cookie-banner {
-    bottom: calc(100px + env(safe-area-inset-bottom, 0px));
+    /* identical footprint to .mobile-cta */
+    bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+    width: min(calc(100vw - 20px), 400px);
+    border-radius: 22px;
+  }
+
+  /* While consent pending: hide the call/WhatsApp bar (slides below screen) */
+  body.cookie-active .mobile-cta {
+    transform: translateX(-50%) translateY(160%);
+    opacity: 0;
+    pointer-events: none;
+  }
+  body.cookie-active .mobile-cta-backdrop {
+    opacity: 0;
   }
 }
 
 /* ── ≤540px: stack text over equal-width buttons ── */
 @media (max-width: 540px) {
   #cookie-banner {
-    width: calc(100vw - 16px);
+    /* match .mobile-cta's ≤540 footprint exactly (it uses 100% - 12px) */
+    width: min(calc(100vw - 12px), 400px);
     padding: 12px;
   }
   .cb-inner {

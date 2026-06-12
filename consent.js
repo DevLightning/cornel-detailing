@@ -38,9 +38,18 @@
   function hideBanner(el) {
     el.classList.remove('cb-visible');
     el.classList.add('cb-hiding');
+    /* Hand the bottom slot back to the call/WhatsApp bar: removing
+       'cookie-active' lets the bar slide up as the banner slides down,
+       producing a smooth swap. Also clear the scroll-driven hidden state so
+       the bar is actually revealed at the moment of the swap. */
+    document.body.classList.remove('cookie-active');
+    var bar = document.querySelector('.mobile-cta');
+    var backdrop = document.querySelector('.mobile-cta-backdrop');
+    if (bar) bar.classList.remove('mobile-cta--hidden');
+    if (backdrop) backdrop.classList.remove('mobile-cta--hidden');
     setTimeout(function () {
       if (el.parentNode) el.parentNode.removeChild(el);
-    }, 420);
+    }, 460);
   }
 
   function buildBanner() {
@@ -62,6 +71,9 @@
       '</div>';
 
     document.body.appendChild(el);
+    /* Mark consent pending → CSS hides the call/WhatsApp bar on mobile so the
+       cookie banner can occupy that same bottom slot. */
+    document.body.classList.add('cookie-active');
 
     /* Trigger entrance animation on next two frames; setTimeout fallback for
        environments that throttle requestAnimationFrame (background tabs,
