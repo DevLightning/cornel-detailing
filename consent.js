@@ -51,30 +51,27 @@
     el.setAttribute('aria-label', 'Cookie-Einstellungen');
     el.innerHTML =
       '<div class="cb-inner">' +
-        '<div class="cb-icon" aria-hidden="true">' +
-          '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">' +
-            '<path d="M12 2l7 4v5c0 4.4-3 8.5-7 10C8 19.5 5 15.4 5 11V6l7-4z"/>' +
-            '<path d="M9 12l2 2 4-4"/>' +
-          '</svg>' +
-        '</div>' +
         '<p class="cb-text">' +
-          'Cookies fürs Conversion-Tracking. ' +
-          '<a class="cb-link" href="/datenschutz.html">Mehr</a>' +
+          'Wir nutzen Cookies für Conversion-Tracking. ' +
+          '<a class="cb-link" href="/datenschutz.html">Datenschutz</a>' +
         '</p>' +
         '<div class="cb-actions">' +
           '<button class="cb-btn cb-decline" id="cbDecline" type="button">Ablehnen</button>' +
-          '<button class="cb-btn cb-accept"  id="cbAccept"  type="button">OK</button>' +
+          '<button class="cb-btn cb-accept"  id="cbAccept"  type="button">Akzeptieren</button>' +
         '</div>' +
       '</div>';
 
     document.body.appendChild(el);
 
-    /* Trigger entrance animation on next two frames */
+    /* Trigger entrance animation on next two frames; setTimeout fallback for
+       environments that throttle requestAnimationFrame (background tabs,
+       some in-app webviews) */
     requestAnimationFrame(function () {
       requestAnimationFrame(function () {
         el.classList.add('cb-visible');
       });
     });
+    setTimeout(function () { el.classList.add('cb-visible'); }, 150);
 
     el.querySelector('#cbAccept').addEventListener('click', function () {
       localStorage.setItem(KEY, 'accepted');

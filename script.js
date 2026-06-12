@@ -311,6 +311,13 @@ const projects = [
 
 const reviews = [
   {
+    name: "Liviu Cazacu",
+    photo: "https://lh3.googleusercontent.com/a/ACg8ocLtbJRqEfbh6kS7BiQTWo-drT0dUkBAlUVy_SE1NrAF2DWZFA=w96-h96-p-rp-mo-br100",
+    rating: 5,
+    text: "corneldetailing arbeitet sehr sauber und leistet wirklich hervorragende Arbeit mit großer Liebe zum Detail. Ich kann ihn wärmstens empfehlen und komme definitiv wieder! 🎉",
+    date: "vor 5 Tagen",
+  },
+  {
     name: "daf ktm",
     photo: "https://lh3.googleusercontent.com/a-/ALV-UjX3YfHQBdYpNrNBfux_QISZmF8qyVTXfmRepKicSumiJxUPtCM=w96-h96-p-rp-mo-br100",
     rating: 5,
@@ -330,13 +337,6 @@ const reviews = [
     rating: 5,
     text: "Das Beste!",
     date: "vor 2 Wochen",
-  },
-  {
-    name: "Liviu Cazacu",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocLtbJRqEfbh6kS7BiQTWo-drT0dUkBAlUVy_SE1NrAF2DWZFA=w96-h96-p-rp-mo-br100",
-    rating: 5,
-    text: "corneldetailing arbeitet sehr sauber und leistet wirklich hervorragende Arbeit mit großer Liebe zum Detail. Ich kann ihn wärmstens empfehlen und komme definitiv wieder! 🎉",
-    date: "vor 5 Tagen",
   },
   {
     name: "Alina Maldea",
@@ -411,6 +411,27 @@ function getWhatsAppLink() {
   const { whatsappNumber, whatsappPrefill } = window.SITE_CONFIG.business;
   if (!whatsappNumber) return "";
   return `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(whatsappPrefill)}`;
+}
+
+/* Vehicle-first pricing: the visitor picks their vehicle class once, every
+   package shows exactly one price, and the choice carries into the WhatsApp
+   prefill so the lead arrives with package + vehicle + price. */
+const VEHICLE_LABELS = { pkw: "PKW", suv: "SUV / Kombi", van: "Van" };
+
+function getSelectedVehicle() {
+  try {
+    const v = localStorage.getItem("cornel_vehicle");
+    if (v === "suv" || v === "van") return v;
+  } catch (e) { /* storage blocked — default */ }
+  return "pkw";
+}
+
+function getWhatsAppLinkForPackage(pkg, vehicle) {
+  const { whatsappNumber } = window.SITE_CONFIG.business;
+  if (!whatsappNumber) return "";
+  const v = vehicle || getSelectedVehicle();
+  const msg = `Hallo! Ich interessiere mich für Paket ${pkg.number} · ${pkg.title} (${VEHICLE_LABELS[v]}: ${pkg.prices[v]}). `;
+  return `https://wa.me/${whatsappNumber.replace(/\D/g, "")}?text=${encodeURIComponent(msg)}`;
 }
 
 function hasMissingRequiredFields() {
@@ -488,17 +509,18 @@ function renderShowcaseStrip() {
     )
     .join("");
 
-  const total = projects.length;
+  // Terminal card keeps users in the conversion funnel: straight to prices
+  // instead of detouring to the gallery page.
   const allCardHtml = `
-    <a class="ss-card ss-card--all reveal" href="galerie.html" style="--i:${selected.length}" aria-label="Alle ${total}+ Aufbereitungen ansehen">
+    <a class="ss-card ss-card--all reveal" href="#autoaufbereitung-pakete" style="--i:${selected.length}" aria-label="Pakete und Preise ansehen">
       <div class="ss-card-all-inner">
         <span class="ss-card-all-arrow" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14M13 5l7 7-7 7"/>
           </svg>
         </span>
-        <span class="ss-card-all-label">Alle Referenzen</span>
-        <span class="ss-card-all-count">${total}+ Aufbereitungen</span>
+        <span class="ss-card-all-label">Pakete &amp; Preise</span>
+        <span class="ss-card-all-count">${packages.length} Pakete ab € 49,-</span>
       </div>
     </a>
   `;
@@ -561,13 +583,18 @@ function renderPackages() {
     const icon = categoryIcons[cat] || categoryIcons["Premium"];
     const groupClass = catClass[cat] || "";
 
+    const veh = getSelectedVehicle();
     const rowsHtml = pkgs.map((pkg) => {
       const checkSvg = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
       const items = pkg.items.map((item) => `<li><span class="pkg-check" aria-hidden="true">${checkSvg}</span>${item}</li>`).join("");
       const note = pkg.note ? `<p class="package-note">${pkg.note}</p>` : "";
+      // Package-specific WhatsApp prefill — carries package + vehicle + price
+      const waHref = getWhatsAppLinkForPackage(pkg, veh);
+      const price = pkg.prices[veh];
+      const priceTextClass = price.length > 9 ? " is-text" : "";
 
       return `
-        <article class="pkg-row reveal">
+        <article class="pkg-row">
           <details class="pkg-details">
             <summary class="pkg-row-summary">
               <span class="pkg-row-icon" aria-hidden="true">${icon}</span>
@@ -576,19 +603,20 @@ function renderPackages() {
                 <h3>${pkg.title}</h3>
                 <p class="pkg-row-teaser">${pkg.teaser}</p>
               </div>
-              <div class="pkg-row-prices" aria-label="Preisübersicht">
-                <div class="pkg-price"><strong>${pkg.prices.pkw}</strong><span>PKW</span></div>
-                <div class="pkg-price"><strong>${pkg.prices.suv}</strong><span>SUV / Kombi</span></div>
-                <div class="pkg-price"><strong>${pkg.prices.van}</strong><span>Van</span></div>
+              <div class="pkg-price-single" data-pkw="${pkg.prices.pkw}" data-suv="${pkg.prices.suv}" data-van="${pkg.prices.van}" aria-label="Preis">
+                <strong class="${priceTextClass.trim()}">${price}</strong>
+                <span class="pkg-price-for">für ${VEHICLE_LABELS[veh]}</span>
               </div>
-              <span class="pkg-toggle" aria-hidden="true">${icons.chevron}</span>
+              <span class="pkg-toggle" aria-hidden="true"><span class="pkg-toggle-text">Leistungen</span>${icons.chevron}</span>
             </summary>
             <div class="pkg-items">
               <ul>${items}</ul>
               ${note}
               <div class="package-content-actions">
                 <a class="button button-secondary button-small" data-call-link href="#kontakt">${icons.phone}<span>Anrufen</span></a>
-                <a class="button button-primary button-small cta-pulse" data-whatsapp-link href="#kontakt">${icons.whatsapp}<span>WhatsApp</span></a>
+                ${waHref
+                  ? `<a class="button button-primary button-small cta-pulse" data-pkg-wa="${pkg.number}" href="${waHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>Dieses Paket anfragen</span></a>`
+                  : `<a class="button button-primary button-small cta-pulse" data-whatsapp-link href="#kontakt">${icons.whatsapp}<span>WhatsApp</span></a>`}
               </div>
             </div>
           </details>
@@ -607,7 +635,62 @@ function renderPackages() {
     `;
   }).join("");
 
-  grid.innerHTML = `<div class="pkg-table">${groupsHtml}</div>`;
+  // Vehicle selector — big obvious buttons, icon + label, selected = green.
+  // Sticky above the package list so the active class is always visible.
+  const vehNow = getSelectedVehicle();
+  const vehicleIcons = {
+    pkw: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13h1l2-5h12l2 5h1"/><path d="M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"/><circle cx="7.5" cy="15" r="1.4"/><circle cx="16.5" cy="15" r="1.4"/></svg>',
+    suv: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 14h1l1.5-4.5L8 7h8l2.5 2.5L20 14h1"/><path d="M4 14v3a1 1 0 001 1h1a1 1 0 001-1v-1h10v1a1 1 0 001 1h1a1 1 0 001-1v-3"/><circle cx="7.5" cy="15.5" r="1.5"/><circle cx="16.5" cy="15.5" r="1.5"/></svg>',
+    van: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16V7a1 1 0 011-1h11l4 4h1a1 1 0 011 1v5"/><path d="M3 16h2m4 0h6m4 0h2M14 6v4h5"/><circle cx="7" cy="16.5" r="1.6"/><circle cx="17" cy="16.5" r="1.6"/></svg>',
+  };
+  const selectorHtml = `
+    <div class="vehicle-select" role="group" aria-label="Fahrzeugtyp wählen">
+      <span class="vehicle-select-label">Welches Fahrzeug haben Sie?</span>
+      <div class="vehicle-select-btns">
+        ${["pkw", "suv", "van"].map((v) => `
+          <button type="button" class="vsel${v === vehNow ? " is-active" : ""}" data-vehicle="${v}" aria-pressed="${v === vehNow}">
+            ${vehicleIcons[v]}
+            <span>${VEHICLE_LABELS[v]}</span>
+          </button>
+        `).join("")}
+      </div>
+    </div>
+  `;
+
+  grid.innerHTML = `${selectorHtml}<div class="pkg-table">${groupsHtml}</div>`;
+  setupVehicleSelect();
+}
+
+function applyVehicleSelection(v) {
+  document.querySelectorAll(".vehicle-select [data-vehicle]").forEach((b) => {
+    const active = b.getAttribute("data-vehicle") === v;
+    b.classList.toggle("is-active", active);
+    b.setAttribute("aria-pressed", String(active));
+  });
+  document.querySelectorAll(".pkg-price-single").forEach((el) => {
+    const price = el.getAttribute("data-" + v) || "";
+    const strong = el.querySelector("strong");
+    strong.textContent = price;
+    strong.classList.toggle("is-text", price.length > 9);
+    el.querySelector(".pkg-price-for").textContent = "für " + VEHICLE_LABELS[v];
+  });
+  document.querySelectorAll("[data-pkg-wa]").forEach((link) => {
+    const num = Number(link.getAttribute("data-pkg-wa"));
+    const pkg = packages.find((p) => p.number === num);
+    if (pkg) link.href = getWhatsAppLinkForPackage(pkg, v);
+  });
+}
+
+function setupVehicleSelect() {
+  const wrap = document.querySelector(".vehicle-select");
+  if (!wrap) return;
+  wrap.addEventListener("click", (e) => {
+    const btn = e.target.closest("[data-vehicle]");
+    if (!btn) return;
+    const v = btn.getAttribute("data-vehicle");
+    try { localStorage.setItem("cornel_vehicle", v); } catch (err) { /* ok */ }
+    applyVehicleSelection(v);
+  });
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
@@ -764,18 +847,56 @@ function setupMobileCta() {
   const phoneHref = getPhoneHref();
   const whatsappHref = getWhatsAppLink();
 
+  const phoneDisplay = window.SITE_CONFIG.business.phoneDisplay || "";
   const callButton = phoneHref
-    ? `<a class="button button-secondary" href="${phoneHref}">${icons.phone}<span>Anrufen</span></a>`
+    ? `<a class="button button-secondary" href="${phoneHref}" aria-label="Jetzt anrufen: ${phoneDisplay}">${icons.phone}<span>Anrufen</span></a>`
     : `<a class="button button-secondary is-disabled" href="#kontakt" aria-disabled="true">${icons.phone}<span>Anrufen</span></a>`;
 
   const whatsappButton = whatsappHref
-    ? `<a class="button button-whatsapp" href="${whatsappHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>WhatsApp</span></a>`
+    ? `<a class="button button-whatsapp" href="${whatsappHref}" target="_blank" rel="noreferrer" aria-label="Termin per WhatsApp anfragen">${icons.whatsapp}<span>WhatsApp</span></a>`
     : `<a class="button button-whatsapp is-disabled" href="#kontakt" aria-disabled="true">${icons.whatsapp}<span>WhatsApp</span></a>`;
 
   container.innerHTML = `${callButton}${whatsappButton}`;
 
   // Conversion tracking handled by the unified delegated listener at the
   // top of this file. No per-button listeners needed.
+}
+
+/* One-green-per-viewport rule: hide the sticky CTA bar while a section's own
+   CTA block is on screen, so users never see duplicate contact buttons
+   stacked on top of each other. Plain scroll + rect math (no
+   IntersectionObserver) so behavior is identical everywhere. */
+function setupCtaBarAutoHide() {
+  const bar = document.querySelector(".mobile-cta");
+  const backdrop = document.querySelector(".mobile-cta-backdrop");
+  if (!bar) return;
+
+  const targets = Array.from(
+    document.querySelectorAll(".hero-actions, .mid-cta, .ceramic-actions, .glass-actions")
+  );
+  if (!targets.length) return;
+
+  let pending = false;
+  function check() {
+    pending = false;
+    const vh = window.innerHeight;
+    const hide = targets.some((t) => {
+      const r = t.getBoundingClientRect();
+      if (r.height === 0) return false;
+      const overlap = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+      return overlap > r.height * 0.3;
+    });
+    bar.classList.toggle("mobile-cta--hidden", hide);
+    if (backdrop) backdrop.classList.toggle("mobile-cta--hidden", hide);
+  }
+  function onScroll() {
+    if (pending) return;
+    pending = true;
+    setTimeout(check, 80);
+  }
+  window.addEventListener("scroll", onScroll, { passive: true });
+  window.addEventListener("resize", onScroll, { passive: true });
+  check();
 }
 
 function setupPackageDetails() {
@@ -840,19 +961,10 @@ function renderReviews() {
     </div>
   `;
 
-  // Duplicate for seamless infinite loop
-  const allCards = [...reviews, ...reviews].map(cardHtml).join("");
-  track.innerHTML = allCards;
-
-  // Touch: tap anywhere in the marquee to pause; tap again to resume
-  const marquee = track.parentElement;
-  let paused = false;
-  marquee.addEventListener("touchstart", () => {
-    paused = !paused;
-    const state = paused ? "paused" : "running";
-    track.style.webkitAnimationPlayState = state;
-    track.style.animationPlayState = state;
-  }, { passive: true });
+  // Static swipeable cards — substantial reviews first so the opening
+  // cards carry real content instead of one-liners.
+  const ordered = [...reviews].sort((a, b) => b.text.length - a.text.length);
+  track.innerHTML = ordered.map(cardHtml).join("");
 }
 
 function renderGalleryFilters() {
@@ -1351,6 +1463,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupStaticText();
   setupActionLinks();
   setupMobileCta();
+  setupCtaBarAutoHide();
   setupPackageDetails();
   setupReveal();
   setupMobileMenu();

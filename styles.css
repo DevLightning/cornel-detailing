@@ -737,7 +737,9 @@ body::after {
     linear-gradient(180deg, var(--white) 0%, #f7f9fc 100%);
   box-shadow: var(--shadow-section);
   border-top: 3px solid var(--green);
-  overflow: hidden;
+  /* clip-path instead of overflow:hidden — clips the decorative corner glows
+     WITHOUT breaking position:sticky for the vehicle selector inside */
+  clip-path: inset(0 round var(--r-xl));
   position: relative;
 }
 
@@ -981,17 +983,25 @@ body::after {
 }
 
 .pkg-toggle {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
+  gap: 6px;
   height: 32px;
-  border-radius: 50%;
+  padding: 0 12px;
+  border-radius: 999px;
   border: 1px solid var(--border);
   background: var(--off-white);
   color: var(--grey-500);
   flex-shrink: 0;
   transition: background 0.18s var(--ease), border-color 0.18s var(--ease), color 0.18s var(--ease), box-shadow 0.18s var(--ease);
+}
+.pkg-toggle-text {
+  font-family: var(--font-heading);
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
 }
 .pkg-row-summary:hover .pkg-toggle {
   background: rgba(var(--pkg-cat-rgb), 0.08);
@@ -1091,61 +1101,26 @@ body::after {
 }
 .reviews-stars-big { color: #FBBC04; font-size: 1.1rem; letter-spacing: 2px; }
 
-/* Marquee wrapper — hides overflow and fades edges */
-.reviews-marquee {
+/* Reviews scroller — static swipeable cards (same pattern as showcase strip).
+   Readable at the user's own pace, crawlable, screen-reader accessible. */
+.reviews-scroller {
   position: relative;
-  overflow: hidden;
   margin-top: 32px;
-  /* NOTE: mask-image removed — it blocks child transform animations on iOS Safari 12–14 */
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-bottom: 6px;
 }
-
-/* Fade overlays via pseudo-elements — same visual result, no compositing conflict */
-.reviews-marquee::before,
-.reviews-marquee::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  width: 80px;
-  z-index: 2;
-  pointer-events: none;
-}
-.reviews-marquee::before {
-  left: 0;
-  background: linear-gradient(to right, var(--white) 0%, transparent 100%);
-}
-.reviews-marquee::after {
-  right: 0;
-  background: linear-gradient(to left, var(--white) 0%, transparent 100%);
-}
-
-.reviews-marquee:hover .reviews-track {
-  -webkit-animation-play-state: paused;
-  animation-play-state: paused;
-}
+.reviews-scroller::-webkit-scrollbar { display: none; }
 
 .reviews-track {
   display: flex;
-  /* gap removed — not supported in iOS Safari < 14.5; use margin-right on cards instead */
-  width: -webkit-max-content;
   width: max-content;
-  -webkit-animation: reviews-scroll 40s linear infinite;
-  animation: reviews-scroll 40s linear infinite;
-  will-change: transform;
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
-  position: relative;
-  z-index: 1;
+  padding: 4px 2px;
 }
-
-@-webkit-keyframes reviews-scroll {
-  from { -webkit-transform: translateX(0); transform: translateX(0); }
-  to   { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
-}
-@keyframes reviews-scroll {
-  from { -webkit-transform: translateX(0); transform: translateX(0); }
-  to   { -webkit-transform: translateX(-50%); transform: translateX(-50%); }
-}
+.reviews-track .review-card { scroll-snap-align: start; }
 
 /* Individual card */
 .review-card {
@@ -1220,9 +1195,25 @@ body::after {
 
 .reviews-cta {
   display: flex;
-  justify-content: center;
-  margin-top: 28px;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  margin-top: 24px;
 }
+
+.reviews-read-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.86rem;
+  font-weight: 600;
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-color: rgba(59,106,212,0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+.reviews-read-all:hover { text-decoration-color: var(--blue); }
 
 .reviews-leave-btn {
   display: inline-flex;
@@ -2567,9 +2558,9 @@ body::after {
   z-index: 50;
   display: none; grid-template-columns: 1fr 1fr; gap: 7px;
   width: calc(100% - 20px); max-width: 400px;
-  padding: 7px; border-radius: 30px;
-  border: 1px solid rgba(255,255,255,0.92);
-  background: rgba(255,255,255,0.78);
+  padding: 7px; border-radius: 31px;
+  border: 1px solid rgba(255,255,255,0.95);
+  background: rgba(255,255,255,0.86);
   backdrop-filter: blur(40px) saturate(2.0);
   -webkit-backdrop-filter: blur(40px) saturate(2.0);
   box-shadow:
@@ -2580,18 +2571,35 @@ body::after {
     0 20px 56px rgba(15,20,34,0.12),
     0 40px 80px rgba(15,20,34,0.08);
   transform: translateX(-50%);
+  transition: transform 0.32s var(--ease), opacity 0.26s var(--ease);
+}
+
+/* Hidden while an in-section CTA block is on screen (one green per viewport) */
+.mobile-cta.mobile-cta--hidden {
+  transform: translateX(-50%) translateY(150%);
+  opacity: 0;
+  pointer-events: none;
+}
+.mobile-cta-backdrop {
+  transition: opacity 0.26s var(--ease);
+}
+.mobile-cta-backdrop.mobile-cta--hidden {
+  opacity: 0;
 }
 .mobile-cta a {
-  min-height: 50px;
+  min-height: 54px;
   min-width: 0;
 }
 .mobile-cta .button {
   width: 100%;
   min-width: 0;
   padding: 0 14px;
-  font-size: 0.84rem;
-  height: 50px;
-  border-radius: 24px;
+  font-size: 0.95rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  height: 54px;
+  border-radius: 25px;
+  gap: 9px;
 }
 .mobile-cta .button span {
   overflow: hidden;
@@ -2600,9 +2608,11 @@ body::after {
 }
 .mobile-cta .button svg {
   flex-shrink: 0;
-  width: 17px;
-  height: 17px;
+  width: 20px;
+  height: 20px;
 }
+/* Call button: green phone icon for instant recognition */
+.mobile-cta .button-secondary svg { fill: var(--green); }
 /* WhatsApp button — premium green gradient with inner glow */
 .mobile-cta .button-whatsapp {
   background: linear-gradient(170deg, #27d065 0%, #16a34a 100%);
@@ -2793,8 +2803,17 @@ body::after {
     height: 56px; border-radius: 16px;
   }
   .hero-link { font-size: 0.95rem; padding: 10px 14px; }
-  .hero-trust-row { gap: 10px; flex-wrap: wrap; justify-content: center; }
-  .htb { font-size: 0.78rem; }
+  /* Trust row: stars line on top, the two short badges share line two —
+     no orphaned third line */
+  .hero-trust-row {
+    flex-wrap: wrap;
+    justify-content: center;
+    column-gap: 14px;
+    row-gap: 7px;
+  }
+  .hero-trust-row .htb:first-child { flex-basis: 100%; justify-content: center; text-align: center; }
+  .htb-sep { display: none; }
+  .htb { font-size: 0.78rem; display: inline-flex; }
   .hero-availability { font-size: 0.8rem; margin-top: 18px; }
 
   /* ── Section structural ── */
@@ -2816,12 +2835,23 @@ body::after {
   }
   .section-heading p { font-size: 0.95rem; line-height: 1.6; }
 
-  /* ── Value cards — bigger icons & text ── */
-  .value-card { padding: 22px 20px; }
-  .value-card .icon-badge { width: 52px; height: 52px; border-radius: 14px; }
-  .value-card .icon-badge svg { width: 26px; height: 26px; }
-  .value-card h3 { font-size: 1.1rem; }
-  .value-card p { font-size: 0.95rem; line-height: 1.55; }
+  /* ── Value cards — compact horizontal rows on mobile (icon left, text right)
+     so the section takes ~half the vertical space ── */
+  .value-card {
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    column-gap: 14px;
+    align-items: start;
+    padding: 14px 16px;
+  }
+  .value-card .icon-badge {
+    width: 44px; height: 44px; border-radius: 12px;
+    grid-row: 1 / span 2;
+  }
+  .value-card .icon-badge svg { width: 22px; height: 22px; }
+  .value-card h3 { font-size: 1rem; margin: 2px 0 2px; }
+  .value-card p { font-size: 0.88rem; line-height: 1.45; margin: 0; }
+  .value-grid { gap: 10px; }
 
   /* ── Buttons — taller and more confident ── */
   .button { height: 52px; font-size: 0.94rem; padding: 0 22px; border-radius: 16px; }
@@ -2870,7 +2900,9 @@ body::after {
     align-items: flex-start;
   }
   .pkg-row-icon { display: none; }
-  .pkg-row-info { flex: 1 1 0; min-width: 0; overflow: hidden; }
+  /* Info gets ≥56% of the row so titles never wrap mid-word; the
+     "Leistungen" pill is pushed to its own line below */
+  .pkg-row-info { flex: 1 1 56%; min-width: 0; overflow: hidden; }
   .pkg-row-num { font-size: 0.74rem; }
   .pkg-row-info h3 {
     font-size: 1.08rem;
@@ -2900,12 +2932,14 @@ body::after {
   }
   .pkg-price span { font-size: 0.74rem; font-weight: 600; }
   .pkg-toggle {
-    width: 36px; height: 36px;
+    height: 36px;
+    padding: 0 14px;
     align-self: flex-start;
     margin-top: 4px;
     flex-shrink: 0;
   }
-  .pkg-toggle svg { width: 16px; height: 16px; }
+  .pkg-toggle-text { font-size: 0.78rem; }
+  .pkg-toggle svg { width: 15px; height: 15px; }
   .pkg-items { padding: 16px 14px 20px; }
   .pkg-items ul { grid-template-columns: 1fr; gap: 10px 0; }
   .pkg-items ul li {
@@ -2985,7 +3019,7 @@ body::after {
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
-   COOKIE CONSENT BANNER  — minimal glass pill
+   COOKIE CONSENT BANNER — minimal clean card
    ═══════════════════════════════════════════════════════════════════════════ */
 
 #cookie-banner {
@@ -2993,23 +3027,19 @@ body::after {
   bottom: 16px;
   left: 50%;
   z-index: 9999;
-  width: min(calc(100vw - 24px), 460px);
-  border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.86);
-  background: rgba(255,255,255,0.88);
-  backdrop-filter: blur(36px) saturate(1.8);
-  -webkit-backdrop-filter: blur(36px) saturate(1.8);
+  width: min(calc(100vw - 24px), 480px);
+  border-radius: 14px;
+  border: 1px solid var(--border-strong);
+  background: var(--white);
   box-shadow:
-    inset 0 1px 0 rgba(255,255,255,1),
-    0 2px 8px rgba(15,18,25,0.06),
-    0 10px 32px rgba(15,18,25,0.10),
-    0 24px 56px rgba(15,18,25,0.08);
-  padding: 10px 12px;
+    0 2px 8px rgba(15,18,25,0.07),
+    0 12px 36px rgba(15,18,25,0.13);
+  padding: 12px 14px;
   transform: translateX(-50%) translateY(calc(100% + 24px));
   opacity: 0;
   transition:
-    transform 0.42s cubic-bezier(0.34, 1.15, 0.64, 1),
-    opacity   0.28s var(--ease);
+    transform 0.38s cubic-bezier(0.34, 1.1, 0.64, 1),
+    opacity   0.26s var(--ease);
   will-change: transform, opacity;
 }
 
@@ -3027,34 +3057,16 @@ body::after {
 .cb-inner {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 14px;
 }
 
-/* Compact icon — 30×30 */
-.cb-icon {
-  flex-shrink: 0;
-  width: 30px;
-  height: 30px;
-  border-radius: 9px;
-  background: linear-gradient(150deg, rgba(37,185,86,0.16) 0%, rgba(37,185,86,0.06) 100%);
-  border: 1px solid rgba(37,185,86,0.24);
-  color: var(--green);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
-}
-.cb-icon svg { width: 16px; height: 16px; }
-
-/* Inline text + link */
 .cb-text {
   flex: 1;
   min-width: 0;
   margin: 0;
   font-size: 0.8rem;
-  line-height: 1.35;
+  line-height: 1.4;
   color: var(--grey-600);
-  letter-spacing: -0.005em;
 }
 .cb-link {
   color: var(--blue);
@@ -3066,139 +3078,83 @@ body::after {
 }
 .cb-link:hover { text-decoration-color: var(--blue); }
 
-/* Buttons row */
 .cb-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
   align-items: center;
 }
 
 .cb-btn {
   position: relative;
-  height: 34px;
-  padding: 0 14px;
+  height: 38px;
+  padding: 0 16px;
   border-radius: 10px;
-  border: none;
   cursor: pointer;
   font-family: var(--font-heading);
-  font-size: 0.78rem;
+  font-size: 0.8rem;
   font-weight: 700;
   letter-spacing: -0.005em;
   white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   transition: background 0.16s var(--ease), color 0.16s var(--ease),
-              transform 0.14s var(--ease), box-shadow 0.16s var(--ease);
+              border-color 0.16s var(--ease), transform 0.14s var(--ease);
 }
-/* Expand hit-area to meet 44pt touch target without enlarging visual */
+/* Expanded hit-area: 44pt touch target without growing the visual */
 .cb-btn::after {
   content: '';
   position: absolute;
-  inset: -6px;
+  inset: -5px;
 }
 .cb-btn:active { transform: scale(0.97); }
 
 .cb-decline {
-  background: transparent;
-  color: var(--grey-500);
-  padding: 0 10px;
-}
-.cb-decline:hover { color: var(--dark); background: rgba(15,20,34,0.05); }
-
-.cb-accept {
-  background: #e6e9f0;
-  color: var(--dark);
+  background: var(--white);
   border: 1px solid var(--border-strong);
-  box-shadow: 0 1px 3px rgba(15,20,34,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+  color: var(--grey-600);
 }
-.cb-accept:hover {
-  background: #dce0ea;
-  box-shadow: 0 2px 7px rgba(15,20,34,0.10), inset 0 1px 0 rgba(255,255,255,0.6);
+.cb-decline:hover {
+  background: var(--grey-50);
+  color: var(--dark);
 }
 
-/* ── Tablet / large phone (≤720px) — wherever the floating CTA bar shows,
-   lift the cookie banner well clear of it so the "Akzeptieren / OK" button
-   can't be mis-tapped as the WhatsApp button below.
-   CTA bar = ~64px tall + 12px bottom inset → reserve ~24px clear gap above it,
-   plus the iPhone home-indicator safe area. ── */
+/* Accept: dark filled — clearly distinct from grey decline AND from the
+   green WhatsApp CTA below the banner */
+.cb-accept {
+  background: var(--dark);
+  border: 1px solid var(--dark);
+  color: #fff;
+}
+.cb-accept:hover { background: var(--grey-800); }
+
+/* ── ≤720px: sit above the floating CTA bar ── */
 @media (max-width: 720px) {
   #cookie-banner {
     bottom: calc(100px + env(safe-area-inset-bottom, 0px));
   }
 }
 
-/* ── Mobile (≤540px) — matched button geometry ── */
+/* ── ≤540px: stack text over equal-width buttons ── */
 @media (max-width: 540px) {
   #cookie-banner {
     width: calc(100vw - 16px);
-    border-radius: 14px;
-    padding: 10px 10px;
+    padding: 12px;
   }
   .cb-inner {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-areas:
-      "icon text"
-      "actions actions";
-    column-gap: 10px;
-    row-gap: 8px;
-    align-items: center;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
   }
-  .cb-icon {
-    grid-area: icon;
-    width: 30px;
-    height: 30px;
-    border-radius: 9px;
-  }
-  .cb-icon svg { width: 15px; height: 15px; }
-  .cb-text {
-    grid-area: text;
-    font-size: 0.78rem;
-    line-height: 1.35;
-  }
+  .cb-text { text-align: left; }
   .cb-actions {
-    grid-area: actions;
     display: grid;
-    grid-template-columns: 1fr 1.6fr;
+    grid-template-columns: 1fr 1fr;
     gap: 8px;
     width: 100%;
   }
-  .cb-btn {
-    height: 38px;
-    padding: 0;                    /* width is fully controlled by the grid */
-    border-radius: 10px;
-    font-size: 0.82rem;
-    width: 100%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .cb-decline {
-    background: rgba(15,20,34,0.04);
-    border: 1px solid rgba(15,20,34,0.08);
-    color: var(--grey-600);
-  }
-  .cb-decline:hover {
-    background: rgba(15,20,34,0.08);
-    color: var(--dark);
-  }
-  .cb-accept {
-    box-shadow: 0 1px 4px rgba(15,20,34,0.08), inset 0 1px 0 rgba(255,255,255,0.6);
-  }
-}
-
-/* ── Very small phones (≤360px) ── */
-@media (max-width: 360px) {
-  #cookie-banner { padding: 9px 9px; }
-  .cb-icon { display: none; }
-  .cb-inner {
-    grid-template-columns: 1fr;
-    grid-template-areas:
-      "text"
-      "actions";
-    row-gap: 8px;
-  }
-  .cb-text { font-size: 0.76rem; }
-  .cb-btn { height: 36px; font-size: 0.8rem; }
+  .cb-btn { width: 100%; height: 42px; font-size: 0.84rem; padding: 0; }
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -4044,6 +4000,10 @@ body::after {
 }
 .glass-call svg { color: #fff; }
 
+/* Kontakt card WhatsApp — secondary white button, green icon for recognition */
+.glass-wa svg { fill: var(--green); }
+.glass-wa:hover { border-color: var(--green); }
+
 /* ── Mobile response promise badge ── */
 @media (max-width: 720px) {
   .hero-availability--promise {
@@ -4470,3 +4430,189 @@ body.lb-locked { overflow: hidden; }
   }
 }
 
+
+/* ════════════════════════════════════════════════════════════════════════════
+   VEHICLE-FIRST PRICING — selector + single price per package
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Sticky selector card — stays visible while scrolling the package list */
+.vehicle-select {
+  position: sticky;
+  top: 80px;
+  z-index: 30;
+  margin-bottom: 14px;
+  padding: 12px 14px 14px;
+  border-radius: 18px;
+  border: 1px solid var(--border-strong);
+  background: var(--white);
+  box-shadow:
+    0 2px 8px rgba(15,20,34,0.05),
+    0 10px 30px rgba(15,20,34,0.10);
+}
+
+.vehicle-select-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--dark);
+  margin-bottom: 10px;
+}
+
+.vehicle-select-btns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.vsel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  min-height: 72px;
+  padding: 10px 6px;
+  border-radius: 14px;
+  border: 1.5px solid var(--border-strong);
+  background: var(--white);
+  color: var(--grey-600);
+  font-family: var(--font-heading);
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: -0.005em;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background 0.16s var(--ease), border-color 0.16s var(--ease),
+              color 0.16s var(--ease), box-shadow 0.16s var(--ease),
+              transform 0.14s var(--ease);
+}
+.vsel svg { width: 30px; height: 30px; flex-shrink: 0; }
+.vsel:hover { border-color: var(--green); color: var(--dark); }
+.vsel:active { transform: scale(0.97); }
+.vsel.is-active {
+  background: var(--green);
+  border-color: var(--green);
+  color: #fff;
+  box-shadow: 0 4px 16px var(--green-glow);
+}
+
+/* Single price per row — one big number, vehicle label underneath */
+.pkg-price-single {
+  text-align: right;
+  flex-shrink: 0;
+  margin-left: 4px;
+}
+.pkg-price-single strong {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  color: var(--dark);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+/* Long text prices ("nach Besichtigung") shrink and wrap */
+.pkg-price-single strong.is-text {
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: normal;
+  max-width: 132px;
+  line-height: 1.25;
+}
+.pkg-price-single .pkg-price-for {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--grey-400);
+  margin-top: 2px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 720px) {
+  .vehicle-select {
+    top: 68px;
+    border-radius: 16px;
+    padding: 10px 10px 12px;
+  }
+  .vehicle-select-label { font-size: 0.94rem; }
+  .vsel { min-height: 76px; font-size: 0.82rem; }
+  .vsel svg { width: 32px; height: 32px; }
+
+  .pkg-price-single { align-self: flex-start; margin-left: auto; }
+  .pkg-price-single strong { font-size: 1.4rem; }
+  .pkg-price-single strong.is-text { max-width: 120px; }
+}
+
+@media (max-width: 360px) {
+  .vsel { min-height: 68px; font-size: 0.76rem; padding: 8px 4px; }
+  .vsel svg { width: 28px; height: 28px; }
+  .pkg-price-single strong { font-size: 1.25rem; }
+}
+
+/* ── Desktop: selector as one compact row (label left, buttons right) ── */
+@media (min-width: 721px) {
+  .vehicle-select {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 18px;
+  }
+  .vehicle-select-label {
+    margin-bottom: 0;
+    flex-shrink: 0;
+  }
+  .vehicle-select-btns {
+    margin-left: auto;
+    grid-template-columns: repeat(3, 158px);
+  }
+  .vsel {
+    flex-direction: row;
+    gap: 8px;
+    min-height: 52px;
+    padding: 8px 10px;
+  }
+  .vsel svg { width: 24px; height: 24px; }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   iOS / IPHONE OPTIMIZATIONS
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* No grey tap flash on iOS — buttons have their own pressed states */
+a, button { -webkit-tap-highlight-color: transparent; }
+
+/* Dynamic viewport height: keeps full-height correct when the Safari
+   toolbar collapses/expands (falls back to 100vh where unsupported) */
+@supports (min-height: 100dvh) {
+  body { min-height: 100dvh; }
+}
+
+@media (max-width: 720px) {
+  /* Content never hides behind the CTA bar + home indicator */
+  .site-shell {
+    padding-bottom: calc(96px + env(safe-area-inset-bottom, 0px));
+  }
+
+  /* Cheaper backdrop blurs on mobile GPUs — visually near-identical,
+     significantly less compositing work on older iPhones */
+  .topbar {
+    backdrop-filter: blur(22px) saturate(1.8);
+    -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  }
+  .mobile-cta {
+    backdrop-filter: blur(22px) saturate(1.8);
+    -webkit-backdrop-filter: blur(22px) saturate(1.8);
+  }
+  .mobile-cta-backdrop {
+    backdrop-filter: blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  }
+  .topnav {
+    backdrop-filter: blur(24px) saturate(1.8);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  }
+}
