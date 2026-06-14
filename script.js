@@ -757,7 +757,30 @@ function gtag_report_conversion_whatsapp(url) {
     return /^tel:/i.test(href);
   }
 
+  /* ── Conversion-quality guards (reduce false / inflated conversions) ──────
+     1) Only count REAL lead CTAs — the actual WhatsApp/call buttons — not any
+        incidental wa.me / tel: link that might exist elsewhere on the page.
+     2) Count each action at most once per browsing session — kills inflation
+        from rage-clicks, double-taps, curiosity clicks and tapping several
+        package buttons. The first genuine click is tracked; later clicks just
+        open WhatsApp / the dialer normally without re-counting.
+     3) Ignore synthetic / scripted clicks (bots, crawlers) — only real
+        user-generated taps have event.isTrusted === true.
+     None of this changes how the buttons look or feel — clicking is identical.
+  */
+  var WA_CTA = "a.button-whatsapp, a.topnav-cta, a.glass-wa, a[data-whatsapp-link], a[data-pkg-wa]";
+  var CALL_CTA = "a.glass-call, a.topnav-call, a.topbar-phone, a[data-call-link], .mobile-cta a.button-secondary";
+
+  function alreadyCounted(key) {
+    try { return sessionStorage.getItem(key) === "1"; } catch (e) { return false; }
+  }
+  function markCounted(key) {
+    try { sessionStorage.setItem(key, "1"); } catch (e) { /* storage blocked — still fire */ }
+  }
+
   function onDocumentClick(e) {
+    // (3) Drop bot / scripted clicks — real taps are trusted
+    if (!e.isTrusted) return;
     // Let the browser handle modifier-click / middle-click (new tab/window)
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (e.button !== undefined && e.button !== 0) return;
@@ -769,9 +792,17 @@ function gtag_report_conversion_whatsapp(url) {
     var url = link.href;
 
     if (isWhatsAppHref(rawHref)) {
+      // (1) only real WhatsApp CTA buttons — otherwise let the link work untracked
+      if (!link.matches(WA_CTA)) return;
+      // (2) once per session
+      if (alreadyCounted("cornel_wa_lead")) return;
+      markCounted("cornel_wa_lead");
       e.preventDefault();
       gtag_report_conversion_whatsapp(url);
     } else if (isCallHref(rawHref)) {
+      if (!link.matches(CALL_CTA)) return;
+      if (alreadyCounted("cornel_call_lead")) return;
+      markCounted("cornel_call_lead");
       e.preventDefault();
       gtag_report_conversion(url);
     }
