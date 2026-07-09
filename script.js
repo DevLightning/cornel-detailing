@@ -136,7 +136,7 @@ const projects = [
     title: "Porsche 911 Cabrio",
     label: "Showcase Finish",
     description: "Kräftige Farbe, tiefer Lack und ein Premium-Auftritt.",
-    asset: "assets/gallery/porsche-cabrio-finish.jpg",
+    asset: "assets/gallery/porsche-cabrio-finish.webp",
     layout: "wide",
     featured: true,
     category: "Exterieur",
@@ -146,7 +146,7 @@ const projects = [
     title: "Porsche 911 Cockpit",
     label: "Innenraum Detail",
     description: "Leder, Kontraste und feine Oberflächen professionell aufbereitet.",
-    asset: "assets/gallery/porsche-cockpit.jpg",
+    asset: "assets/gallery/porsche-cockpit.webp",
     layout: "tall",
     featured: true,
     category: "Innenraum",
@@ -156,7 +156,7 @@ const projects = [
     title: "Porsche 911 Heck",
     label: "Exterieur Abschluss",
     description: "Finish für den finalen Eindruck mit gleichmäßigem Glanz.",
-    asset: "assets/gallery/porsche-heck.jpg",
+    asset: "assets/gallery/porsche-heck.webp",
     layout: "tall",
     featured: true,
     category: "Exterieur",
@@ -166,7 +166,7 @@ const projects = [
     title: "Ford Transit Custom",
     label: "Flächenfinish",
     description: "Gerade Flächen und Spiegelungen sauber herausgearbeitet.",
-    asset: "assets/gallery/ford-transit-exterieur.jpg",
+    asset: "assets/gallery/ford-transit-exterieur.webp",
     layout: "tall",
     category: "Exterieur",
   },
@@ -175,7 +175,7 @@ const projects = [
     title: "Ford Transit Cockpit",
     label: "Cockpit Aufbereitung",
     description: "Strukturierte Flächen und ein sauberer Fahrerbereich.",
-    asset: "assets/gallery/ford-transit-cockpit.jpg",
+    asset: "assets/gallery/ford-transit-cockpit.webp",
     layout: "square",
     category: "Innenraum",
   },
@@ -184,7 +184,7 @@ const projects = [
     title: "Ford Transit Dashboard",
     label: "Detail Reinigung",
     description: "Klare Displays und gepflegte Oberflächen bis ins Detail.",
-    asset: "assets/gallery/ford-transit-dashboard.jpg",
+    asset: "assets/gallery/ford-transit-dashboard.webp",
     layout: "square",
     category: "Innenraum",
   },
@@ -193,7 +193,7 @@ const projects = [
     title: "Citroën C4 Picasso",
     label: "Reflexionskontrolle",
     description: "Reflexionslinien zeigen die Qualität von Politur und Lackfinish.",
-    asset: "assets/gallery/citroen-reflexion.jpg",
+    asset: "assets/gallery/citroen-reflexion.webp",
     layout: "wide",
     category: "Exterieur",
   },
@@ -202,7 +202,7 @@ const projects = [
     title: "Aston Martin Vantage",
     label: "Motorraum Detail",
     description: "Saubere technische Flächen für ein komplettes Premium-Bild.",
-    asset: "assets/gallery/aston-martin-motorraum.jpg",
+    asset: "assets/gallery/aston-martin-motorraum.webp",
     layout: "full",
     category: "Detail",
   },
@@ -211,7 +211,7 @@ const projects = [
     title: "Ford Transit Custom",
     label: "Reflexionskontrolle",
     description: "Hexagonale Lichtreflexionen zeigen die Qualität der Lackoberfläche nach der Aufbereitung.",
-    asset: "assets/gallery/ford-transit-reflexion-front.jpg",
+    asset: "assets/gallery/ford-transit-reflexion-front.webp",
     layout: "tall",
     category: "Exterieur",
   },
@@ -220,7 +220,7 @@ const projects = [
     title: "Mercedes-Benz V-Klasse",
     label: "Exterieur Finish",
     description: "Tiefschwarzer Lack, poliert und versiegelt · ein Minivan auf Premium-Niveau.",
-    asset: "assets/gallery/mercedes-vito-exterieur.jpg",
+    asset: "assets/gallery/mercedes-vito-exterieur.webp",
     layout: "wide",
     category: "Exterieur",
   },
@@ -229,7 +229,7 @@ const projects = [
     title: "Aston Martin Vantage",
     label: "Exterieur Rot",
     description: "Kräftiges Rot, tiefe Reflexionen und ein perfektes Gesamtbild nach der Vollaufbereitung.",
-    asset: "assets/gallery/aston-martin-rot-exterieur.jpg",
+    asset: "assets/gallery/aston-martin-rot-exterieur.webp",
     layout: "square",
     category: "Exterieur",
   },
@@ -238,7 +238,7 @@ const projects = [
     title: "Lackanalyse",
     label: "Reflexion Nahaufnahme",
     description: "Hexagonale Lichtmuster machen kleinste Unregelmäßigkeiten im Lack sichtbar.",
-    asset: "assets/gallery/lack-reflexion-nahaufnahme.jpg",
+    asset: "assets/gallery/lack-reflexion-nahaufnahme.webp",
     layout: "square",
     category: "Detail",
   },
@@ -247,7 +247,7 @@ const projects = [
     title: "Aston Martin Vantage",
     label: "Motor Aufbereitung",
     description: "Jedes Detail zählt · aufbereiteter Motorraum für ein lückenloses Premium-Ergebnis.",
-    asset: "assets/gallery/aston-martin-motorraum-detail.jpg",
+    asset: "assets/gallery/aston-martin-motorraum-detail.webp",
     layout: "square",
     category: "Detail",
   },
@@ -256,7 +256,7 @@ const projects = [
     title: "Audi RS3 Sportback",
     label: "Exterieur Finish",
     description: "Tiefschwarzer Lack, poliert und versiegelt · sportliche Präzision auf einem anderen Level.",
-    asset: "assets/gallery/Screenshot_1.png",
+    asset: "assets/gallery/Screenshot_1.webp",
     layout: "full",
     category: "Exterieur",
   },
@@ -265,7 +265,7 @@ const projects = [
     title: "BMW M3 Competition",
     label: "Keramikversiegelung",
     description: "Sao-Paulo-Gelb, tiefer Glanz und keramisch versiegelt · jedes Detail unter Hexagon-Licht inszeniert.",
-    asset: "assets/gallery/bmw1.jpeg",
+    asset: "assets/gallery/bmw1.webp",
     layout: "tall",
     featured: true,
     category: "Exterieur",
@@ -275,7 +275,7 @@ const projects = [
     title: "BMW M3 Competition",
     label: "Front Detail",
     description: "Kräftiges Gelb mit Spiegelreflexionen · Lack wie am ersten Tag, optimal vorbereitet auf den Keramikschutz.",
-    asset: "assets/gallery/bmw2.jpeg",
+    asset: "assets/gallery/bmw2.webp",
     layout: "tall",
     featured: true,
     category: "Exterieur",
@@ -285,7 +285,7 @@ const projects = [
     title: "BMW M3 Competition",
     label: "Carbondach Detail",
     description: "Hexagon-Reflexionen auf Carbon und Heckflügel · Beweis für eine perfekt versiegelte Oberfläche.",
-    asset: "assets/gallery/bmw3.jpeg",
+    asset: "assets/gallery/bmw3.webp",
     layout: "tall",
     category: "Detail",
   },
@@ -294,7 +294,7 @@ const projects = [
     title: "BMW M3 Competition",
     label: "Carbon Spiegel",
     description: "Carbongewebe und Lack treffen sich · beides hochglänzend versiegelt für langen Schutz.",
-    asset: "assets/gallery/bmw4.jpeg",
+    asset: "assets/gallery/bmw4.webp",
     layout: "square",
     category: "Detail",
   },
@@ -303,7 +303,7 @@ const projects = [
     title: "BMW M3 Competition",
     label: "Felgen & Bremse",
     description: "Schmiederäder, blaue Bremssättel und Lack im Hexagon-Spiegelbild · Detailing auf Showroom-Niveau.",
-    asset: "assets/gallery/bmw5.jpeg",
+    asset: "assets/gallery/bmw5.webp",
     layout: "wide",
     category: "Exterieur",
   },
@@ -757,19 +757,34 @@ function gtag_report_conversion_whatsapp(url) {
     return /^tel:/i.test(href);
   }
 
-  /* ── Conversion-quality guards (reduce false / inflated conversions) ──────
-     1) Only count REAL lead CTAs — the actual WhatsApp/call buttons — not any
-        incidental wa.me / tel: link that might exist elsewhere on the page.
-     2) Count each action at most once per browsing session — kills inflation
-        from rage-clicks, double-taps, curiosity clicks and tapping several
-        package buttons. The first genuine click is tracked; later clicks just
-        open WhatsApp / the dialer normally without re-counting.
-     3) Ignore synthetic / scripted clicks (bots, crawlers) — only real
-        user-generated taps have event.isTrusted === true.
-     None of this changes how the buttons look or feel — clicking is identical.
+  /* ── Conversion-quality guards ─────────────────────────────────────────────
+     Layered gates so only clicks that look like a real customer count.
+     None of them change how the buttons look or feel.
+
+     1) CTA scope      — only the real WhatsApp/call buttons count.
+     2) isTrusted      — synthetic/bot clicks never count.
+     3) Session dedupe — one WhatsApp + one call conversion per session,
+        marked at FIRE time (a gated click doesn't burn the slot).
+     4) Engagement     — visitor must have scrolled OR been on the page >4s.
+        Instant taps straight off an ad click are bounces/fat-fingers.
+     5) Bar cooldown   — taps on the floating bar within 450ms of it sliding
+        in are swallowed entirely (the "under the finger" misclick).
+     6) App-open confirmation (WhatsApp only) — the conversion is sent via
+        beacon ONLY when the page actually hands off to WhatsApp
+        (visibilitychange/pagehide within 3.5s of the tap). A click whose
+        hand-off is cancelled never converts. Calls fire at click time with
+        gates 1–5 (the iOS call sheet doesn't hide the page, so an app-open
+        gate would erase legitimate iPhone call conversions).
   */
   var WA_CTA = "a.button-whatsapp, a.topnav-cta, a.glass-wa, a[data-whatsapp-link], a[data-pkg-wa]";
   var CALL_CTA = "a.glass-call, a.topnav-call, a.topbar-phone, a[data-call-link], .mobile-cta a.button-secondary";
+
+  var pageLoadedAt = Date.now();
+  var hasScrolled = false;
+  window.addEventListener("scroll", function () { hasScrolled = true; }, { passive: true, once: true });
+  function visitorEngaged() {
+    return hasScrolled || (Date.now() - pageLoadedAt > 4000);
+  }
 
   function alreadyCounted(key) {
     try { return sessionStorage.getItem(key) === "1"; } catch (e) { return false; }
@@ -778,10 +793,41 @@ function gtag_report_conversion_whatsapp(url) {
     try { sessionStorage.setItem(key, "1"); } catch (e) { /* storage blocked — still fire */ }
   }
 
+  function sendConversionBeacon(label) {
+    if (typeof gtag !== "function") return;
+    gtag("event", "conversion", {
+      send_to: label,
+      value: 1.0,
+      currency: "EUR",
+      transport_type: "beacon",
+    });
+  }
+
+  /* Fire only when the browser actually leaves for the app. Beacon transport
+     survives the page being backgrounded/unloaded mid-send. */
+  function fireOnAppOpen(label, key) {
+    var done = false;
+    function fire() {
+      if (done) return;
+      done = true;
+      cleanup();
+      markCounted(key);
+      sendConversionBeacon(label);
+    }
+    function onVis() { if (document.visibilityState === "hidden") fire(); }
+    function cleanup() {
+      document.removeEventListener("visibilitychange", onVis);
+      window.removeEventListener("pagehide", fire);
+    }
+    document.addEventListener("visibilitychange", onVis);
+    window.addEventListener("pagehide", fire);
+    setTimeout(function () { if (!done) cleanup(); }, 3500);
+  }
+  // exposed for verification/testing
+  window.__fireOnAppOpen = fireOnAppOpen;
+
   function onDocumentClick(e) {
-    // (3) Drop bot / scripted clicks — real taps are trusted
-    if (!e.isTrusted) return;
-    // Let the browser handle modifier-click / middle-click (new tab/window)
+    if (!e.isTrusted) return;                                       // (2)
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
     if (e.button !== undefined && e.button !== 0) return;
 
@@ -789,22 +835,26 @@ function gtag_report_conversion_whatsapp(url) {
     if (!link) return;
 
     var rawHref = link.getAttribute("href") || link.href;
-    var url = link.href;
+
+    /* (5) under-finger cooldown: the floating bar just slid in beneath a
+       scrolling thumb — swallow the tap entirely (no nav, no conversion) */
+    if (link.closest(".mobile-cta") && Date.now() - (window.__ctaBarShownAt || 0) < 450) {
+      e.preventDefault();
+      return;
+    }
 
     if (isWhatsAppHref(rawHref)) {
-      // (1) only real WhatsApp CTA buttons — otherwise let the link work untracked
-      if (!link.matches(WA_CTA)) return;
-      // (2) once per session
-      if (alreadyCounted("cornel_wa_lead")) return;
-      markCounted("cornel_wa_lead");
-      e.preventDefault();
-      gtag_report_conversion_whatsapp(url);
+      if (!link.matches(WA_CTA)) return;                            // (1)
+      if (alreadyCounted("cornel_wa_lead")) return;                 // (3)
+      if (!visitorEngaged()) return;                                // (4) — link still works, untracked
+      /* (6) navigate naturally; count only on confirmed hand-off */
+      fireOnAppOpen("AW-17936964522/fOZQCIjd37UcEKq3gelC", "cornel_wa_lead");
     } else if (isCallHref(rawHref)) {
       if (!link.matches(CALL_CTA)) return;
       if (alreadyCounted("cornel_call_lead")) return;
+      if (!visitorEngaged()) return;
       markCounted("cornel_call_lead");
-      e.preventDefault();
-      gtag_report_conversion(url);
+      sendConversionBeacon("AW-17936964522/-_FGCIXd37UcEKq3geIC");
     }
   }
 
@@ -917,6 +967,10 @@ function setupCtaBarAutoHide() {
       const overlap = Math.min(r.bottom, vh) - Math.max(r.top, 0);
       return overlap > r.height * 0.3;
     });
+    // Record hidden→visible transitions: taps on the bar right after it
+    // slides in are treated as accidental (under-finger misclick cooldown)
+    const wasHidden = bar.classList.contains("mobile-cta--hidden");
+    if (wasHidden && !hide) window.__ctaBarShownAt = Date.now();
     bar.classList.toggle("mobile-cta--hidden", hide);
     if (backdrop) backdrop.classList.toggle("mobile-cta--hidden", hide);
   }

@@ -4040,7 +4040,9 @@ body::after {
   width: 40px;
   height: 40px;
   margin-left: auto;
-  margin-right: 6px;
+  /* ≥12px separation from the hamburger — 8px minimum-gap standard for
+     adjacent touch targets, padded to avoid accidental call taps */
+  margin-right: 12px;
   border-radius: 12px;
   border: 1px solid rgba(22,163,74,0.32);
   background: rgba(22,163,74,0.10);
@@ -4049,6 +4051,12 @@ body::after {
   transition: background 0.18s var(--ease), border-color 0.18s var(--ease),
               transform 0.16s var(--ease), box-shadow 0.18s var(--ease);
   position: relative;
+}
+/* Expand the effective touch target to 48px without growing the visual */
+.topbar-phone::before {
+  content: '';
+  position: absolute;
+  inset: -4px;
 }
 .topbar-phone svg { width: 17px; height: 17px; }
 /* Subtle pulse — gentle reminder there's a quick-call shortcut */
@@ -4633,4 +4641,19 @@ a, button { -webkit-tap-highlight-color: transparent; }
     backdrop-filter: blur(24px) saturate(1.8);
     -webkit-backdrop-filter: blur(24px) saturate(1.8);
   }
+}
+
+/* ════════════════════════════════════════════════════════════════════════════
+   SHORT VIEWPORTS (iPhone SE / 8, small Androids, ~667px tall)
+   Keep the hero CTA + trust signals above the fold on 4.7" screens
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (max-width: 720px) and (max-height: 700px) {
+  .hero { min-height: 430px; }
+  .hero-content { padding: 26px 18px; }
+  .hero h1 { font-size: clamp(1.9rem, 8.2vw, 2.3rem); }
+  .hero-sub { font-size: 0.92rem; }
+  .hero-actions .button,
+  .hero-cta-primary { height: 52px !important; }
+  .hero-availability--promise { margin-top: 10px; font-size: 0.72rem; padding: 8px 12px; }
+  .hero-trust-row { row-gap: 5px; margin-top: 10px; }
 }

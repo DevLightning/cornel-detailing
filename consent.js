@@ -47,6 +47,8 @@
     var backdrop = document.querySelector('.mobile-cta-backdrop');
     if (bar) bar.classList.remove('mobile-cta--hidden');
     if (backdrop) backdrop.classList.remove('mobile-cta--hidden');
+    /* misclick cooldown: the bar just appeared where the cookie buttons were */
+    window.__ctaBarShownAt = Date.now();
     setTimeout(function () {
       if (el.parentNode) el.parentNode.removeChild(el);
     }, 460);
