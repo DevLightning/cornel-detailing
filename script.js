@@ -984,6 +984,26 @@ function setupCtaBarAutoHide() {
   check();
 }
 
+
+/* Click-to-load Google Maps: the iframe (and Google's cookies) only load
+   after an explicit tap — faster initial page + consent-clean. */
+function setupMapFacade() {
+  const btn = document.getElementById("mapFacade");
+  if (!btn) return;
+  btn.addEventListener("click", function () {
+    const iframe = document.createElement("iframe");
+    iframe.src = btn.getAttribute("data-map-src");
+    iframe.width = "100%";
+    iframe.height = "100%";
+    iframe.style.cssText = "border:0;border-radius:var(--r-lg);min-height:240px;";
+    iframe.setAttribute("allowfullscreen", "");
+    iframe.setAttribute("loading", "lazy");
+    iframe.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
+    iframe.title = "Google Maps – Cornel Detailing Standort";
+    btn.replaceWith(iframe);
+  });
+}
+
 function setupPackageDetails() {
   const details = Array.from(document.querySelectorAll(".pkg-details"));
   details.forEach((item) => {
@@ -1548,6 +1568,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupStaticText();
   setupActionLinks();
   setupMobileCta();
+  setupMapFacade();
   setupCtaBarAutoHide();
   setupPackageDetails();
   setupReveal();

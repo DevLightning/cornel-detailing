@@ -5,9 +5,9 @@ window.SITE_CONFIG = {
     legalForm: "Einzelunternehmen",
     ownerName: "Cornel Istrate",
     address: {
-      street: "Willendorferstraße 196",
-      postalCode: "2732",
-      city: "Würflach",
+      street: "Fördergasse 290",
+      postalCode: "2640",
+      city: "Enzenreith",
       country: "Österreich",
     },
     phoneDisplay: "+43 676 4391253",
@@ -16,7 +16,7 @@ window.SITE_CONFIG = {
     whatsappNumber: "436764391253",
     whatsappPrefill:
       "Hallo, ich möchte einen Termin bei Cornel Detailing anfragen.",
-    serviceArea: "Würflach, Neunkirchen und Umgebung",
+    serviceArea: "Enzenreith, Gloggnitz, Neunkirchen und Umgebung",
     appointmentHint: "Termine nach Vereinbarung",
     uid: "Keine UID-Nummer – Kleinunternehmer gemäß § 6 Abs. 1 Z 27 UStG",
     gisa: "",
@@ -33,7 +33,7 @@ window.SITE_CONFIG = {
       privacyUrl: "https://vercel.com/legal/privacy-policy",
     },
     footerText:
-      "Professionelle Autoaufbereitung in Würflach, Neunkirchen und Umgebung.",
+      "Professionelle Autoaufbereitung in Enzenreith, Gloggnitz, Neunkirchen und Umgebung.",
     privacyDate: "18.03.2026",
   },
 };
