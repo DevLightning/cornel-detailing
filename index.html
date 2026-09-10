@@ -85,7 +85,7 @@
             "@type": "AggregateRating",
             "ratingValue": "5.0",
             "bestRating": "5",
-            "reviewCount": "30"
+            "reviewCount": "50"
           },
           "address": {
             "@type": "PostalAddress",
@@ -325,9 +325,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=27" />
+    <link rel="stylesheet" href="styles.css?v=28" />
     <script src="site-config.js?v=5" defer></script>
-    <script src="script.js?v=18" defer></script>
+    <script src="script.js?v=19" defer></script>
     <script src="consent.js?v=8" defer></script>
   </head>
   <body>
@@ -377,7 +377,7 @@
               Enzenreith · Gloggnitz
             </span>
             <h1>Professionelle Autoaufbereitung.</h1>
-            <p class="hero-sub">Lackpolitur · Keramikversiegelung · Innenreinigung.</p>
+            <p class="hero-sub">Lackpolitur · Keramikversiegelung<br />Innenreinigung.</p>
 
             <div class="hero-actions">
               <a class="button button-whatsapp hero-cta-primary" data-whatsapp-link href="#kontakt">
@@ -393,17 +393,20 @@
             </div>
 
             <div class="hero-trust-row" aria-label="Vertrauenssignale">
-              <span class="htb"><span class="htb-stars" aria-hidden="true">★★★★★</span>&nbsp;5,0 · <span id="heroReviewCount">30+</span>&nbsp;Bewertungen</span>
+              <span class="htb"><span class="htb-stars" aria-hidden="true">★★★★★</span>&nbsp;5,0 · <span id="heroReviewCount">50+</span>&nbsp;Bewertungen</span>
               <span class="htb-sep" aria-hidden="true"></span>
               <span class="htb">60 Mon. Schutz</span>
               <span class="htb-sep" aria-hidden="true"></span>
               <span class="htb">Abholung inkl.</span>
             </div>
-            <div class="hero-availability hero-availability--promise" aria-live="polite">
-              <svg class="hero-availability-icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/>
-              </svg>
-              <span><strong>Antwort meist in 1 Stunde</strong> · Termin vorab per WhatsApp oder Anruf vereinbaren</span>
+            <div class="hero-availability hero-availability--promise">
+              <p class="hap-title">
+                <span class="hap-icon" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
+                </span>
+                Antwort meist in 1 Stunde
+              </p>
+              <p class="hap-sub">Termin vorab per WhatsApp oder Anruf</p>
             </div>
           </div>
         </section>
@@ -418,7 +421,12 @@
 
           <div class="showcase-strip-wrap">
             <div class="showcase-strip-track" id="showcaseStripTrack" aria-live="polite"></div>
+            <div class="ss-swipe-hint" id="showcaseSwipeHint" aria-hidden="true">
+              <span class="ss-swipe-gesture"><i></i></span>
+              <span>Wischen für mehr</span>
+            </div>
           </div>
+          <div class="ss-dots" id="showcaseStripDots" aria-hidden="true"></div>
         </section>
 
         <!-- ── REVIEWS ─────────────────────────────────── -->
@@ -426,7 +434,7 @@
           <div class="section-heading">
             <span class="section-tag">Bewertungen</span>
             <h2>Das sagen unsere Kunden.</h2>
-            <p>Über <strong id="reviewStatCount">30+</strong> zufriedene Kunden · echte Bewertungen aus dem Bezirk Neunkirchen.</p>
+            <p>Über <strong id="reviewStatCount">50+</strong> zufriedene Kunden · echte Bewertungen aus dem Bezirk Neunkirchen.</p>
             <div class="reviews-rating-summary" aria-label="Durchschnittsbewertung">
               <span class="reviews-stars-big" aria-hidden="true">★★★★★</span>
               <strong>5,0</strong>

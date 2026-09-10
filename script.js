@@ -528,6 +528,76 @@ function renderShowcaseStrip() {
   target.innerHTML = cardsHtml + allCardHtml;
 }
 
+/* Showcase strip on phones: page dots that follow the swipe, plus a one-time
+   "Wischen" hint (the photos glide left to reveal the next one, then settle
+   back). Transform/opacity only, and it waits until the strip is on screen,
+   so page load is untouched. */
+function setupShowcaseSwipe() {
+  const track = document.getElementById("showcaseStripTrack");
+  const dotsWrap = document.getElementById("showcaseStripDots");
+  const hint = document.getElementById("showcaseSwipeHint");
+  if (!track || !dotsWrap) return;
+  const cards = Array.from(track.children);
+  if (cards.length < 2) return;
+
+  dotsWrap.innerHTML = cards.map(() => "<span></span>").join("");
+  const dots = Array.from(dotsWrap.children);
+  let active = -1;
+  const syncDots = () => {
+    const mid = track.scrollLeft + track.clientWidth / 2;
+    let best = 0;
+    let bestDist = Infinity;
+    cards.forEach((card, i) => {
+      const dist = Math.abs(card.offsetLeft + card.offsetWidth / 2 - mid);
+      if (dist < bestDist) { bestDist = dist; best = i; }
+    });
+    if (best === active) return;
+    if (dots[active]) dots[active].classList.remove("is-active");
+    dots[best].classList.add("is-active");
+    active = best;
+  };
+  let queued = false;
+  track.addEventListener("scroll", () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; syncDots(); });
+  }, { passive: true });
+  syncDots();
+
+  // The hint plays once per visit, on phones, unless motion is reduced
+  if (!window.matchMedia("(max-width: 720px)").matches) return;
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  try { if (sessionStorage.getItem("cornel_swipe_hint")) return; } catch (e) { /* ok */ }
+
+  let touched = false;
+  const stopHint = () => {
+    touched = true;
+    track.classList.remove("is-nudging");
+    if (hint) hint.classList.remove("is-on");
+  };
+  track.addEventListener("pointerdown", stopHint, { passive: true });
+  track.addEventListener("touchstart", stopHint, { passive: true });
+
+  const play = () => {
+    if (touched || track.scrollLeft > 4) return;
+    try { sessionStorage.setItem("cornel_swipe_hint", "1"); } catch (e) { /* ok */ }
+    track.classList.add("is-nudging");
+    if (hint) hint.classList.add("is-on");
+    cards[0].addEventListener("animationend", () => track.classList.remove("is-nudging"), { once: true });
+    setTimeout(() => { if (hint) hint.classList.remove("is-on"); }, 2600);
+  };
+
+  const whenVisible = () => {
+    const r = track.getBoundingClientRect();
+    const onScreen = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+    if (onScreen < r.height * 0.7) return;
+    window.removeEventListener("scroll", whenVisible);
+    setTimeout(play, 900);   // after the cards' own fade-in has finished
+  };
+  window.addEventListener("scroll", whenVisible, { passive: true });
+  whenVisible();
+}
+
 function renderGallery() {
   const target = document.getElementById("galleryGrid");
   if (!target) return;
@@ -1423,7 +1493,7 @@ function setupVideoShowcase() {
 
 function setupReviewCount() {
   document.querySelectorAll("#heroReviewCount, #reviewStatCount").forEach((el) => {
-    el.textContent = "30+";
+    el.textContent = "50+";
   });
 }
 
@@ -1606,6 +1676,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCtaBarAutoHide();
   setupPackageDetails();
   setupReveal();
+  setupShowcaseSwipe();
   setupMobileMenu();
   setupScrollHeader();
   setupHeaderSheen();
