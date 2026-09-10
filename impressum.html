@@ -38,9 +38,9 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png" />
     <meta name="robots" content="index,follow" />
     
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="styles.css?v=27" />
     <script src="site-config.js" defer></script>
-    <script src="legal.js" defer></script>
+    <script src="legal.js?v=2" defer></script>
     <script src="consent.js" defer></script>
   </head>
   <body class="legal-page">
@@ -51,15 +51,22 @@
           <img src="assets/logo-header.webp" alt="Cornel Detailing Logo" />
           <span>
             <strong>Cornel Detailing</strong>
-            <small>Detailing nähe Neunkirchen</small>
+            <small>Autoaufbereitung<span class="brand-loc"> · Gloggnitz &amp; Enzenreith</span></small>
           </span>
         </a>
+
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="topnav">
+          <span></span><span></span>
+        </button>
         <nav class="topnav" id="topnav" aria-label="Rechtliches">
           <a href="/">Startseite</a>
           <a href="galerie.html">Galerie</a>
           <a href="datenschutz.html">Datenschutz</a>
         </nav>
-        <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-expanded="false"><span></span><span></span><span></span></button>
+
+        <a class="topbar-phone" data-call-link href="tel:+436764391253" aria-label="Anrufen +43 676 4391253">
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+        </a>
       </header>
 
       <main class="legal-main">
@@ -134,10 +141,7 @@
               <p data-legal="consumerDisputeInfo"></p>
               <p>
                 Online-Streitbeilegung:
-                <a
-                  href="https://ec.europa.eu/consumers/odr/"
-                  target="_blank"
-                  rel="noreferrer"
+                <a href="https://ec.europa.eu/consumers/odr/" target="_blank" rel="noreferrer"
                 >https://ec.europa.eu/consumers/odr/</a>
               </p>
             </article>

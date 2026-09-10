@@ -325,9 +325,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png" />
-    <link rel="stylesheet" href="styles.css?v=26" />
+    <link rel="stylesheet" href="styles.css?v=27" />
     <script src="site-config.js?v=5" defer></script>
-    <script src="script.js?v=17" defer></script>
+    <script src="script.js?v=18" defer></script>
     <script src="consent.js?v=8" defer></script>
   </head>
   <body>
@@ -338,9 +338,13 @@
           <img src="assets/logo-header.webp" alt="Cornel Detailing Logo" />
           <span>
             <strong>Cornel Detailing</strong>
-            <small>Premium Detailing nähe Neunkirchen</small>
+            <small>Autoaufbereitung<span class="brand-loc"> · Gloggnitz &amp; Enzenreith</span></small>
           </span>
         </a>
+
+        <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="topnav">
+          <span></span><span></span>
+        </button>
 
         <nav class="topnav" id="topnav" aria-label="Hauptnavigation">
           <span class="nav-pill" aria-hidden="true" id="navPill"></span>
@@ -362,10 +366,6 @@
         <a class="topbar-phone" data-call-link href="tel:+436764391253" aria-label="Anrufen +43 676 4391253">
           <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
         </a>
-
-        <button class="menu-toggle" id="menuToggle" aria-label="Menü öffnen" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
       </header>
 
       <main id="top">
@@ -431,7 +431,7 @@
               <span class="reviews-stars-big" aria-hidden="true">★★★★★</span>
               <strong>5,0</strong>
               <span>auf Google</span>
-              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" style="flex-shrink:0">
+              <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
                 <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
@@ -612,15 +612,10 @@
 
             <div class="ceramic-media">
               <div class="ceramic-video-frame">
-                <video
-                  class="ceramic-video"
-                  id="keramicVideo"
-                  src="assets/gallery/keramic.mp4"
+                <video class="ceramic-video" id="keramicVideo" src="assets/gallery/keramic.mp4"
                   muted
                   loop
-                  playsinline
-                  preload="metadata"
-                  aria-hidden="true"
+                  playsinline preload="metadata" aria-hidden="true"
                 ></video>
                 <div class="ceramic-video-overlay" aria-hidden="true"></div>
                 <button class="ceramic-video-toggle" id="keramicVideoToggle" aria-label="Video pausieren" type="button">
@@ -675,7 +670,7 @@
               <p>Fördergasse 290, 2640 Enzenreith</p>
               <p class="location-area">Kunden aus dem gesamten <strong>Bezirk Neunkirchen</strong> · inkl. Abholung.</p>
               <a class="button button-secondary" href="https://www.google.com/maps/dir/?api=1&destination=F%C3%B6rdergasse+290,+2640+Enzenreith,+Austria" target="_blank" rel="noreferrer">
-                <svg viewBox="0 0 24 24" aria-hidden="true" style="width:14px;height:14px;fill:currentColor;flex-shrink:0">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
                 </svg>
                 <span>In Google Maps öffnen</span>
@@ -684,9 +679,7 @@
             <div class="location-map">
               <!-- Click-to-load facade: the Google Maps iframe (and its cookies)
                    only load after an explicit tap — faster page + GDPR-clean -->
-              <button class="map-facade" id="mapFacade" type="button"
-                      data-map-src="https://www.google.com/maps?q=F%C3%B6rdergasse+290,+2640+Enzenreith,+%C3%96sterreich&output=embed"
-                      aria-label="Google Maps Karte laden">
+              <button class="map-facade" id="mapFacade" type="button" data-map-src="https://www.google.com/maps?q=F%C3%B6rdergasse+290,+2640+Enzenreith,+%C3%96sterreich&output=embed" aria-label="Google Maps Karte laden">
                 <span class="map-facade-pin" aria-hidden="true">
                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
                 </span>

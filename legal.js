@@ -82,23 +82,92 @@ function fillLegalPage() {
   });
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  fillLegalPage();
+/* Header: menu sheet, scrolled state and the one-time gloss sweep. Mirrors
+   setupMobileMenu / setupScrollHeader / setupHeaderSheen in script.js. */
+function setupHeader() {
+  const topbar = document.querySelector(".topbar");
+  if (!topbar) return;
+
+  const onScroll = () => topbar.classList.toggle("is-scrolled", window.scrollY > 24);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+  let sheenSeen = false;
+  try {
+    sheenSeen = !!sessionStorage.getItem("cornel_sheen");
+    sessionStorage.setItem("cornel_sheen", "1");
+  } catch (e) { /* storage blocked: still play it */ }
+  if (!sheenSeen) topbar.classList.add("is-sheen");
 
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("topnav");
-  if (toggle && nav) {
-    toggle.addEventListener("click", () => {
-      const open = nav.classList.toggle("is-open");
-      toggle.classList.toggle("is-active", open);
-      toggle.setAttribute("aria-expanded", open);
-    });
-    nav.querySelectorAll("a").forEach((link) => {
-      link.addEventListener("click", () => {
-        nav.classList.remove("is-open");
-        toggle.classList.remove("is-active");
-        toggle.setAttribute("aria-expanded", "false");
+  if (!toggle || !nav) return;
+
+  // Tap-outside layer: dims the page and swallows the closing tap
+  const scrim = document.createElement("div");
+  scrim.className = "topbar-scrim";
+  scrim.setAttribute("aria-hidden", "true");
+  topbar.insertAdjacentElement("afterend", scrim);
+
+  let openedAtY = 0;
+  const isOpen = () => nav.classList.contains("is-open");
+  const setOpen = (open, returnFocus) => {
+    nav.classList.toggle("is-open", open);
+    toggle.classList.toggle("is-active", open);
+    scrim.classList.toggle("is-visible", open);
+    toggle.setAttribute("aria-expanded", String(open));
+    toggle.setAttribute("aria-label", open ? "Menü schließen" : "Menü öffnen");
+    if (open) openedAtY = window.scrollY;
+    else if (returnFocus) toggle.focus();
+  };
+
+  toggle.addEventListener("click", () => setOpen(!isOpen()));
+  scrim.addEventListener("click", () => setOpen(false));
+  nav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) setOpen(false, true);
+  });
+  window.addEventListener("scroll", () => {
+    if (isOpen() && Math.abs(window.scrollY - openedAtY) > 12) setOpen(false);
+  }, { passive: true });
+  const desktop = window.matchMedia("(min-width: 861px)");
+  const onBreakpoint = (e) => { if (e.matches) setOpen(false); };
+  if (desktop.addEventListener) desktop.addEventListener("change", onBreakpoint);
+  else if (desktop.addListener) desktop.addListener(onBreakpoint);
+}
+
+/* Header call button: same Google Ads call conversion as the main pages,
+   with the same quality gates (trusted taps only, engaged visitors only,
+   i.e. scrolled or >4s on the page, and once per session). */
+function setupCallConversion() {
+  const loadedAt = Date.now();
+  let scrolled = false;
+  window.addEventListener("scroll", () => { scrolled = true; }, { passive: true, once: true });
+
+  document.addEventListener("click", (e) => {
+    if (!e.isTrusted) return;
+    const link = e.target.closest && e.target.closest('a.topbar-phone[href^="tel:"]');
+    if (!link) return;
+    if (!scrolled && Date.now() - loadedAt <= 4000) return;
+    try {
+      if (sessionStorage.getItem("cornel_call_lead") === "1") return;
+      sessionStorage.setItem("cornel_call_lead", "1");
+    } catch (err) { /* storage blocked: still count */ }
+    if (typeof gtag === "function") {
+      gtag("event", "conversion", {
+        send_to: "AW-17936964522/-_FGCIXd37UcEKq3geIC",
+        value: 1.0,
+        currency: "EUR",
+        transport_type: "beacon",
       });
-    });
-  }
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  fillLegalPage();
+  setupHeader();
+  setupCallConversion();
 });

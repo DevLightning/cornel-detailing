@@ -1140,23 +1140,57 @@ function setupGalleryFilter() {
 function setupMobileMenu() {
   const toggle = document.getElementById("menuToggle");
   const nav = document.getElementById("topnav");
-  if (!toggle || !nav) return;
+  const topbar = document.querySelector(".topbar");
+  if (!toggle || !nav || !topbar) return;
 
-  toggle.addEventListener("click", () => {
-    const open = nav.classList.toggle("is-open");
+  // Tap-outside layer: dims the page and swallows the closing tap, so a tap
+  // meant to dismiss the menu can never land on a call/WhatsApp button
+  const scrim = document.createElement("div");
+  scrim.className = "topbar-scrim";
+  scrim.setAttribute("aria-hidden", "true");
+  topbar.insertAdjacentElement("afterend", scrim);
+
+  let openedAtY = 0;
+  const isOpen = () => nav.classList.contains("is-open");
+
+  function setOpen(open, returnFocus) {
+    nav.classList.toggle("is-open", open);
     toggle.classList.toggle("is-active", open);
-    toggle.setAttribute("aria-expanded", open);
+    scrim.classList.toggle("is-visible", open);
+    toggle.setAttribute("aria-expanded", String(open));
     toggle.setAttribute("aria-label", open ? "Menü schließen" : "Menü öffnen");
+    if (open) openedAtY = window.scrollY;
+    else if (returnFocus) toggle.focus();
+  }
+
+  toggle.addEventListener("click", () => setOpen(!isOpen()));
+  scrim.addEventListener("click", () => setOpen(false));
+  nav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", () => setOpen(false));
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && isOpen()) setOpen(false, true);
   });
 
-  // Close menu when a link is clicked
-  nav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      nav.classList.remove("is-open");
-      toggle.classList.remove("is-active");
-      toggle.setAttribute("aria-expanded", "false");
-    });
-  });
+  // Scrolling away closes it, and so does growing past the mobile breakpoint
+  window.addEventListener("scroll", () => {
+    if (isOpen() && Math.abs(window.scrollY - openedAtY) > 12) setOpen(false);
+  }, { passive: true });
+  const desktop = window.matchMedia("(min-width: 861px)");
+  const onBreakpoint = (e) => { if (e.matches) setOpen(false); };
+  if (desktop.addEventListener) desktop.addEventListener("change", onBreakpoint);
+  else if (desktop.addListener) desktop.addListener(onBreakpoint);
+}
+
+/* One gloss sweep across the header per visit (the animation is pure CSS) */
+function setupHeaderSheen() {
+  const topbar = document.querySelector(".topbar");
+  if (!topbar) return;
+  try {
+    if (sessionStorage.getItem("cornel_sheen")) return;
+    sessionStorage.setItem("cornel_sheen", "1");
+  } catch (e) { /* storage blocked: still play it */ }
+  topbar.classList.add("is-sheen");
 }
 
 function setupScrollHeader() {
@@ -1574,6 +1608,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupReveal();
   setupMobileMenu();
   setupScrollHeader();
+  setupHeaderSheen();
   setupActiveNav();
   setupNavPill();
   setupGalleryFilter();
