@@ -5446,3 +5446,147 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 /* Small details that follow the palette */
 .ss-dots span.is-active { background: var(--ink); }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   REVIEWS · kept simple: title, one rating line, the cards, one line of links
+   Cards fill the row exactly (1 on phones, 2 on tablets, 3 on desktop, 4 on
+   wide screens). Touch screens swipe with small position dots; desktop shows
+   a still row of the strongest reviews.
+   ════════════════════════════════════════════════════════════════════════════ */
+#kundenbewertungen .section-heading {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+.reviews-rating-summary .rv-count { color: var(--grey-500); }
+
+.reviews-scroller {
+  --rv-n: 3;
+  --rv-side: var(--pad-x);
+  --rv-gap: var(--rv-side);   /* gutter = outer margin: even spacing, no slivers */
+  display: flex;
+  gap: var(--rv-gap);
+  /* bleed to the card's edges; the padding brings the cards back in line */
+  margin: 28px calc(-1 * var(--pad-x)) 0;
+  padding: 6px var(--rv-side) 12px;
+  scroll-padding-inline: var(--rv-side);
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+}
+.reviews-scroller:focus-visible {
+  outline: 2px solid var(--brand-deep);
+  outline-offset: -4px;
+  border-radius: var(--r-lg);
+}
+.reviews-track { display: contents; }
+
+.review-card,
+.reviews-track .review-card {
+  flex: 0 0 calc((100% - (var(--rv-n) - 1) * var(--rv-gap)) / var(--rv-n));
+  width: auto;
+  min-width: 0;
+  margin: 0;
+  padding: 20px 22px;
+  gap: 14px;
+  scroll-snap-align: start;
+}
+.review-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.review-card .review-text {
+  flex: 1 1 auto;
+  font-size: 0.92rem;
+  line-height: 1.6;
+  color: var(--grey-600);
+}
+.review-author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.review-author .review-avatar { width: 40px; height: 40px; }
+
+/* Small position dots, only where the cards can be swiped */
+.rv-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  height: 6px;
+  margin-top: 14px;
+}
+.rv-dots[hidden] { display: none; }
+.rv-dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(15,20,34,0.16);
+  transition: width 0.35s var(--ease-out), background-color 0.35s var(--ease-out);
+}
+.rv-dots span.is-active { width: 20px; background: var(--ink); }
+
+/* One quiet line of links instead of buttons */
+.reviews-links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0 10px;
+  margin: 12px 0 -8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+.reviews-links a {
+  padding: 10px 2px;   /* comfortable tap area, same look */
+  color: var(--brand-deep);
+  text-decoration: underline;
+  text-decoration-color: rgba(122,94,0,0.3);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.15s;
+}
+.reviews-links a:hover { text-decoration-color: var(--brand-deep); }
+.reviews-links span { color: var(--grey-400); }
+
+/* Desktop: a still row of the strongest reviews, nothing to scroll */
+@media (min-width: 1041px) {
+  .reviews-track .review-card:nth-child(n+4) { display: none; }
+}
+@media (min-width: 1500px) {
+  .reviews-scroller { --rv-n: 4; }
+  .reviews-track .review-card:nth-child(4) { display: flex; }
+}
+@media (max-width: 1040px) {
+  .reviews-scroller { --rv-n: 2; }
+}
+@media (max-width: 720px) {
+  .reviews-scroller {
+    --rv-n: 1;
+    --rv-gap: 12px;
+    --rv-side: calc(var(--pad-x) + 16px);   /* both neighbours peek in equally */
+    margin-top: 24px;
+  }
+  .review-card,
+  .reviews-track .review-card {
+    padding: 18px 20px;
+    scroll-snap-align: center;
+    scroll-snap-stop: always;
+  }
+  .reviews-rating-summary { padding: 12px 18px; gap: 8px; }
+  .reviews-rating-summary strong { font-size: 1.25rem; }
+  .reviews-stars-big { font-size: 1rem; letter-spacing: 1px; }
+}
+/* Very small phones: the rating stays on one line, the two links stack */
+@media (max-width: 360px) {
+  .reviews-rating-summary { padding: 10px 14px; gap: 6px; white-space: nowrap; }
+  .reviews-rating-summary svg { display: none; }
+  .reviews-rating-summary strong { font-size: 1.1rem; }
+  .reviews-rating-summary .rv-count { font-size: 0.85rem; }
+  .reviews-stars-big { font-size: 0.85rem; letter-spacing: 0; }
+  .reviews-links { flex-direction: column; gap: 0; }
+  .reviews-links span { display: none; }
+}

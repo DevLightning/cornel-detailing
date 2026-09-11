@@ -1116,14 +1116,12 @@ function renderReviews() {
       `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="fill:${i < n ? "#FBBC04" : "#e0e0e0"}"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>`
     ).join("");
 
+  // Testimonial layout: stars + Google on top, the words, then the author
+  // pinned to the bottom so names line up across every card in a row
   const cardHtml = (r) => `
-    <div class="review-card">
-      <div class="review-card-top">
-        <img class="review-avatar" src="${r.photo}" alt="${r.name}" loading="lazy">
-        <div class="review-meta">
-          <strong>${r.name}</strong>
-          <span class="review-date">${r.date}</span>
-        </div>
+    <article class="review-card">
+      <div class="review-card-head">
+        <div class="review-stars" role="img" aria-label="${r.rating} von 5 Sternen">${stars(r.rating)}</div>
         <svg class="review-google-icon" viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
@@ -1131,15 +1129,70 @@ function renderReviews() {
           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
         </svg>
       </div>
-      <div class="review-stars">${stars(r.rating)}</div>
       <p class="review-text">${r.text}</p>
-    </div>
+      <div class="review-author">
+        <img class="review-avatar" src="${r.photo}" alt="" width="40" height="40" loading="lazy">
+        <div class="review-meta">
+          <strong>${r.name}</strong>
+          <span class="review-date">${r.date}</span>
+        </div>
+      </div>
+    </article>
   `;
 
-  // Static swipeable cards — substantial reviews first so the opening
-  // cards carry real content instead of one-liners.
-  const ordered = [...reviews].sort((a, b) => b.text.length - a.text.length);
+  // Static swipeable cards: the six most detailed reviews, longest first, so
+  // every card carries real words (one-liners stay on Google)
+  const ordered = [...reviews].sort((a, b) => b.text.length - a.text.length).slice(0, 6);
   track.innerHTML = ordered.map(cardHtml).join("");
+}
+
+/* Reviews: small position dots that follow the swipe. The CSS makes cards
+   fill the row exactly (--rv-n per breakpoint), so one step is always one
+   card plus the gap. Desktop shows a still row, so the dots hide there. */
+function setupReviewsCarousel() {
+  const scroller = document.getElementById("reviewsScroller");
+  const dotsWrap = document.getElementById("reviewsDots");
+  if (!scroller || !dotsWrap) return;
+  const all = Array.from(scroller.querySelectorAll(".review-card"));
+  if (!all.length) return;
+
+  let cards = all;
+  let positions = 1;
+  let active = -1;
+  let lastWidth = 0;
+
+  const step = () =>
+    (cards.length > 1 ? cards[1].offsetLeft - cards[0].offsetLeft : cards[0].offsetWidth) || 1;
+
+  const sync = () => {
+    const i = Math.min(positions - 1, Math.max(0, Math.round(scroller.scrollLeft / step())));
+    if (i === active) return;
+    const dots = dotsWrap.children;
+    if (dots[active]) dots[active].classList.remove("is-active");
+    if (dots[i]) dots[i].classList.add("is-active");
+    active = i;
+  };
+
+  const layout = () => {
+    if (scroller.clientWidth === lastWidth) return;   // ignore toolbar-only resizes
+    lastWidth = scroller.clientWidth;
+    cards = all.filter((c) => c.offsetParent !== null);   // desktop hides extra cards
+    const visible = parseInt(getComputedStyle(scroller).getPropertyValue("--rv-n"), 10) || 1;
+    positions = Math.max(1, cards.length - visible + 1);
+    dotsWrap.hidden = positions <= 1;
+    dotsWrap.innerHTML = "<span></span>".repeat(positions);
+    active = -1;
+    sync();
+  };
+
+  let queued = false;
+  scroller.addEventListener("scroll", () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => { queued = false; sync(); });
+  }, { passive: true });
+  window.addEventListener("resize", layout, { passive: true });
+  layout();
 }
 
 function renderGalleryFilters() {
@@ -1677,6 +1730,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupPackageDetails();
   setupReveal();
   setupShowcaseSwipe();
+  setupReviewsCarousel();
   setupMobileMenu();
   setupScrollHeader();
   setupHeaderSheen();
