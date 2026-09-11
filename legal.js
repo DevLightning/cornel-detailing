@@ -132,7 +132,7 @@ function setupHeader() {
   window.addEventListener("scroll", () => {
     if (isOpen() && Math.abs(window.scrollY - openedAtY) > 12) setOpen(false);
   }, { passive: true });
-  const desktop = window.matchMedia("(min-width: 861px)");
+  const desktop = window.matchMedia("(min-width: 1025px)");
   const onBreakpoint = (e) => { if (e.matches) setOpen(false); };
   if (desktop.addEventListener) desktop.addEventListener("change", onBreakpoint);
   else if (desktop.addListener) desktop.addListener(onBreakpoint);

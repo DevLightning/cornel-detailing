@@ -1246,7 +1246,7 @@ function setupMobileMenu() {
   window.addEventListener("scroll", () => {
     if (isOpen() && Math.abs(window.scrollY - openedAtY) > 12) setOpen(false);
   }, { passive: true });
-  const desktop = window.matchMedia("(min-width: 861px)");
+  const desktop = window.matchMedia("(min-width: 1025px)");
   const onBreakpoint = (e) => { if (e.matches) setOpen(false); };
   if (desktop.addEventListener) desktop.addEventListener("change", onBreakpoint);
   else if (desktop.addListener) desktop.addListener(onBreakpoint);
@@ -1325,7 +1325,7 @@ function setupNavPill() {
   if (!pill || !nav) return;
 
   function move(link) {
-    if (!link || window.innerWidth <= 860) {
+    if (!link || window.innerWidth <= 1024) {
       pill.classList.remove('is-visible');
       return;
     }

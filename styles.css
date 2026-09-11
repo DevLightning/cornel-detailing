@@ -423,7 +423,7 @@ body::after {
   visibility: visible;
   transition: opacity 0.3s var(--ease-out), visibility 0s;
 }
-@media (min-width: 861px) {
+@media (min-width: 1025px) {
   .topbar-scrim { display: none; }
 }
 
@@ -2860,9 +2860,9 @@ body::after {
   .location-map { min-height: 240px; }
 }
 
-@media (max-width: 860px) {
-  .section-logo { display: none; }
-  .section-header-with-logo { display: block; }
+/* Compact header (menu · logo · call) for phones, landscape phones and
+   iPads up to 1024px wide: the full desktop menu needs about 980px */
+@media (max-width: 1024px) {
   /* ── Mobile header: [menu] [brand] [call] on a mirrored 3-column grid.
      Both controls sit centred in the capsule's rounded ends
      (60px bar, 8px inset: 30 − 8 = 22px radius, concentric) ── */
@@ -2977,6 +2977,11 @@ body::after {
   .nav-pill { display: none !important; }
 
   .brand > span { display: flex; }
+}
+
+@media (max-width: 860px) {
+  .section-logo { display: none; }
+  .section-header-with-logo { display: block; }
   .featured-projects {
     grid-template-columns: 1fr; grid-template-rows: none; min-height: 0;
   }
@@ -3544,7 +3549,10 @@ body::after {
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   CERAMIC / KERAMIK SHOWCASE — yellow accent section
+   CERAMIC / KERAMIK SHOWCASE · yellow accent feature
+   A centred, mirrored composition: the headline on top, the live video in the
+   middle as the "product shot" with two benefits on each side pointing at it,
+   and one call to action underneath.
    ════════════════════════════════════════════════════════════════════════════ */
 :root {
   --ceramic-yellow: #f5c518;
@@ -3556,13 +3564,12 @@ body::after {
 
 .ceramic-showcase {
   position: relative;
-  padding: clamp(56px, 6vw, 96px) clamp(28px, 4vw, 56px);
-  margin: 28px 0;
+  padding: clamp(40px, 4.4vw, 64px) var(--pad-x, clamp(28px, 3vw, 44px));
+  margin: 24px 0 0;
   border-radius: var(--r-xl);
   background:
-    radial-gradient(ellipse 60% 50% at 100% 0%, rgba(245,197,24,0.16) 0%, transparent 55%),
-    radial-gradient(ellipse 70% 60% at 0% 100%, rgba(245,197,24,0.10) 0%, transparent 60%),
-    linear-gradient(165deg, var(--ceramic-dark-2) 0%, var(--ceramic-dark) 60%, #08090c 100%);
+    radial-gradient(ellipse 48% 40% at 50% 62%, rgba(245,197,24,0.08) 0%, transparent 70%),
+    linear-gradient(180deg, var(--ceramic-dark-2) 0%, var(--ceramic-dark) 55%, #08090c 100%);
   overflow: hidden;
   isolation: isolate;
   box-shadow:
@@ -3573,19 +3580,22 @@ body::after {
   color: #fff;
 }
 
-/* Decorative yellow glow blob top-right */
+/* Stage light: a soft yellow glow falling from the top centre */
 .ceramic-bg-glow {
   position: absolute;
-  top: -160px; right: -120px;
-  width: 460px; height: 460px;
+  top: -250px;
+  left: 50%;
+  width: min(780px, 130%);
+  height: 460px;
+  transform: translateX(-50%);
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(245,197,24,0.32) 0%, rgba(245,197,24,0.08) 40%, transparent 70%);
-  filter: blur(40px);
+  background: radial-gradient(ellipse at center, rgba(245,197,24,0.24) 0%, rgba(245,197,24,0.07) 45%, transparent 70%);
+  filter: blur(24px);
   pointer-events: none;
   z-index: 0;
 }
 
-/* Subtle film grain / noise texture for premium feel */
+/* Subtle film grain for a premium, printed feel */
 .ceramic-grain {
   position: absolute;
   inset: 0;
@@ -3597,25 +3607,37 @@ body::after {
 }
 
 .ceramic-layout {
+  --c-gap: clamp(28px, 3.2vw, 48px);
   position: relative;
   z-index: 2;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: clamp(32px, 4vw, 64px);
+  grid-template-columns: minmax(0, 1fr) clamp(260px, 24vw, 320px) minmax(0, 1fr);
+  grid-template-areas:
+    "head  head  head"
+    "start media end"
+    "cta   cta   cta";
+  column-gap: var(--c-gap);
+  row-gap: clamp(28px, 3.2vw, 44px);
   align-items: center;
+  max-width: 1120px;
+  margin: 0 auto;
 }
 
-/* ── Content side ──────────────────────────────────────── */
-.ceramic-content {
+/* ── Headline ──────────────────────────────────────────── */
+.ceramic-head {
+  grid-area: head;
+  justify-self: center;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  align-items: center;
+  gap: 16px;
+  max-width: 700px;
+  text-align: center;
 }
 
 .ceramic-tag {
   display: inline-flex;
   align-items: center;
-  align-self: flex-start;
   gap: 8px;
   padding: 7px 14px 7px 12px;
   border-radius: 999px;
@@ -3650,34 +3672,79 @@ body::after {
 
 .ceramic-lead {
   margin: 0;
-  max-width: 56ch;
+  max-width: 58ch;
   font-size: 1rem;
   line-height: 1.65;
   color: rgba(255,255,255,0.78);
+  text-wrap: balance;
 }
 
-/* ── Benefits grid ─────────────────────────────────────── */
+/* ── Benefits: two on each side of the video, mirrored ── */
 .ceramic-benefits {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14px 18px;
-  margin-top: 6px;
+  grid-template-rows: repeat(2, minmax(0, 1fr));  /* two equal slots per side */
+  align-items: center;                            /* so left and right cards line up */
+  row-gap: 18px;
+  align-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
+.ceramic-benefits--start { grid-area: start; }
+.ceramic-benefits--end   { grid-area: end; }
 
 .ceramic-benefit {
+  position: relative;
   display: flex;
   align-items: flex-start;
   gap: 12px;
-  padding: 14px;
+  padding: 16px;
   border-radius: 14px;
-  background: linear-gradient(160deg, rgba(255,255,255,0.04) 0%, rgba(255,255,255,0.015) 100%);
-  border: 1px solid rgba(255,255,255,0.07);
+  background: linear-gradient(160deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 100%);
+  border: 1px solid rgba(255,255,255,0.08);
   transition: transform 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease);
 }
-.ceramic-benefit:hover {
-  transform: translateY(-2px);
-  border-color: rgba(245,197,24,0.32);
-  background: linear-gradient(160deg, rgba(245,197,24,0.06) 0%, rgba(255,255,255,0.02) 100%);
+@media (hover: hover) {
+  .ceramic-benefit:hover {
+    transform: translateY(-2px);
+    border-color: rgba(245,197,24,0.32);
+    background: linear-gradient(160deg, rgba(245,197,24,0.06) 0%, rgba(255,255,255,0.02) 100%);
+  }
+}
+/* Icons face the video, so the left column is mirrored */
+.ceramic-benefits--start .ceramic-benefit {
+  flex-direction: row-reverse;
+  text-align: right;
+}
+/* Callouts: a glowing node on the card edge and a hairline towards the video */
+.ceramic-benefit::before,
+.ceramic-benefit::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  pointer-events: none;
+}
+.ceramic-benefit::before {
+  width: 8px;
+  height: 8px;
+  margin-top: -4px;
+  border-radius: 50%;
+  background: var(--ceramic-yellow);
+  box-shadow: 0 0 0 3px rgba(245,197,24,0.16), 0 0 10px rgba(245,197,24,0.5);
+}
+.ceramic-benefit::after {
+  width: calc(var(--c-gap) - 16px);
+  height: 1px;
+}
+.ceramic-benefits--start .ceramic-benefit::before { right: -4.5px; }
+.ceramic-benefits--start .ceramic-benefit::after {
+  left: calc(100% + 4px);
+  background: linear-gradient(90deg, rgba(245,197,24,0.55), rgba(245,197,24,0));
+}
+.ceramic-benefits--end .ceramic-benefit::before { left: -4.5px; }
+.ceramic-benefits--end .ceramic-benefit::after {
+  right: calc(100% + 4px);
+  background: linear-gradient(270deg, rgba(245,197,24,0.55), rgba(245,197,24,0));
 }
 
 .ceramic-benefit-icon {
@@ -3710,59 +3777,48 @@ body::after {
   color: rgba(255,255,255,0.62);
 }
 
-/* ── Actions ───────────────────────────────────────────── */
-.ceramic-actions {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 14px 22px;
-  margin-top: 8px;
-}
-.ceramic-actions .button-whatsapp {
-  /* Override pulse default — already styled; sit on dark bg with green */
-  box-shadow: 0 6px 22px rgba(22,163,74,0.36), 0 0 0 0 rgba(22,163,74,0.35);
-}
-.ceramic-meta {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.82rem;
-  color: rgba(255,255,255,0.58);
-}
-.ceramic-meta-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--ceramic-yellow);
-  box-shadow: 0 0 0 3px rgba(245,197,24,0.18);
-  animation: ceramicMetaPulse 2.4s ease-in-out infinite;
-}
-@keyframes ceramicMetaPulse {
-  0%, 100% { box-shadow: 0 0 0 3px rgba(245,197,24,0.18); }
-  50%      { box-shadow: 0 0 0 6px rgba(245,197,24,0.05); }
-}
-
-/* ── Media side (video) ────────────────────────────────── */
+/* ── Video: the centrepiece ────────────────────────────── */
 .ceramic-media {
+  grid-area: media;
   position: relative;
+  display: flex;
+  justify-content: center;
+}
+/* Spotlight halo and a thin orbit ring behind the frame */
+.ceramic-media::before,
+.ceramic-media::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: -1;
+}
+.ceramic-media::before {
+  width: 170%;
+  background: radial-gradient(circle, rgba(245,197,24,0.18) 0%, rgba(245,197,24,0.06) 38%, transparent 66%);
+}
+.ceramic-media::after {
+  width: 120%;
+  border: 1px solid rgba(245,197,24,0.16);
 }
 
 .ceramic-video-frame {
   position: relative;
-  aspect-ratio: 9 / 14;
-  max-height: 620px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
   border-radius: 22px;
   overflow: hidden;
-  border: 1px solid rgba(245,197,24,0.20);
+  border: 1px solid rgba(245,197,24,0.24);
   background: #000;
   box-shadow:
-    0 30px 80px rgba(0,0,0,0.45),
-    0 12px 32px rgba(245,197,24,0.10),
-    inset 0 1px 0 rgba(255,255,255,0.08);
-  transform: perspective(1400px) rotateY(-3deg) rotateX(0.5deg);
-  transition: transform 0.5s var(--ease);
-}
-.ceramic-video-frame:hover {
-  transform: perspective(1400px) rotateY(-1deg) rotateX(0deg);
+    0 0 0 6px rgba(245,197,24,0.05),
+    0 30px 80px rgba(0,0,0,0.5),
+    0 12px 40px rgba(245,197,24,0.12),
+    inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .ceramic-video {
@@ -3780,6 +3836,26 @@ body::after {
     radial-gradient(ellipse 80% 60% at 50% 100%, rgba(245,197,24,0.10) 0%, transparent 60%),
     linear-gradient(180deg, rgba(0,0,0,0) 70%, rgba(0,0,0,0.35) 100%);
   z-index: 2;
+}
+
+/* "Glanz": one gloss sweep across the video when the section comes into view */
+.ceramic-video-frame::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(115deg, transparent 38%, rgba(255,255,255,0.26) 50%, transparent 62%) no-repeat;
+  background-size: 250% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+}
+.ceramic-showcase.is-visible .ceramic-video-frame::after {
+  animation: ceramicGloss 1.6s cubic-bezier(0.45, 0.05, 0.25, 1) 0.7s 1;
+}
+@keyframes ceramicGloss {
+  from { background-position: 120% 0; opacity: 1; }
+  to   { background-position: -20% 0; opacity: 1; }
 }
 
 /* Live recording badge */
@@ -3811,14 +3887,14 @@ body::after {
   animation: ceramicMetaPulse 1.6s ease-in-out infinite;
 }
 
-/* Video toggle button */
+/* Video toggle button (44px: comfortable to tap) */
 .ceramic-video-toggle {
   position: absolute;
   bottom: 14px; right: 14px;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 42px; height: 42px;
+  width: 44px; height: 44px;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,0.20);
   background: rgba(0,0,0,0.55);
@@ -3829,11 +3905,13 @@ body::after {
   transition: background 0.2s var(--ease), transform 0.18s var(--ease), border-color 0.2s var(--ease);
   z-index: 3;
 }
-.ceramic-video-toggle:hover {
-  background: rgba(245,197,24,0.85);
-  border-color: var(--ceramic-yellow);
-  color: var(--ceramic-dark);
-  transform: scale(1.05);
+@media (hover: hover) {
+  .ceramic-video-toggle:hover {
+    background: rgba(245,197,24,0.85);
+    border-color: var(--ceramic-yellow);
+    color: var(--ceramic-dark);
+    transform: scale(1.05);
+  }
 }
 .ceramic-video-toggle svg { width: 16px; height: 16px; fill: currentColor; }
 .ceramic-video-toggle .icon-play  { display: none; }
@@ -3841,43 +3919,92 @@ body::after {
 .ceramic-video-toggle.is-paused .icon-play  { display: block; }
 .ceramic-video-toggle.is-paused .icon-pause { display: none; }
 
-/* ── Tablet & mobile ───────────────────────────────────── */
-@media (max-width: 960px) {
-  .ceramic-layout {
-    grid-template-columns: 1fr;
-    gap: 36px;
-  }
-  .ceramic-media { order: -1; }
-  .ceramic-video-frame {
-    aspect-ratio: 16 / 11;
-    max-height: 380px;
-    transform: none;
-  }
-  .ceramic-video-frame:hover { transform: none; }
-  .ceramic-bg-glow { width: 320px; height: 320px; top: -100px; right: -80px; }
+/* ── Call to action ────────────────────────────────────── */
+.ceramic-actions {
+  grid-area: cta;
+  justify-self: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+}
+.ceramic-actions .button-whatsapp {
+  min-width: 260px;
+  /* Sits on the dark background with its own green glow */
+  box-shadow: 0 6px 22px rgba(22,163,74,0.36), 0 0 0 0 rgba(22,163,74,0.35);
+}
+.ceramic-meta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.58);
+  text-align: center;
+}
+.ceramic-meta-dot {
+  flex-shrink: 0;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ceramic-yellow);
+  box-shadow: 0 0 0 3px rgba(245,197,24,0.18);
+}
+@keyframes ceramicMetaPulse {
+  0%, 100% { box-shadow: 0 0 0 3px rgba(245,197,24,0.18); }
+  50%      { box-shadow: 0 0 0 6px rgba(245,197,24,0.05); }
 }
 
+/* ── Tablets: video centred, benefits as a 2 × 2 grid below ── */
+@media (max-width: 1040px) {
+  .ceramic-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-areas:
+      "head  head"
+      "media media"
+      "start end"
+      "cta   cta";
+    column-gap: 14px;
+    row-gap: 32px;
+  }
+  .ceramic-media { justify-self: center; width: min(100%, 340px); }
+  .ceramic-video-frame { aspect-ratio: 4 / 5; }
+  .ceramic-benefits { align-items: stretch; row-gap: 14px; }
+  .ceramic-benefits--start .ceramic-benefit { flex-direction: row; text-align: left; }
+  .ceramic-benefit::before,
+  .ceramic-benefit::after { display: none; }
+}
+
+/* ── Phones: one column on the centre axis ─────────────── */
 @media (max-width: 720px) {
   .ceramic-showcase {
-    padding: clamp(40px, 7vw, 64px) clamp(20px, 4vw, 32px);
+    padding: 40px var(--pad-x, 20px) 36px;
     border-radius: var(--r-lg);
-    margin: 18px 0;
+    margin: 16px 0 0;
   }
-  .ceramic-benefits {
-    grid-template-columns: 1fr;
-    gap: 10px;
+  .ceramic-bg-glow { top: -190px; height: 360px; }
+  .ceramic-layout {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "head" "media" "start" "end" "cta";
+    row-gap: 26px;
   }
-  .ceramic-benefit { padding: 12px; }
+  .ceramic-head { gap: 14px; }
+  .ceramic-title { font-size: clamp(2rem, 8.6vw, 2.6rem); }
+  .ceramic-lead { font-size: 0.96rem; }
+  .ceramic-media { width: min(100%, 420px); }
+  .ceramic-media::after { display: none; }
+  .ceramic-video-frame {
+    border-radius: 16px;
+    box-shadow: 0 0 0 5px rgba(245,197,24,0.05), 0 20px 50px rgba(0,0,0,0.5);
+  }
+  .ceramic-benefits { gap: 10px; }
+  /* the 26px row gap becomes 10px here, so both lists read as one */
+  .ceramic-benefits--end { margin-top: -16px; }
+  .ceramic-benefit { padding: 12px 14px; }
   .ceramic-benefit-icon { width: 34px; height: 34px; }
   .ceramic-benefit-icon svg { width: 16px; height: 16px; }
-  .ceramic-actions { gap: 12px; flex-direction: column; align-items: stretch; }
-  .ceramic-actions .button { width: 100%; justify-content: center; }
-  .ceramic-meta { justify-content: center; text-align: center; }
-  .ceramic-video-frame {
-    aspect-ratio: 9 / 12;
-    max-height: 460px;
-  }
-  .ceramic-video-toggle { width: 38px; height: 38px; bottom: 10px; right: 10px; }
+  .ceramic-actions { justify-self: stretch; align-items: stretch; }
+  .ceramic-actions .button { width: 100%; min-width: 0; justify-content: center; }
+  .ceramic-video-toggle { bottom: 10px; right: 10px; }
   .ceramic-video-badge { top: 10px; left: 10px; padding: 5px 9px; font-size: 0.65rem; }
 }
 
@@ -5018,3 +5145,154 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .u-note-center { margin-top: 1.5rem; font-style: normal; font-size: 0.82rem; color: var(--grey-400); text-align: center; }
 .u-narrow { max-width: 700px; margin: 0 auto; }
 .u-narrow-sm { max-width: 680px; margin: 0 auto; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   DESIGN SYSTEM · one type scale, one corner radius, one spacing rhythm
+   Every top-level block reads these tokens, so titles, corners, gaps and
+   text edges line up from the smallest phone to desktop.
+   ════════════════════════════════════════════════════════════════════════════ */
+:root {
+  --fs-h2: clamp(1.85rem, 2.8vw, 2.7rem);       /* section titles */
+  --fs-h3: clamp(1.4rem, 1rem + 1vw, 1.65rem);  /* titles of cards inside a section */
+  --fs-lead: 0.95rem;                           /* intro text under a title */
+  --gap-block: 24px;                            /* space between top-level blocks */
+  --pad-x: clamp(28px, 3vw, 44px);              /* inner side padding of blocks */
+  --pad-y: clamp(28px, 3vw, 44px);              /* inner top/bottom padding */
+  --r-block: var(--r-xl);                       /* corner radius of blocks */
+}
+@media (max-width: 720px) {
+  :root {
+    --fs-h2: clamp(1.7rem, 7vw, 2.2rem);
+    --fs-h3: clamp(1.45rem, 6vw, 1.8rem);
+    --gap-block: 16px;
+    --pad-x: 24px;
+    --pad-y: 32px;
+    --r-block: var(--r-lg);
+  }
+}
+@media (max-width: 480px) {
+  :root { --pad-x: 20px; --pad-y: 28px; }
+}
+
+/* Type: one size per level */
+.section-heading h2,
+.showcase-strip-header h2 { font-size: var(--fs-h2); }
+.glass-card h2,
+.location-info h2 { font-size: var(--fs-h3); }
+.section-heading > p:not(.section-note),
+.showcase-strip-header p,
+.glass-card-half > p:not(.glass-micro),
+.location-info > p { font-size: var(--fs-lead); line-height: 1.6; }
+
+/* Blocks: same corners, same gaps, same inner padding */
+.hero,
+.showcase-strip,
+.section,
+.mid-cta,
+.ceramic-showcase,
+.glass-card,
+.footer { border-radius: var(--r-block); }
+
+.topbar { margin-bottom: var(--gap-block); }
+.showcase-strip,
+.section,
+.mid-cta,
+.ceramic-showcase,
+.glass-row,
+.section-glass,
+.footer { margin-top: var(--gap-block); }
+.ceramic-showcase { margin-bottom: 0; }
+.glass-row { gap: var(--gap-block); }
+
+.section { padding: var(--pad-y) var(--pad-x); }
+.showcase-strip-header,
+.mid-cta,
+.footer { padding-left: var(--pad-x); padding-right: var(--pad-x); }
+.glass-card-half,
+.location-info { padding: var(--pad-y) var(--pad-x); }
+
+/* Packages keep their edge-to-edge list on phones; the heading and notes take
+   the shared inset, so their text lines up with every other section */
+@media (max-width: 720px) {
+  .section-packages { padding-left: 8px; padding-right: 8px; }
+  .section-packages .section-heading,
+  .section-packages .section-note {
+    padding-left: calc(var(--pad-x) - 8px);
+    padding-right: calc(var(--pad-x) - 8px);
+  }
+  .section-packages .section-heading .section-note { padding-left: 0; padding-right: 0; }
+  /* Inner corners stay tighter than the block around them */
+  .pkg-table { border-radius: 14px; }
+}
+@media (max-width: 480px) {
+  .section-packages { padding-left: 4px; padding-right: 4px; }
+  .section-packages .section-heading,
+  .section-packages .section-note {
+    padding-left: calc(var(--pad-x) - 4px);
+    padding-right: calc(var(--pad-x) - 4px);
+  }
+  .section-packages .section-heading .section-note { padding-left: 0; padding-right: 0; }
+}
+
+/* Phones: one centred axis. Every section head sits on it, like the hero and
+   the reference strip, while lists and cards below stay left-aligned */
+@media (max-width: 720px) {
+  #top .section-heading {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    justify-items: center;
+  }
+  #top .section-heading > p {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 34ch;
+    text-wrap: balance;
+  }
+  #top .location-info { align-items: center; text-align: center; }
+  .footer { justify-items: center; text-align: center; }
+  .footer-links { justify-content: center; }
+}
+
+/* Tablets / iPad portrait: services as compact rows (icon left, text right)
+   instead of tall stacked cards; the location card keeps two columns */
+@media (min-width: 721px) and (max-width: 1040px) {
+  .value-grid { gap: 12px; }
+  .value-card {
+    display: grid;
+    grid-template-columns: 52px 1fr;
+    column-gap: 18px;
+    align-items: start;
+    padding: 20px 24px;
+  }
+  .value-card .icon-badge { grid-row: 1 / span 2; width: 52px; height: 52px; }
+  .value-card h3 { margin: 4px 0; }
+  .value-card p { margin: 0; }
+  .location-card { grid-template-columns: 1fr 1fr; }
+  .location-map { min-height: 300px; }
+}
+
+/* Small desktops and iPads in landscape (1025–1180px): the full menu fits
+   with slightly tighter links and the short brand line */
+@media (min-width: 1025px) and (max-width: 1180px) {
+  .topnav a { padding: 0 12px; }
+  .brand-loc { display: none; }
+}
+
+/* Landscape phones: a short screen gets the compact bar and a tighter hero,
+   so the headline and "Termin anfragen" fit on the first screen */
+@media (orientation: landscape) and (max-height: 500px) {
+  .site-shell { padding-top: 8px; }
+  .topbar { --tb-h: 56px; --tb-inset: 6px; top: 8px; }
+  .hero { min-height: 0; }
+  .hero-content { padding: 28px var(--pad-x); gap: 0; }
+  .hero-location { margin-bottom: 14px; }
+  .hero h1 { font-size: clamp(1.9rem, 4.4vw, 2.5rem); }
+  .hero-sub { margin-top: 10px; font-size: 0.92rem; }
+  .hero-actions { margin-top: 18px; gap: 6px; }
+  .hero-actions .button,
+  .hero-cta-primary { height: 50px !important; }
+  .hero-trust-row { margin-top: 14px; }
+  .hero-availability--promise { margin-top: 14px; }
+  .ceramic-media { width: min(100%, 300px); }
+}
