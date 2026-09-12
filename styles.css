@@ -5590,3 +5590,53 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .reviews-links { flex-direction: column; gap: 0; }
   .reviews-links span { display: none; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   BIG AND ULTRA-WIDE SCREENS (from 1921px)
+   The page keeps growing with the screen instead of stopping in a narrow
+   column: wider shell, taller hero, more photos per row. Text blocks stay in
+   a centred 1600px column so lines never get too long. Nothing below this
+   width changes.
+   ════════════════════════════════════════════════════════════════════════════ */
+@media (min-width: 1921px) {
+  body { font-size: 16px; }
+
+  .site-shell {
+    /* grows with the screen, then stops: 1720px at 1920px, 2700px from ~3700px */
+    max-width: min(2700px, calc(1720px + (100vw - 1920px) * 0.55));
+    padding-left: clamp(32px, 2.2vw, 72px);
+    padding-right: clamp(32px, 2.2vw, 72px);
+  }
+
+  /* Blocks stay full width; their content sits in a centred column */
+  .section,
+  .mid-cta,
+  .footer,
+  .ceramic-showcase {
+    padding-left: max(var(--pad-x), calc((100% - 1600px) / 2));
+    padding-right: max(var(--pad-x), calc((100% - 1600px) / 2));
+  }
+  .glass-row,
+  .section-glass > .location-card {
+    max-width: 1600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .ceramic-layout { max-width: 1400px; }
+
+  /* Review cards line up with the text column */
+  .reviews-scroller { --rv-side: 0px; --rv-gap: 24px; margin-left: 0; margin-right: 0; }
+
+  /* Long copy keeps a readable line length */
+  .faq-item p,
+  .pkg-row-teaser { max-width: 92ch; }
+
+  /* Hero fills the screen without ever growing taller than it */
+  .hero { min-height: min(760px, 62vh); }
+  .hero-content { max-width: 760px; }
+
+  /* Bigger photos in the reference strip and the gallery */
+  .ss-card { flex: 0 0 320px; }
+  .gallery-tile--wide { min-height: 460px; }
+  .gallery-tile--tall { min-height: 560px; }
+}
