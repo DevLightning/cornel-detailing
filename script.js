@@ -309,69 +309,54 @@ const projects = [
   },
 ];
 
+/* Public Google reviews. Only what the card shows is kept here: no profile
+   photos (those would load from Google's servers) and no "x days ago"
+   dates (they go stale). Names are shortened when rendered. */
 const reviews = [
   {
     name: "Liviu Cazacu",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocLtbJRqEfbh6kS7BiQTWo-drT0dUkBAlUVy_SE1NrAF2DWZFA=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "corneldetailing arbeitet sehr sauber und leistet wirklich hervorragende Arbeit mit großer Liebe zum Detail. Ich kann ihn wärmstens empfehlen und komme definitiv wieder! 🎉",
-    date: "vor 5 Tagen",
   },
   {
     name: "daf ktm",
-    photo: "https://lh3.googleusercontent.com/a-/ALV-UjX3YfHQBdYpNrNBfux_QISZmF8qyVTXfmRepKicSumiJxUPtCM=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Tolle Arbeit!",
-    date: "vor 1 Woche",
   },
   {
     name: "Anula Dev",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocJbUibow_E72CizO_dQ-0fDTv6e6nV1tTOirdHunNGgVXMPUA=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Super Aufbereitung!",
-    date: "vor 1 Woche",
   },
   {
     name: "Marius Silviu Anghelache",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocL9jyeE70SCd0BV3ZArDGU8OddSioYkrvowzvv9QlTsQzohyw=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Das Beste!",
-    date: "vor 2 Wochen",
   },
   {
     name: "Alina Maldea",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocKnpyTwB-hjD_60J3doBehE5a2Lj75SnIMhUOAg1nPdQ2V1Vw=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Mein Auto ist wieder frisch, riecht toll und sieht aus wie neu. Cornel Detailing ist erstklassig.",
-    date: "vor 5 Tagen",
   },
   {
     name: "Claudia Strommer",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocJec7E1PmMFWf08o6n6Y44_bWJWKlOqLhoVakAXaaWji7R6dA=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Mein Auto sieht nach jahrelangem Gebrauch wieder wie neu aus! Alles ist absolut perfekt! Vielen Dank!",
-    date: "vor 6 Tagen",
   },
   {
     name: "Alex Iancu",
-    photo: "https://lh3.googleusercontent.com/a/ACg8ocJmJzaHaAGUrJquC8zK1O2Ud-VM_W6sWr26sxLbcB_JSC6yHw=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Er hat mein Auto sehr professionell aufbereitet. Der Beste.",
-    date: "vor 6 Tagen",
   },
   {
     name: "Legacy P",
-    photo: "https://lh3.googleusercontent.com/a-/ALV-UjVXlHyXnWGRlgfgiY2vv9NmI4AzmyHE-ja_q2omZuIQLiuHK8aS=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Beste Autoaufbereitung!",
-    date: "vor 1 Woche",
   },
   {
     name: "Teodor Codrin Murariu",
-    photo: "https://lh3.googleusercontent.com/a-/ALV-UjX0Jzug8VTe3SG3IkG1EPX0g7Ig5WPVMnGRmFWglTEl4YlZnww=w96-h96-p-rp-mo-br100",
     rating: 5,
     text: "Danke für die Autowäsche. Ein echter Profi.",
-    date: "vor 1 Woche",
   },
 ];
 
@@ -418,11 +403,16 @@ function getWhatsAppLink() {
    prefill so the lead arrives with package + vehicle + price. */
 const VEHICLE_LABELS = { pkw: "PKW", suv: "SUV / Kombi", van: "Van" };
 
+/* The chosen vehicle class lives in sessionStorage only after the visitor
+   taps it, and is gone when the tab closes (a requested function, so no
+   consent needed). Older versions kept it permanently: clear that. */
+try { localStorage.removeItem("cornel_vehicle"); } catch (e) { /* ok */ }
+
 function getSelectedVehicle() {
   try {
-    const v = localStorage.getItem("cornel_vehicle");
+    const v = sessionStorage.getItem("cornel_vehicle");
     if (v === "suv" || v === "van") return v;
-  } catch (e) { /* storage blocked — default */ }
+  } catch (e) { /* storage blocked: default */ }
   return "pkw";
 }
 
@@ -567,7 +557,7 @@ function setupShowcaseSwipe() {
   // The hint plays once per visit, on phones, unless motion is reduced
   if (!window.matchMedia("(max-width: 720px)").matches) return;
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  try { if (sessionStorage.getItem("cornel_swipe_hint")) return; } catch (e) { /* ok */ }
+  if (!isNewVisit()) return;
 
   let touched = false;
   const stopHint = () => {
@@ -580,7 +570,6 @@ function setupShowcaseSwipe() {
 
   const play = () => {
     if (touched || track.scrollLeft > 4) return;
-    try { sessionStorage.setItem("cornel_swipe_hint", "1"); } catch (e) { /* ok */ }
     track.classList.add("is-nudging");
     if (hint) hint.classList.add("is-on");
     cards[0].addEventListener("animationend", () => track.classList.remove("is-nudging"), { once: true });
@@ -758,7 +747,7 @@ function setupVehicleSelect() {
     const btn = e.target.closest("[data-vehicle]");
     if (!btn) return;
     const v = btn.getAttribute("data-vehicle");
-    try { localStorage.setItem("cornel_vehicle", v); } catch (err) { /* ok */ }
+    try { sessionStorage.setItem("cornel_vehicle", v); } catch (err) { /* ok */ }
     applyVehicleSelection(v);
   });
 }
@@ -830,6 +819,9 @@ function gtag_report_conversion_whatsapp(url) {
   /* ── Conversion-quality guards ─────────────────────────────────────────────
      Layered gates so only clicks that look like a real customer count.
      None of them change how the buttons look or feel.
+
+     0) Consent        — no Google tag, no conversion, no session marker
+        unless the visitor accepted the cookie banner.
 
      1) CTA scope      — only the real WhatsApp/call buttons count.
      2) isTrusted      — synthetic/bot clicks never count.
@@ -912,6 +904,10 @@ function gtag_report_conversion_whatsapp(url) {
       e.preventDefault();
       return;
     }
+
+    /* (0) consent: consent.js defines gtag only after the visitor accepted
+       Google Ads cookies. Without it nothing is sent and nothing is stored */
+    if (typeof gtag !== "function") return;
 
     if (isWhatsAppHref(rawHref)) {
       if (!link.matches(WA_CTA)) return;                            // (1)
@@ -1068,8 +1064,8 @@ function setupMapFacade() {
     iframe.style.cssText = "border:0;border-radius:var(--r-lg);min-height:240px;";
     iframe.setAttribute("allowfullscreen", "");
     iframe.setAttribute("loading", "lazy");
-    iframe.setAttribute("referrerpolicy", "no-referrer-when-downgrade");
-    iframe.title = "Google Maps – Cornel Detailing Standort";
+    iframe.setAttribute("referrerpolicy", "strict-origin-when-cross-origin");
+    iframe.title = "Google Maps · Standort Cornel Detailing";
     btn.replaceWith(iframe);
   });
 }
@@ -1116,6 +1112,14 @@ function renderReviews() {
       `<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true" style="fill:${i < n ? "#FBBC04" : "#e0e0e0"}"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>`
     ).join("");
 
+  // Reviewers are shown by first name and last initial ("Claudia S.") with a
+  // letter avatar: less personal data than the full Google profile
+  const shortName = (name) => {
+    const parts = name.trim().split(/\s+/);
+    if (parts.length < 2) return parts[0];
+    return `${parts[0]} ${parts[parts.length - 1].charAt(0).toUpperCase()}.`;
+  };
+
   // Testimonial layout: stars + Google on top, the words, then the author
   // pinned to the bottom so names line up across every card in a row
   const cardHtml = (r) => `
@@ -1131,10 +1135,10 @@ function renderReviews() {
       </div>
       <p class="review-text">${r.text}</p>
       <div class="review-author">
-        <img class="review-avatar" src="${r.photo}" alt="" width="40" height="40" loading="lazy">
+        <span class="review-avatar review-avatar--initial" aria-hidden="true">${r.name.trim().charAt(0).toUpperCase()}</span>
         <div class="review-meta">
-          <strong>${r.name}</strong>
-          <span class="review-date">${r.date}</span>
+          <strong>${shortName(r.name)}</strong>
+          <span class="review-date">Google-Bewertung</span>
         </div>
       </div>
     </article>
@@ -1305,14 +1309,21 @@ function setupMobileMenu() {
   else if (desktop.addListener) desktop.addListener(onBreakpoint);
 }
 
+/* True when the visitor arrived from outside the site, false when they came
+   from one of our own pages. Lets one-time effects run once per visit
+   without storing anything on the device. */
+function isNewVisit() {
+  try {
+    return !document.referrer || new URL(document.referrer).origin !== location.origin;
+  } catch (e) {
+    return true;
+  }
+}
+
 /* One gloss sweep across the header per visit (the animation is pure CSS) */
 function setupHeaderSheen() {
   const topbar = document.querySelector(".topbar");
-  if (!topbar) return;
-  try {
-    if (sessionStorage.getItem("cornel_sheen")) return;
-    sessionStorage.setItem("cornel_sheen", "1");
-  } catch (e) { /* storage blocked: still play it */ }
+  if (!topbar || !isNewVisit()) return;
   topbar.classList.add("is-sheen");
 }
 

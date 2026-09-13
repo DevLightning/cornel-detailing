@@ -2,33 +2,6 @@
 <html lang="de-AT">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google Consent Mode v2 — defaults denied until user accepts -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        ad_storage:         'denied',
-        ad_user_data:       'denied',
-        ad_personalization: 'denied',
-        analytics_storage:  'denied',
-        wait_for_update:    500
-      });
-      /* Restore consent immediately for returning visitors */
-      if (localStorage.getItem('cornel_consent') === 'accepted') {
-        gtag('consent', 'update', {
-          ad_storage:         'granted',
-          ad_user_data:       'granted',
-          ad_personalization: 'granted',
-          analytics_storage:  'granted'
-        });
-      }
-    </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
-    <script>
-      gtag('js', new Date());
-      gtag('config', 'AW-17936964522');
-    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Datenschutz | Cornel Detailing</title>
     <link rel="canonical" href="https://corneldetailing.com/datenschutz.html" />
@@ -37,11 +10,10 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
     <meta name="robots" content="index,follow" />
-    
-    <link rel="stylesheet" href="styles.css?v=34" />
-    <script src="site-config.js" defer></script>
-    <script src="legal.js?v=3" defer></script>
-    <script src="consent.js" defer></script>
+
+    <link rel="stylesheet" href="styles.css?v=35" />
+    <script src="legal.js?v=4" defer></script>
+    <script src="consent.js?v=9" defer></script>
   </head>
   <body class="legal-page">
     <div class="site-shell">
@@ -72,126 +44,274 @@
             <span class="section-tag">Rechtliches</span>
             <h1>Datenschutzerklärung</h1>
             <p>
-              Diese Datenschutzerklärung informiert über die Verarbeitung
-              personenbezogener Daten auf der Website von Cornel Detailing.
-              Die Kontaktaufnahme erfolgt über Telefon, WhatsApp oder E-Mail.
+              Welche personenbezogenen Daten beim Besuch dieser Website und bei
+              einer Kontaktaufnahme verarbeitet werden, wofür, auf welcher
+              Rechtsgrundlage und welche Rechte Sie haben.
             </p>
           </div>
 
-          <div class="legal-grid">
+          <div class="legal-grid legal-grid--stack">
+            <article class="legal-card legal-card--summary">
+              <h2>Auf einen Blick</h2>
+              <ul>
+                <li>Ohne Ihre Einwilligung setzen wir keine Cookies und übermitteln keine Daten an Google.</li>
+                <li>Mit Ihrer Einwilligung messen wir mit Google Ads, ob unsere Anzeigen zu Anfragen führen. Personalisierte Werbung und Remarketing sind ausgeschaltet.</li>
+                <li>Kein Kontaktformular, kein Newsletter, keine Analyse-Tools wie Google Analytics. Schriften und Videos kommen von unserem eigenen Webspace.</li>
+              </ul>
+            </article>
+
             <article class="legal-card">
               <h2>1. Verantwortlicher</h2>
-              <p data-legal="controller"></p>
-            </article>
-
-            <article class="legal-card">
-              <h2>2. Hosting</h2>
-              <p data-legal="hosting"></p>
-            </article>
-
-            <article class="legal-card">
-              <h2>3. Server-Logfiles</h2>
               <p>
-                Beim Aufruf dieser Website können technisch notwendige
-                Verbindungsdaten durch den Hosting-Anbieter verarbeitet werden,
-                insbesondere IP-Adresse, Datum und Uhrzeit des Zugriffs,
-                angeforderte Datei, übertragene Datenmenge, Browsertyp und
-                Referrer-URL. Diese Verarbeitung erfolgt auf Grundlage des
-                berechtigten Interesses an einem sicheren und stabilen Betrieb
-                der Website.
+                Cornel Detailing, Inhaber Cornel Istrate<br />
+                Fördergasse 290, 2640 Enzenreith, Österreich<br />
+                Telefon: <a href="tel:+436764391253">+43 676 4391253</a><br />
+                E-Mail: <a href="mailto:kontakt@corneldetailing.at">kontakt@corneldetailing.at</a>
+              </p>
+              <p>
+                Ein Datenschutzbeauftragter ist nicht bestellt, da dafür keine
+                gesetzliche Pflicht besteht.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>4. Kontaktaufnahme</h2>
+              <h2>2. Hosting und Server-Logfiles</h2>
               <p>
-                Wenn Sie per E-Mail, Telefon oder WhatsApp Kontakt aufnehmen,
-                werden die von Ihnen übermittelten Angaben zur Bearbeitung Ihrer
-                Anfrage verwendet. Rechtsgrundlage ist vorvertragliche
-                Kommunikation bzw. unser berechtigtes Interesse an der
-                Beantwortung von Anfragen.
+                Diese Website wird bei Vercel Inc., 440 N Barranca Avenue #4133,
+                Covina, CA 91723, USA, gehostet. Bei jedem Seitenaufruf
+                verarbeitet Vercel technisch notwendige Verbindungsdaten:
+                IP-Adresse, Datum und Uhrzeit, aufgerufene Seite oder Datei,
+                übertragene Datenmenge, Browser und Betriebssystem sowie die
+                zuvor besuchte Seite (Referrer).
+              </p>
+              <p>
+                Zweck ist die sichere und stabile Auslieferung der Website.
+                Rechtsgrundlage ist unser berechtigtes Interesse (Art. 6 Abs. 1
+                lit. f DSGVO). Vercel verarbeitet diese Daten als
+                Auftragsverarbeiter nach Art. 28 DSGVO. Dabei können Daten in die
+                USA übermittelt werden: Vercel ist nach dem EU-US Data Privacy
+                Framework zertifiziert (Angemessenheitsbeschluss, Art. 45 DSGVO),
+                zusätzlich gelten Standardvertragsklauseln der EU-Kommission
+                (Art. 46 DSGVO).
+              </p>
+              <p>
+                Wir selbst werten diese Daten nicht aus. Wie lange Vercel sie
+                aufbewahrt, steht in den
+                <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Datenschutzhinweisen von Vercel</a>.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>5. Kontaktfunktionen auf dieser Website</h2>
+              <h2>3. Speicherung im Browser ohne Einwilligung</h2>
               <p>
-                Diese Website verwendet kein Kontaktformular. Die eingebundenen
-                Schaltflächen öffnen ausschließlich die auf Ihrem Gerät
-                hinterlegten Telefon- oder WhatsApp-Funktionen. Erst nach Ihrer
-                aktiven Nutzung dieser Funktion werden Daten an den jeweiligen
-                Kommunikationsanbieter übermittelt.
+                Im Speicher Ihres Browsers legen wir ohne Einwilligung nur ab,
+                was für eine von Ihnen gewünschte Funktion unbedingt nötig ist
+                (§ 165 Abs. 3 TKG 2021):
+              </p>
+              <ul>
+                <li>
+                  <strong>cornel_consent_v2</strong> (localStorage): Ihre Auswahl im
+                  Cookie-Banner und deren Datum, damit das Banner nicht bei jedem
+                  Seitenaufruf erscheint. Nach 12 Monaten fragen wir erneut.
+                </li>
+                <li>
+                  <strong>cornel_vehicle</strong> (sessionStorage): der Fahrzeugtyp,
+                  den Sie bei den Paketen wählen (PKW, SUV oder Van). Wird beim
+                  Schließen des Tabs gelöscht.
+                </li>
+              </ul>
+              <p>
+                Diese Einträge enthalten keine Kennung, bleiben auf Ihrem Gerät
+                und werden weder an uns noch an Dritte übertragen.
+              </p>
+            </article>
+
+            <article class="legal-card" id="google-ads">
+              <h2>4. Google Ads Conversion-Messung (nur mit Einwilligung)</h2>
+              <p>
+                Erst wenn Sie im Cookie-Banner auf „Akzeptieren“ tippen, laden
+                wir das Google-Tag von Google Ads. Anbieter ist die Google
+                Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.
+                Ohne Einwilligung wird das Google-Tag nicht geladen.
+              </p>
+              <p>
+                <strong>Zweck:</strong> Wir messen, ob Besucher, die über eine
+                unserer Google-Anzeigen kommen, uns danach anrufen oder per
+                WhatsApp schreiben. So sehen wir, welche Anzeigen sinnvoll sind.
+                Personalisierte Werbung und Remarketing sind deaktiviert.
+              </p>
+              <p>
+                <strong>Daten:</strong> IP-Adresse, Geräte- und
+                Browserinformationen, Datum und Uhrzeit, aufgerufene Seiten, die
+                Klick-Kennung der Anzeige (GCLID) und die Information, dass ein
+                Anruf- oder WhatsApp-Button angetippt wurde.
+              </p>
+              <p>
+                <strong>Cookies und Speicher:</strong> Google Ads setzt die
+                Cookies _gcl_au und nach einem Anzeigenklick _gcl_aw und legt
+                im localStorage den Eintrag _gcl_ls an (Speicherdauer jeweils bis
+                zu 90 Tage). Google kann zusätzlich Cookies
+                auf eigenen Domains wie google.com oder doubleclick.net lesen oder
+                setzen. Damit ein Anruf oder eine WhatsApp-Anfrage pro Besuch nur
+                einmal gezählt wird, speichern wir im sessionStorage die Einträge
+                cornel_call_lead und cornel_wa_lead (gelöscht beim Schließen des
+                Tabs).
+              </p>
+              <p>
+                <strong>Rechtsgrundlage:</strong> Ihre Einwilligung (Art. 6 Abs. 1
+                lit. a DSGVO und § 165 Abs. 3 TKG 2021).
+              </p>
+              <p>
+                <strong>Empfänger und Drittland:</strong> Soweit Google die Daten
+                für eigene Zwecke verarbeitet, ist Google dafür eigenständig
+                verantwortlich (Google Ads Controller-Controller-Datenschutzbedingungen).
+                Daten können an die Google LLC in den USA übermittelt werden.
+                Google LLC ist nach dem EU-US Data Privacy Framework zertifiziert
+                (Angemessenheitsbeschluss, Art. 45 DSGVO). Mehr dazu in der
+                <a href="https://policies.google.com/privacy?hl=de" target="_blank" rel="noopener noreferrer">Datenschutzerklärung von Google</a>
+                und unter
+                <a href="https://policies.google.com/technologies/partner-sites?hl=de" target="_blank" rel="noopener noreferrer">Datennutzung durch Google auf Partner-Websites</a>.
+              </p>
+              <p>
+                <strong>Widerruf:</strong> Sie können Ihre Einwilligung jederzeit
+                mit Wirkung für die Zukunft widerrufen, hier oder über
+                „Cookie-Einstellungen“ im Seitenfuß. Dabei löschen wir die
+                Google-Ads-Cookies und -Einträge auf dieser Website.
+              </p>
+              <p>
+                <button type="button" class="button button-secondary legal-cookie-btn" data-cookie-settings>Cookie-Einstellungen öffnen</button>
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>6. Cookies und Tracking (Google Ads)</h2>
+              <h2>5. Google Maps (nur nach Klick)</h2>
               <p>
-                Diese Website verwendet Google Ads Conversion-Tracking, einen
-                Dienst der Google LLC (1600 Amphitheatre Parkway, Mountain View,
-                CA 94043, USA). Dabei werden Cookies eingesetzt, um zu erfassen,
-                ob ein Nutzer nach dem Klick auf eine Google-Anzeige eine
-                bestimmte Aktion (z.&nbsp;B. Kontaktaufnahme per WhatsApp oder
-                Telefon) ausgeführt hat.
+                Auf der Startseite ist eine Karte von Google Maps vorbereitet. Sie
+                wird erst geladen, wenn Sie auf „Karte anzeigen“ tippen, und bei
+                jedem Seitenaufruf erst nach einem neuen Klick. Dann verbindet
+                sich Ihr Browser mit Servern der Google Ireland Limited; dabei
+                werden insbesondere Ihre IP-Adresse, Browserinformationen und die
+                aufgerufene Seite übermittelt, und Google kann Cookies setzen.
               </p>
               <p>
-                Die dadurch erzeugten Informationen werden an Server von Google
-                übertragen und dort gespeichert. Ihre IP-Adresse wird dabei
-                nicht mit anderen Daten von Google zusammengeführt.
-                Weitere Informationen:
-                <a href="https://policies.google.com/privacy" target="_blank" rel="noopener noreferrer">policies.google.com/privacy</a>.
-              </p>
-              <p>
-                Das Setzen von Cookies erfolgt nur mit Ihrer ausdrücklichen
-                Einwilligung über das Cookie-Banner beim ersten Besuch dieser
-                Website. Rechtsgrundlage: Art.&nbsp;6 Abs.&nbsp;1 lit.&nbsp;a DSGVO.
+                Rechtsgrundlage ist Ihre Einwilligung durch den Klick (Art. 6
+                Abs. 1 lit. a DSGVO und § 165 Abs. 3 TKG 2021). Eine Übermittlung
+                an die Google LLC in den USA ist möglich (EU-US Data Privacy
+                Framework, Art. 45 DSGVO). Der Link „In Google Maps öffnen“ führt
+                Sie direkt zu Google; dort gelten die Datenschutzbestimmungen von
+                Google.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>7. Widerruf der Cookie-Einwilligung</h2>
+              <h2>6. Kontakt per Telefon, E-Mail oder WhatsApp</h2>
               <p>
-                Sie können Ihre Einwilligung jederzeit widerrufen. Löschen Sie
-                dazu in Ihrem Browser den Eintrag <code>cornel_consent</code>
-                im lokalen Speicher (localStorage) · beim nächsten Seitenaufruf
-                erscheint das Banner erneut. Alternativ können Sie Cookies in
-                Ihren Browser-Einstellungen generell deaktivieren.
+                Die Buttons auf dieser Website öffnen nur die Telefon-, E-Mail-
+                oder WhatsApp-Funktion Ihres Geräts. Daten werden erst übertragen,
+                wenn Sie selbst anrufen oder eine Nachricht senden.
+              </p>
+              <p>
+                Wenn Sie uns kontaktieren, verarbeiten wir Ihre Angaben, etwa
+                Name, Telefonnummer, Nachricht, Fahrzeugdaten und Fotos, um Ihre
+                Anfrage zu beantworten, Termine zu vereinbaren und Aufträge
+                durchzuführen. Rechtsgrundlage ist Art. 6 Abs. 1 lit. b DSGVO
+                (Anbahnung und Erfüllung eines Vertrags), bei allgemeinen Anfragen
+                unser berechtigtes Interesse an der Beantwortung (Art. 6 Abs. 1
+                lit. f DSGVO).
+              </p>
+              <p>
+                <strong>WhatsApp</strong> wird von der WhatsApp Ireland Limited,
+                Dublin, Irland, bereitgestellt. Nachrichteninhalte sind
+                Ende-zu-Ende-verschlüsselt, WhatsApp verarbeitet aber Metadaten wie
+                Telefonnummer, Zeitpunkt und Gerätedaten und kann diese an die Meta
+                Platforms Inc. in den USA übermitteln (EU-US Data Privacy
+                Framework, Art. 45 DSGVO). Wenn Sie das nicht möchten, rufen Sie
+                uns bitte an oder schreiben Sie eine E-Mail. Details in den
+                <a href="https://www.whatsapp.com/legal/privacy-policy-eea" target="_blank" rel="noopener noreferrer">Datenschutzhinweisen von WhatsApp</a>.
+              </p>
+              <p>
+                <strong>Speicherdauer:</strong> Anfragen, aus denen kein Auftrag
+                entsteht, löschen wir spätestens 12 Monate nach dem letzten
+                Kontakt. Unterlagen zu Aufträgen, insbesondere Rechnungen,
+                bewahren wir so lange auf, wie es gesetzlich vorgeschrieben ist,
+                in der Regel 7 Jahre (§ 132 BAO, Art. 6 Abs. 1 lit. c DSGVO).
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>8. Speicherdauer</h2>
+              <h2>7. Kundenbewertungen</h2>
               <p>
-                Personenbezogene Daten aus Anfragen werden nur so lange
-                gespeichert, wie dies zur Bearbeitung der Anfrage, zur
-                Vertragsanbahnung oder zur Erfüllung gesetzlicher Pflichten
-                erforderlich ist.
+                Auf der Startseite zeigen wir einen Auszug öffentlicher
+                Bewertungen aus unserem Google-Unternehmensprofil: Vorname und
+                Anfangsbuchstabe des Nachnamens, Sternebewertung und
+                Bewertungstext. Profilbilder zeigen wir nicht, und es werden
+                dafür keine Inhalte von Google-Servern geladen.
+              </p>
+              <p>
+                Rechtsgrundlage ist unser berechtigtes Interesse, Interessenten
+                echte Kundenmeinungen zu zeigen (Art. 6 Abs. 1 lit. f DSGVO).
+                Wenn Sie nicht möchten, dass Ihre Bewertung hier erscheint,
+                genügt eine kurze Nachricht und wir entfernen sie.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>9. Ihre Rechte</h2>
+              <h2>8. Ihre Rechte</h2>
               <p>
-                Ihnen stehen grundsätzlich die Rechte auf Auskunft,
-                Berichtigung, Löschung, Einschränkung, Datenübertragbarkeit,
-                Widerruf und Widerspruch zu. Wenn Sie der Ansicht sind, dass die
-                Verarbeitung Ihrer Daten gegen das Datenschutzrecht verstößt,
-                können Sie sich bei der österreichischen Datenschutzbehörde
-                beschweren.
+                Sie haben das Recht auf Auskunft (Art. 15 DSGVO), Berichtigung
+                (Art. 16), Löschung (Art. 17), Einschränkung der Verarbeitung
+                (Art. 18) und Datenübertragbarkeit (Art. 20). Eine Einwilligung
+                können Sie jederzeit widerrufen (Art. 7 Abs. 3 DSGVO); die
+                Rechtmäßigkeit der Verarbeitung bis zum Widerruf bleibt davon
+                unberührt. Für Ihr Anliegen genügt eine E-Mail an
+                <a href="mailto:kontakt@corneldetailing.at">kontakt@corneldetailing.at</a>.
+              </p>
+            </article>
+
+            <article class="legal-card legal-card--highlight">
+              <h2>9. Widerspruchsrecht (Art. 21 DSGVO)</h2>
+              <p>
+                Soweit wir Daten auf Grundlage unseres berechtigten Interesses
+                verarbeiten (Art. 6 Abs. 1 lit. f DSGVO), etwa bei
+                Server-Logfiles, allgemeinen Anfragen oder der Anzeige von
+                Bewertungen, können Sie dieser Verarbeitung jederzeit aus
+                Gründen widersprechen, die sich aus Ihrer besonderen Situation
+                ergeben. Wir verarbeiten die Daten dann nicht mehr, außer wir
+                können zwingende schutzwürdige Gründe nachweisen oder die
+                Verarbeitung dient der Geltendmachung, Ausübung oder Verteidigung
+                von Rechtsansprüchen.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>10. Beschwerdestelle</h2>
+              <h2>10. Beschwerde bei der Datenschutzbehörde</h2>
               <p>
-                Österreichische Datenschutzbehörde, Barichgasse 40-42,
-                1030 Wien, <a href="https://www.dsb.gv.at/" target="_blank" rel="noreferrer">www.dsb.gv.at</a>
+                Wenn Sie der Ansicht sind, dass die Verarbeitung Ihrer Daten gegen
+                das Datenschutzrecht verstößt, können Sie sich bei der
+                Aufsichtsbehörde beschweren (Art. 77 DSGVO). In Österreich ist das
+                die Österreichische Datenschutzbehörde, Barichgasse 40-42, 1030
+                Wien, Telefon +43 1 52 152-0, E-Mail
+                <a href="mailto:dsb@dsb.gv.at">dsb@dsb.gv.at</a>,
+                <a href="https://www.dsb.gv.at/" target="_blank" rel="noopener noreferrer">www.dsb.gv.at</a>.
               </p>
             </article>
 
             <article class="legal-card">
-              <h2>11. Stand</h2>
-              <p data-legal="privacyDate"></p>
+              <h2>11. Weitere Hinweise</h2>
+              <p>
+                Die Nutzung dieser Website ist ohne Angabe persönlicher Daten
+                möglich. Für einen Auftrag benötigen wir Ihren Namen und Ihre
+                Kontaktdaten; ohne diese Angaben können wir keinen Termin
+                vereinbaren. Eine automatisierte Entscheidungsfindung
+                einschließlich Profiling (Art. 22 DSGVO) findet durch uns nicht
+                statt. Die Website wird ausschließlich verschlüsselt über HTTPS
+                ausgeliefert.
+              </p>
+            </article>
+
+            <article class="legal-card">
+              <h2>12. Stand</h2>
+              <p>13. September 2026</p>
             </article>
           </div>
         </section>
@@ -200,12 +320,13 @@
       <footer class="footer">
         <div>
           <strong>Cornel Detailing</strong>
-          <p id="footerText">Hochwertige Autoaufbereitung nähe Neunkirchen.</p>
+          <p>Professionelle Autoaufbereitung in Enzenreith, Gloggnitz, Neunkirchen und Umgebung.</p>
         </div>
         <div class="footer-links">
           <a href="/">Startseite</a>
           <a href="galerie.html">Galerie</a>
           <a href="impressum.html">Impressum</a>
+          <button type="button" class="footer-cookie" data-cookie-settings>Cookie-Einstellungen</button>
         </div>
       </footer>
     </div>

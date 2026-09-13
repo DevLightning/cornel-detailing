@@ -2,33 +2,7 @@
 <html lang="de-AT">
   <head>
     <meta charset="UTF-8" />
-    <!-- Google Consent Mode v2 — defaults denied until user accepts -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        ad_storage:         'denied',
-        ad_user_data:       'denied',
-        ad_personalization: 'denied',
-        analytics_storage:  'denied',
-        wait_for_update:    500
-      });
-      /* Restore consent immediately for returning visitors */
-      if (localStorage.getItem('cornel_consent') === 'accepted') {
-        gtag('consent', 'update', {
-          ad_storage:         'granted',
-          ad_user_data:       'granted',
-          ad_personalization: 'granted',
-          analytics_storage:  'granted'
-        });
-      }
-    </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
-    <script>
-      gtag('js', new Date());
-      gtag('config', 'AW-17936964522');
-    </script>
+    <!-- Google Ads (gtag.js) is loaded by consent.js, only after the visitor accepts -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Auto Frühjahrespflege · Neunkirchen & Gloggnitz</title>
     <meta name="description" content="Nach dem Winter empfiehlt sich eine gründliche Frühjahrespflege. Wir entfernen Salzreste, inspizieren und polieren den Lack · für Ihr Auto in Neunkirchen und Gloggnitz." />
@@ -103,17 +77,15 @@
   ]
 }
     </script>
-    <link rel="preconnect" href="https://www.google.com" />
-    <link rel="dns-prefetch" href="https://maps.gstatic.com" />
     <meta name="theme-color" content="#222933" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
     
-    <link rel="stylesheet" href="styles.css?v=34" />
-    <script src="site-config.js" defer></script>
-    <script src="script.js?v=22" defer></script>
-    <script src="consent.js" defer></script>
+    <link rel="stylesheet" href="styles.css?v=35" />
+    <script src="site-config.js?v=6" defer></script>
+    <script src="script.js?v=23" defer></script>
+    <script src="consent.js?v=9" defer></script>
   </head>
   <body>
     <div class="site-shell">
@@ -300,6 +272,7 @@
           <a href="galerie.html">Galerie</a>
           <a href="impressum.html">Impressum</a>
           <a href="datenschutz.html">Datenschutz</a>
+          <button type="button" class="footer-cookie" data-cookie-settings>Cookie-Einstellungen</button>
         </div>
       </footer>
 

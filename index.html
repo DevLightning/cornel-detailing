@@ -4,33 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 
-    <!-- Google Consent Mode v2 — defaults denied until user accepts -->
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        ad_storage:         'denied',
-        ad_user_data:       'denied',
-        ad_personalization: 'denied',
-        analytics_storage:  'denied',
-        wait_for_update:    500
-      });
-      /* Restore consent immediately for returning visitors */
-      if (localStorage.getItem('cornel_consent') === 'accepted') {
-        gtag('consent', 'update', {
-          ad_storage:         'granted',
-          ad_user_data:       'granted',
-          ad_personalization: 'granted',
-          analytics_storage:  'granted'
-        });
-      }
-    </script>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=AW-17936964522"></script>
-    <script>
-      gtag('js', new Date());
-      gtag('config', 'AW-17936964522');
-    </script>
+    <!-- Google Ads (gtag.js) is loaded by consent.js, only after the visitor accepts -->
 
     <!-- ═══ PRIMARY SEO ═══════════════════════════════════════════════════ -->
     <title>Autoaufbereitung Gloggnitz & Neunkirchen · Cornel Detailing</title>
@@ -311,24 +285,18 @@
     <!-- ═══ PERFORMANCE HINTS ════════════════════════════════════════════ -->
     <!-- LCP: hero background image -->
     <link rel="preload" as="image" href="assets/gallery/background_rs3.webp" fetchpriority="high" />
-    <link rel="preconnect" href="https://lh3.googleusercontent.com" />
-    <link rel="preconnect" href="https://www.google.com" />
-    <link rel="preconnect" href="https://maps.googleapis.com" />
-    <link rel="dns-prefetch" href="https://maps.gstatic.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" media="print" onload="this.media='all'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800;900&display=swap" /></noscript>
+    <!-- Fonts are self-hosted (assets/fonts): no connection to Google -->
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="assets/fonts/poppins-900-latin.woff2" crossorigin />
 
     <meta name="theme-color" content="#222933" />
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
-    <link rel="stylesheet" href="styles.css?v=34" />
-    <script src="site-config.js?v=5" defer></script>
-    <script src="script.js?v=22" defer></script>
-    <script src="consent.js?v=8" defer></script>
+    <link rel="stylesheet" href="styles.css?v=35" />
+    <script src="site-config.js?v=6" defer></script>
+    <script src="script.js?v=23" defer></script>
+    <script src="consent.js?v=9" defer></script>
   </head>
   <body>
     <div class="site-shell">
@@ -452,6 +420,7 @@
             <span aria-hidden="true">·</span>
             <a href="https://g.page/r/CR0HTrLjFzNJEAE/review" target="_blank" rel="noopener noreferrer">Bewertung schreiben</a>
           </p>
+          <p class="reviews-note">Auszug aus unseren Google-Bewertungen · von uns nicht auf Echtheit geprüft</p>
         </section>
 
         <section class="section reveal" id="autoaufbereitung-leistungen" aria-label="Autoaufbereitung Leistungen Gloggnitz">
@@ -502,7 +471,7 @@
               <h2>Klare Pakete. Transparente Preise.</h2>
             </div>
             <p class="section-note" id="priceNote">
-              Alle Preise in EUR. Kleinunternehmerregelung gemäß § 6 Abs. 1 Z 27 UStG.
+              Alle Preise in EUR. Aufgrund der Kleinunternehmerregelung gemäß § 6 Abs. 1 Z 27 UStG wird keine Umsatzsteuer berechnet.
             </p>
           </div>
 
@@ -781,6 +750,7 @@
           <a href="galerie.html">Galerie</a>
           <a href="impressum.html">Impressum</a>
           <a href="datenschutz.html">Datenschutz</a>
+          <button type="button" class="footer-cookie" data-cookie-settings>Cookie-Einstellungen</button>
         </div>
       </footer>
 

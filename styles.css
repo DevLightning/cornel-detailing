@@ -2,6 +2,44 @@
    CORNEL DETAILING — Final. Dark hero. Green CTA. Strong contrast.
    ================================================================ */
 
+/* Self-hosted fonts (assets/fonts, SIL Open Font License 1.1). Loading them
+   from our own server means no visitor data goes to Google Fonts. */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400 700;
+  font-display: swap;
+  src: url('assets/fonts/inter-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('assets/fonts/poppins-600-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('assets/fonts/poppins-700-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 800;
+  font-display: swap;
+  src: url('assets/fonts/poppins-800-latin.woff2') format('woff2');
+}
+@font-face {
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('assets/fonts/poppins-900-latin.woff2') format('woff2');
+}
+
 :root {
   --white: #ffffff;
   --off-white: #f5f7fa;
@@ -5640,3 +5678,134 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .gallery-tile--wide { min-height: 460px; }
   .gallery-tile--tall { min-height: 560px; }
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   LEGAL · cookie banner, cookie settings link, reviews, legal pages
+   Accept and reject look exactly alike (the Austrian DSB requires the "no"
+   to be as easy and as visible as the "yes"). Every page links back to the
+   banner so consent can be withdrawn as easily as it was given.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+#cookie-banner { width: min(calc(100vw - 24px), 640px); }
+.cb-inner { align-items: center; gap: 18px; }
+.cb-copy { flex: 1; min-width: 0; }
+.cb-title {
+  margin: 0 0 3px;
+  font-family: var(--font-heading);
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: var(--dark);
+}
+.cb-status {
+  margin: 6px 0 0;
+  font-size: 0.76rem;
+  color: var(--grey-600);
+}
+.cb-status strong { color: var(--dark); }
+.cb-links {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 5px 0 0;
+  font-size: 0.78rem;
+}
+.cb-links span { color: var(--grey-400); }
+
+.cb-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  width: 132px;
+}
+.cb-btn {
+  width: 100%;
+  background: var(--white);
+  border: 1.5px solid var(--dark);
+  color: var(--dark);
+}
+@media (hover: hover) {
+  .cb-btn:hover { background: var(--dark); color: #fff; }
+}
+
+@media (max-width: 720px) {
+  #cookie-banner { padding: 14px; }
+  .cb-inner {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+  }
+  .cb-actions {
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+  }
+  .cb-btn { height: 44px; font-size: 0.86rem; padding: 0; }
+}
+
+/* "Cookie-Einstellungen" in the footer: looks like its neighbouring links */
+.footer-links .footer-cookie {
+  display: inline-flex;
+  align-items: center;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  background: none;
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--grey-600);
+  cursor: pointer;
+  transition: all 0.15s var(--ease);
+}
+.footer-links .footer-cookie:hover {
+  color: var(--dark);
+  background: var(--off-white);
+  border-color: var(--border);
+  box-shadow: 0 1px 4px rgba(15,20,34,0.05);
+}
+
+/* Reviews: letter avatars instead of Google profile photos, plus the
+   notice on how the reviews are checked (§ 2 UWG) */
+.review-avatar--initial {
+  display: grid;
+  place-items: center;
+  background: var(--ink);
+  color: var(--brand);
+  font-family: var(--font-heading);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.reviews-note {
+  max-width: 60ch;
+  margin: 10px auto 0;
+  text-align: center;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--grey-500);
+}
+
+/* Privacy policy: one readable column, a tinted summary first and the right
+   to object set apart (Art. 21 DSGVO asks for it to stand out) */
+.legal-grid--stack { grid-template-columns: 1fr; }
+.legal-grid--stack .legal-card > * { max-width: 78ch; }
+.legal-card ul {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding-left: 1.15em;
+  color: var(--grey-500);
+  line-height: 1.6;
+}
+.legal-card li::marker { color: var(--brand-deep); }
+.legal-card strong { color: var(--dark); }
+.legal-card--summary {
+  background: var(--brand-soft);
+  border-color: rgba(230,189,13,0.45);
+}
+.legal-card--summary ul { color: var(--grey-600); }
+.legal-card--highlight { box-shadow: inset 4px 0 0 var(--brand), var(--shadow-section); }
+.legal-card p + p,
+.legal-card ul + p,
+.legal-card p + ul { margin-top: 10px; }
+.legal-cookie-btn { margin-top: 4px; }

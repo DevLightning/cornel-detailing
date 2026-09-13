@@ -1,9 +1,9 @@
+/* Contact data and short texts used by script.js on the main pages.
+   The legal details (Impressum, Datenschutz) are written directly into
+   impressum.html and datenschutz.html: change them there. */
 window.SITE_CONFIG = {
   business: {
     name: "Cornel Detailing",
-    businessPurpose: "Autoaufbereitung, Innenreinigung, Außenreinigung, Lackpolitur und Versiegelung",
-    legalForm: "Einzelunternehmen",
-    ownerName: "Cornel Istrate",
     address: {
       street: "Fördergasse 290",
       postalCode: "2640",
@@ -18,22 +18,9 @@ window.SITE_CONFIG = {
       "Hallo, ich möchte einen Termin bei Cornel Detailing anfragen.",
     serviceArea: "Enzenreith, Gloggnitz, Neunkirchen und Umgebung",
     appointmentHint: "Termine nach Vereinbarung",
-    uid: "Keine UID-Nummer – Kleinunternehmer gemäß § 6 Abs. 1 Z 27 UStG",
-    gisa: "",
-    chamber: "Wirtschaftskammer Niederösterreich",
-    supervisoryAuthority: "Bezirkshauptmannschaft Neunkirchen",
-    tradeRegulation: "Gewerbeordnung (GewO), abrufbar im Rechtsinformationssystem des Bundes",
-    consumerDisputeInfo:
-      "Verbraucherinnen und Verbraucher haben die Möglichkeit, Beschwerden an die Online-Streitbeilegungsplattform der EU zu richten: https://ec.europa.eu/consumers/odr/ – Wir sind weder verpflichtet noch bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
     priceNote:
       "Alle Preise in EUR. Aufgrund der Kleinunternehmerregelung gemäß § 6 Abs. 1 Z 27 UStG wird keine Umsatzsteuer berechnet.",
-    hostingProvider: {
-      name: "Vercel Inc.",
-      address: "340 S Lemon Ave #4133, Walnut, CA 91789, USA",
-      privacyUrl: "https://vercel.com/legal/privacy-policy",
-    },
     footerText:
       "Professionelle Autoaufbereitung in Enzenreith, Gloggnitz, Neunkirchen und Umgebung.",
-    privacyDate: "18.03.2026",
   },
 };
