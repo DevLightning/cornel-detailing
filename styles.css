@@ -3695,11 +3695,11 @@ body::after {
 .showcase-strip-track {
   display: flex;
   gap: 14px;
-  padding: 4px clamp(28px, 4vw, 44px);
+  padding: 4px var(--pad-x);        /* same side margin as every other block */
   overflow-x: auto;
   overflow-y: hidden;
   scroll-snap-type: x mandatory;
-  scroll-padding-left: clamp(28px, 4vw, 44px);
+  scroll-padding-left: var(--pad-x);
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -4649,6 +4649,17 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* Type: one size per level */
 .section-heading h2,
 .showcase-strip-header h2 { font-size: var(--fs-h2); }
+/* Desktop: a title that needs two lines splits evenly, never "... Fahrzeug / tun." */
+@media (min-width: 721px) {
+  .section-heading h2,
+  .showcase-strip-header h2 { text-wrap: balance; }
+}
+/* Laptops and desktops: every section title fits on one line; intro text
+   under a title keeps a readable length */
+@media (min-width: 1041px) {
+  .section-heading:not(.section-heading-inline) { max-width: 760px; }
+  .section-heading > p:not(.section-note) { max-width: 62ch; }
+}
 .glass-card h2,
 .location-info h2 { font-size: var(--fs-h3); }
 .section-heading > p:not(.section-note),
@@ -5032,9 +5043,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 /* ════════════════════════════════════════════════════════════════════════════
    BIG AND ULTRA-WIDE SCREENS (from 1921px)
    The page keeps growing with the screen instead of stopping in a narrow
-   column: wider shell, taller hero, more photos per row. Text blocks stay in
-   a centred 1600px column so lines never get too long. Nothing below this
-   width changes.
+   column: wider shell, taller hero, more photos and cards per row. Every
+   block uses the same side margin, so content edges line up down the whole
+   page; long copy keeps its own line-length limit. Nothing below this width
+   changes.
    ════════════════════════════════════════════════════════════════════════════ */
 @media (min-width: 1921px) {
   body { font-size: 16px; }
@@ -5046,14 +5058,9 @@ a, button { -webkit-tap-highlight-color: transparent; }
     padding-right: clamp(32px, 2.2vw, 72px);
   }
 
-  /* Blocks stay full width; their content sits in a centred column */
-  .section,
-  .mid-cta,
-  .footer,
-  .ceramic-showcase {
-    padding-left: max(var(--pad-x), calc((100% - 1600px) / 2));
-    padding-right: max(var(--pad-x), calc((100% - 1600px) / 2));
-  }
+  /* One side margin for every block (sections, photo strip, reviews, pricing,
+     FAQ, footer): content fills its box the same way everywhere */
+  :root { --pad-x: clamp(44px, 2.6vw, 80px); }
   /* The gallery/contact row and the location card keep the same outer edges
      as the blocks above and below them. Their centred content gets a little
      more room and size, so lines don't wrap early inside the wide cards */
@@ -5067,8 +5074,33 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .glass-card p { max-width: 56ch; }
   .ceramic-layout { max-width: 1400px; }
 
-  /* Review cards line up with the text column */
-  .reviews-scroller { --rv-side: 0px; --rv-gap: 24px; margin-left: 0; margin-right: 0; }
+  /* Section titles get room for one line on the wider blocks (the pricing
+     heading, title left and note right, keeps its full width) */
+  .section-heading:not(.section-heading-inline) { max-width: 880px; }
+
+  /* Review cards keep the shared side margin, with a calmer gutter */
+  .reviews-scroller { --rv-gap: 28px; }
+
+  /* Services: icon beside the text, so the wider cards stay compact */
+  .value-grid { gap: 20px; }
+  .value-card {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr);
+    column-gap: 22px;
+    align-items: start;
+    padding: 30px 32px;
+  }
+  .value-card .icon-badge { grid-row: 1 / span 2; width: 56px; height: 56px; border-radius: 14px; }
+  .value-card .icon-badge svg { width: 24px; height: 24px; }
+  .value-card h3 { margin: 4px 0 6px; font-size: 1.15rem; }
+  .value-card p { margin: 0; }
+
+  /* FAQ: two columns of questions; an opened answer only grows its own item */
+  .faq-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 12px 20px;
+  }
 
   /* Long copy keeps a readable line length */
   .faq-item p,
@@ -5082,6 +5114,15 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .ss-card { flex: 0 0 320px; }
   .gallery-tile--wide { min-height: 460px; }
   .gallery-tile--tall { min-height: 560px; }
+}
+/* More reviews per row as the screen widens, so the cards keep their size */
+@media (min-width: 2800px) {
+  .reviews-scroller { --rv-n: 5; }
+  .reviews-track .review-card:nth-child(5) { display: flex; }
+}
+@media (min-width: 3600px) {
+  .reviews-scroller { --rv-n: 6; }
+  .reviews-track .review-card:nth-child(6) { display: flex; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -5752,14 +5793,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 }
 
 /* ── Big and ultra-wide screens: the packages fill their box ──
-   From 1921px the section uses its full width instead of the 1600px text
-   column and everything grows a step. From 2400px two categories share a
+   From 1921px everything grows a step. From 2400px two categories share a
    row (four cards), the way the reviews and the photo strip add columns. */
 @media (min-width: 1921px) {
-  .section.section-packages {
-    padding-left: clamp(44px, 2.6vw, 80px);
-    padding-right: clamp(44px, 2.6vw, 80px);
-  }
+  /* side margins come from the shared --pad-x (see BIG AND ULTRA-WIDE SCREENS) */
   .section-packages .section-note { max-width: 420px; font-size: 0.88rem; }
 
   .vehicle-select { padding: 8px 8px 8px 28px; }
