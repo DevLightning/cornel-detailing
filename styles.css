@@ -5310,35 +5310,56 @@ a, button { -webkit-tap-highlight-color: transparent; }
 }
 
 @media (max-width: 720px) {
-  .package-grid { margin-top: 20px; }
+  .package-grid { margin-top: 16px; }
+  /* Phones: compact and solid (no blur to repaint while scrolling). Once it
+     sticks, the label sits exactly behind the header, whose bottom edge is
+     at 64px (8px offset + 56px bar). Only the buttons stay in view, and no
+     card text can slide through a gap between the two bars:
+     38px top + 6px padding + 2px margin + 18px label = 64px, then 6px of
+     white before the buttons. */
   .vehicle-select {
-    top: 72px;
+    top: 38px;
     display: block;
-    padding: 8px;
+    padding: 6px;
     border-radius: var(--r-lg);
+    background: var(--white);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
   }
   .vehicle-select-label {
     display: block;
-    margin: 4px 0 8px;
+    height: 18px;
+    margin: 2px 0 6px;
+    overflow: hidden;
+    font-size: 0.8rem;
+    line-height: 18px;
     text-align: center;
-    font-size: 0.9rem;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
   .vehicle-select-btns { width: auto; }
   .vsel {
     flex-direction: column;
-    gap: 4px;
-    min-height: 64px;
-    padding: 8px 4px;
-    border-radius: 10px;          /* 18px corner minus the 8px inset */
-    font-size: 0.8rem;
+    gap: 2px;
+    min-height: 50px;
+    padding: 6px 4px;
+    border-radius: 12px;          /* 18px corner minus the 6px inset */
+    font-size: 0.76rem;
     text-align: center;
   }
-  .vsel:focus-visible { border-radius: 10px; }
-  .vsel svg { width: 26px; height: 26px; }
+  .vsel:focus-visible { border-radius: 12px; }
+  .vsel svg { width: 22px; height: 22px; }
+
+  /* The tax note takes three lines instead of four */
+  #top .section-packages .section-heading > .section-note {
+    max-width: 42ch;
+    font-size: 0.8rem;
+    line-height: 1.45;
+  }
 }
 @media (max-width: 360px) {
-  .vsel { min-height: 60px; font-size: 0.74rem; }
-  .vsel svg { width: 24px; height: 24px; }
+  .vsel { font-size: 0.72rem; }
+  .vsel svg { width: 20px; height: 20px; }
 }
 
 /* Short landscape screens: a sticky selector would cover too much of the

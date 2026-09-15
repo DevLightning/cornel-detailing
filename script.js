@@ -1038,7 +1038,8 @@ function setupCtaBarAutoHide() {
   if (!bar) return;
 
   const targets = Array.from(
-    document.querySelectorAll(".hero-actions, .mid-cta, .ceramic-actions, .glass-actions")
+    // an open package's own buttons count too (closed packages are skipped below)
+    document.querySelectorAll(".hero-actions, .mid-cta, .ceramic-actions, .glass-actions, .pkg-card .package-content-actions")
   );
   if (!targets.length) return;
 
@@ -1047,6 +1048,8 @@ function setupCtaBarAutoHide() {
     pending = false;
     const vh = window.innerHeight;
     const hide = targets.some((t) => {
+      // Chrome still gives content inside a closed <details> a size, so skip it explicitly
+      if (t.closest("details:not([open])")) return false;
       const r = t.getBoundingClientRect();
       if (r.height === 0) return false;
       const overlap = Math.min(r.bottom, vh) - Math.max(r.top, 0);
@@ -1176,8 +1179,12 @@ function setupPackageDetails() {
     const group = details.closest(".pkg-group-cards");
     const pair = sideBySide.matches && group ? Array.from(group.querySelectorAll(".pkg-details")) : [details];
 
+    // Lets the call/WhatsApp bar re-check what is on screen once the panel has moved
+    const recheckBar = () => setTimeout(() => window.dispatchEvent(new Event("scroll")), 280);
+
     if (details.open && !details.classList.contains("is-collapsed")) {
       pair.forEach((d) => close(d, true));
+      recheckBar();
       return;
     }
 
@@ -1198,6 +1205,7 @@ function setupPackageDetails() {
 
     pair.forEach(open);
     setTimeout(() => reveal(pair), reducedMotion.matches ? 0 : 260);
+    recheckBar();
   });
 
   // Opened another way (e.g. the browser's find in page): never leave it collapsed
