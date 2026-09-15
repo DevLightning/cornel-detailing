@@ -606,13 +606,19 @@ function renderGallery() {
     .join("");
 }
 
+/* The one package marked "Empfohlen": 60 months of ceramic protection for
+   €200 more than the 12-month sealing, the best long-term value for the
+   client and the service the ceramic section and the FAQ already recommend. */
+const RECOMMENDED_PACKAGE = 9;
+
 function renderPackages() {
   const grid = document.getElementById("packagesGrid");
   if (!grid) return;
 
   const categoryIcons = {
     "Außen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1l2-5h12l2 5h1"/><path d="M5 12v5a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-5"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>',
-    "Innen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M7 9v6M17 9v6M7 12h10"/></svg>',
+    // Steering wheel: reads as "inside the car" at a glance
+    "Innen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M10 12 3.3 10M14 12l6.7-2M12 14v7"/></svg>',
     "Politur": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>',
     "Versiegelung": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>',
     "Premium": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l3 6 6 .9-4.4 4.2 1 6L12 16.7 6.4 19l1-6L3 8.9 9 8l3-6z"/></svg>',
@@ -644,8 +650,16 @@ function renderPackages() {
 
     const veh = getSelectedVehicle();
     const rowsHtml = pkgs.map((pkg) => {
-      const checkSvg = `<svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
-      const items = pkg.items.map((item) => `<li><span class="pkg-check" aria-hidden="true">${checkSvg}</span>${item}</li>`).join("");
+      const checkSvg = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>`;
+      const infoSvg = `<svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.5h.01"/></svg>`;
+      // Lines starting with "…" are conditions ("…nach erfolgter Lackpolitur"),
+      // not services: no tick, and they don't count towards "N Leistungen"
+      const isCondition = (item) => item.startsWith("…");
+      const items = pkg.items.map((item) => isCondition(item)
+        ? `<li class="pkg-item-pre"><span class="pkg-check" aria-hidden="true">${infoSvg}</span>${item}</li>`
+        : `<li><span class="pkg-check" aria-hidden="true">${checkSvg}</span>${item}</li>`).join("");
+      const serviceCount = pkg.items.filter((item) => !isCondition(item)).length;
+      const recommended = pkg.number === RECOMMENDED_PACKAGE;
       const note = pkg.note ? `<p class="package-note">${pkg.note}</p>` : "";
       // Package-specific WhatsApp prefill — carries package + vehicle + price
       const waHref = getWhatsAppLinkForPackage(pkg, veh);
@@ -653,29 +667,34 @@ function renderPackages() {
       const priceTextClass = price.length > 9 ? " is-text" : "";
 
       return `
-        <article class="pkg-row">
+        <article class="pkg-card${recommended ? " is-recommended" : ""}" aria-labelledby="pkg-title-${pkg.number}">
+          <div class="pkg-card-head">
+            <p class="pkg-card-meta">
+              <span class="pkg-row-num">Paket ${pkg.number}</span>
+              ${recommended ? `<span class="pkg-badge">Empfohlen</span>` : ""}
+            </p>
+            <h3 id="pkg-title-${pkg.number}">${pkg.title}</h3>
+            <div class="pkg-price-single" data-pkw="${pkg.prices.pkw}" data-suv="${pkg.prices.suv}" data-van="${pkg.prices.van}" aria-label="Preis">
+              <strong class="${priceTextClass.trim()}">${price}</strong>
+              <span class="pkg-price-for">für ${VEHICLE_LABELS[veh]}</span>
+            </div>
+            <p class="pkg-row-teaser">${pkg.teaser}</p>
+          </div>
           <details class="pkg-details">
-            <summary class="pkg-row-summary">
-              <span class="pkg-row-icon" aria-hidden="true">${icon}</span>
-              <div class="pkg-row-info">
-                <span class="pkg-row-num">Paket ${pkg.number}</span>
-                <h3>${pkg.title}</h3>
-                <p class="pkg-row-teaser">${pkg.teaser}</p>
-              </div>
-              <div class="pkg-price-single" data-pkw="${pkg.prices.pkw}" data-suv="${pkg.prices.suv}" data-van="${pkg.prices.van}" aria-label="Preis">
-                <strong class="${priceTextClass.trim()}">${price}</strong>
-                <span class="pkg-price-for">für ${VEHICLE_LABELS[veh]}</span>
-              </div>
-              <span class="pkg-toggle" aria-hidden="true"><span class="pkg-toggle-text">Leistungen</span>${icons.chevron}</span>
+            <summary class="pkg-toggle">
+              <span class="pkg-toggle-text">${serviceCount} ${serviceCount === 1 ? "Leistung" : "Leistungen"}<span class="pkg-sr">: ${pkg.title}</span></span>
+              <span class="pkg-toggle-icon" aria-hidden="true">${icons.chevron}</span>
             </summary>
             <div class="pkg-items">
-              <ul>${items}</ul>
-              ${note}
-              <div class="package-content-actions">
-                <a class="button button-secondary button-small" data-call-link href="#kontakt">${icons.phone}<span>Anrufen</span></a>
-                ${waHref
-                  ? `<a class="button button-primary button-small cta-pulse" data-pkg-wa="${pkg.number}" href="${waHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>Dieses Paket anfragen</span></a>`
-                  : `<a class="button button-primary button-small cta-pulse" data-whatsapp-link href="#kontakt">${icons.whatsapp}<span>WhatsApp</span></a>`}
+              <div class="pkg-items-inner">
+                <ul>${items}</ul>
+                ${note}
+                <div class="package-content-actions">
+                  <a class="button button-secondary button-small" data-call-link href="#kontakt">${icons.phone}<span>Anrufen</span></a>
+                  ${waHref
+                    ? `<a class="button button-primary button-small cta-pulse" data-pkg-wa="${pkg.number}" href="${waHref}" target="_blank" rel="noreferrer">${icons.whatsapp}<span>Dieses Paket anfragen</span></a>`
+                    : `<a class="button button-primary button-small cta-pulse" data-whatsapp-link href="#kontakt">${icons.whatsapp}<span>WhatsApp</span></a>`}
+                </div>
               </div>
             </div>
           </details>
@@ -684,12 +703,12 @@ function renderPackages() {
     }).join("");
 
     return `
-      <div class="pkg-group ${groupClass}">
-        <div class="pkg-group-header">
-          <span class="pkg-group-icon">${icon}</span>
+      <div class="pkg-group ${groupClass}${pkgs.length === 1 ? " pkg-group--single" : ""}">
+        <p class="pkg-group-header">
+          <span class="pkg-group-icon" aria-hidden="true">${icon}</span>
           <span class="pkg-group-name">${cat}</span>
-        </div>
-        ${rowsHtml}
+        </p>
+        <div class="pkg-group-cards">${rowsHtml}</div>
       </div>
     `;
   }).join("");
@@ -716,7 +735,7 @@ function renderPackages() {
     </div>
   `;
 
-  grid.innerHTML = `${selectorHtml}<div class="pkg-table">${groupsHtml}</div>`;
+  grid.innerHTML = `${selectorHtml}<div class="pkg-list">${groupsHtml}</div>`;
   setupVehicleSelect();
 }
 
@@ -1070,17 +1089,121 @@ function setupMapFacade() {
   });
 }
 
+/* Packages: tap a card to open its services. The panel glides open and shut
+   (the CSS animates its height, this only toggles classes), one package is
+   open at a time, and side by side a pair opens together so both lists can
+   be compared. Panels above the tapped card close instantly and the page is
+   shifted by the same amount, so the card never jumps away from the finger. */
 function setupPackageDetails() {
-  const details = Array.from(document.querySelectorAll(".pkg-details"));
-  details.forEach((item) => {
-    item.addEventListener("toggle", () => {
-      if (!item.open) return;
+  const list = document.querySelector(".pkg-list");
+  if (!list) return;
+  const all = Array.from(list.querySelectorAll(".pkg-details"));
+  const sideBySide = window.matchMedia("(min-width: 721px)");
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const root = document.documentElement;
+  const runs = new WeakMap();
 
-      details.forEach((other) => {
-        if (other !== item) other.open = false;
-      });
+  // Finishes an animation on transitionend, with a timer in case none fires
+  const settle = (details, after) => {
+    const run = (runs.get(details) || 0) + 1;
+    runs.set(details, run);
+    const panel = details.querySelector(".pkg-items");
+    let finished = false;
+    const done = (e) => {
+      if (finished || (e && (e.target !== panel || e.propertyName !== "grid-template-rows"))) return;
+      finished = true;
+      panel.removeEventListener("transitionend", done);
+      if (runs.get(details) !== run) return;   // a newer open/close took over
+      details.classList.remove("is-animating");
+      if (after) after();
+    };
+    panel.addEventListener("transitionend", done);
+    setTimeout(done, 320);
+  };
+
+  const open = (details) => {
+    details.open = true;
+    if (reducedMotion.matches) {
+      runs.set(details, (runs.get(details) || 0) + 1);
+      details.classList.remove("is-animating", "is-collapsed");
+      return;
+    }
+    details.classList.add("is-animating", "is-collapsed");
+    void details.offsetHeight;                 // start from zero height
+    details.classList.remove("is-collapsed");
+    settle(details);
+  };
+
+  const close = (details, animate) => {
+    if (!details.open) return;
+    if (!animate || reducedMotion.matches) {
+      runs.set(details, (runs.get(details) || 0) + 1);
+      details.open = false;
+      details.classList.remove("is-animating", "is-collapsed");
+      return;
+    }
+    details.classList.add("is-animating", "is-collapsed");
+    settle(details, () => {
+      details.open = false;
+      details.classList.remove("is-collapsed");
     });
+  };
+
+  // After opening, bring the services and buttons into view without pushing
+  // the card's title under the header or the sticky vehicle selector
+  const reveal = (pair) => {
+    const card = pair[0].closest(".pkg-card");
+    const header = document.querySelector(".topbar");
+    const selector = document.querySelector(".vehicle-select");
+    let top = header ? header.getBoundingClientRect().bottom : 0;
+    if (selector && getComputedStyle(selector).position === "sticky") {
+      top = Math.max(top, parseFloat(getComputedStyle(selector).top) + selector.offsetHeight);
+    }
+    const bar = document.querySelector(".mobile-cta");
+    const barSpace = bar && getComputedStyle(bar).display !== "none" ? bar.offsetHeight + 20 : 0;
+    const bottom = Math.max(...pair.map((d) => d.getBoundingClientRect().bottom));
+    const overflow = bottom - (window.innerHeight - barSpace - 16);
+    const room = card.getBoundingClientRect().top - top - 12;
+    const by = Math.min(overflow, room);
+    if (by > 8) window.scrollBy({ top: by, behavior: reducedMotion.matches ? "auto" : "smooth" });
+  };
+
+  list.addEventListener("click", (e) => {
+    const summary = e.target.closest(".pkg-toggle");
+    if (!summary) return;
+    e.preventDefault();                        // opening and closing happen here
+    const details = summary.parentElement;
+    const group = details.closest(".pkg-group-cards");
+    const pair = sideBySide.matches && group ? Array.from(group.querySelectorAll(".pkg-details")) : [details];
+
+    if (details.open && !details.classList.contains("is-collapsed")) {
+      pair.forEach((d) => close(d, true));
+      return;
+    }
+
+    const before = summary.getBoundingClientRect().top;
+    root.style.overflowAnchor = "none";        // we keep the position ourselves
+    // Same row or further down: glide shut. Above: close instantly (see below)
+    all.forEach((d) => {
+      if (d.open && !pair.includes(d)) close(d, d.getBoundingClientRect().top >= before - 1);
+    });
+    const shift = summary.getBoundingClientRect().top - before;
+    if (Math.abs(shift) > 1) {
+      const behavior = root.style.scrollBehavior;
+      root.style.scrollBehavior = "auto";
+      window.scrollBy(0, shift);
+      root.style.scrollBehavior = behavior;
+    }
+    requestAnimationFrame(() => requestAnimationFrame(() => { root.style.overflowAnchor = ""; }));
+
+    pair.forEach(open);
+    setTimeout(() => reveal(pair), reducedMotion.matches ? 0 : 260);
   });
+
+  // Opened another way (e.g. the browser's find in page): never leave it collapsed
+  all.forEach((d) => d.addEventListener("toggle", () => {
+    if (d.open && !d.classList.contains("is-animating")) d.classList.remove("is-collapsed");
+  }));
 }
 
 function setupReveal() {
