@@ -6028,16 +6028,12 @@ a, button { -webkit-tap-highlight-color: transparent; }
   position: absolute;
   inset: 0;
   z-index: 0;
-  background:
-    radial-gradient(90% 120% at 6% 0%, rgba(230,189,13,0.13) 0%, rgba(230,189,13,0) 55%),
-    linear-gradient(100deg, rgba(13,17,24,0.97) 0%, rgba(13,17,24,0.94) 46%, rgba(13,17,24,0.72) 100%);
+  background: linear-gradient(100deg, rgba(13,17,24,0.96) 0%, rgba(13,17,24,0.93) 46%, rgba(13,17,24,0.7) 100%);
   pointer-events: none;
 }
 @media (max-width: 1040px) {
   .tp-hero::after {
-    background:
-      radial-gradient(100% 70% at 10% 0%, rgba(230,189,13,0.14) 0%, rgba(230,189,13,0) 60%),
-      linear-gradient(180deg, rgba(13,17,24,0.95) 0%, rgba(13,17,24,0.9) 100%);
+    background: linear-gradient(180deg, rgba(13,17,24,0.94) 0%, rgba(13,17,24,0.9) 100%);
   }
 }
 .tp-hero-inner {
@@ -6081,7 +6077,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  filter: drop-shadow(0 2px 18px rgba(230,189,13,0.28));
 }
 .tp-lead {
   margin: 16px 0 0;
@@ -6096,7 +6091,16 @@ a, button { -webkit-tap-highlight-color: transparent; }
   gap: 12px;
   margin-top: clamp(22px, 3vw, 30px);
 }
-.tp-hero-actions .button { flex: 1 1 auto; min-width: 0; }
+/* Calm buttons: the site's pulse and glow belong to the homepage hero, a
+   town page keeps them flat and at their natural width. */
+.tp-hero-actions .button {
+  height: 52px;
+  padding: 0 26px;
+  animation: none;
+  box-shadow: none;
+}
+.tp-hero-actions .button:hover,
+.tp-hero-actions .button:focus-visible { box-shadow: none; }
 
 .tp-facts {
   display: flex;
@@ -6125,11 +6129,22 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 .tp-shot {
   position: relative;
+  margin: 0;
   border-radius: var(--r-xl);
   overflow: hidden;
-  border: 1px solid rgba(255,255,255,0.16);
-  box-shadow: 0 26px 64px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.09);
   background: #0b0e14;
+}
+/* a short scrim so the label stays readable on any photo */
+.tp-shot::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 36%;
+  background: linear-gradient(to top, rgba(10,13,18,0.62), rgba(10,13,18,0));
+  pointer-events: none;
 }
 .tp-shot img {
   display: block;
@@ -6153,7 +6168,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   font-size: 0.8rem;
   font-weight: 800;
   letter-spacing: -0.01em;
-  box-shadow: 0 10px 26px rgba(0,0,0,0.35);
+  z-index: 1;
 }
 
 /* ── work photos ── */
@@ -6441,12 +6456,18 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .tp-hero { padding: 26px var(--pad-x) 30px; }
   .tp-hero h1 { font-size: clamp(1.95rem, 8.4vw, 2.6rem); }
   .tp-lead { font-size: 0.95rem; margin-top: 12px; }
-  .tp-hero-actions { margin-top: 20px; gap: 10px; }
-  .tp-hero-actions .button { width: 100%; height: 52px; }
+  .tp-hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 340px;
+    margin-top: 20px;
+    gap: 10px;
+  }
+  .tp-hero-actions .button { width: 100%; height: 54px; padding: 0 18px; }
   .tp-facts { gap: 8px 16px; margin-top: 18px; }
   .tp-facts li { font-size: 0.78rem; }
   .tp-facts strong { font-size: 0.92rem; }
-  .tp-shot img { aspect-ratio: 4 / 3; }
+  /* keep the photo's own 3:2 ratio on phones too, so nothing is cropped */
   .tp-svc article { padding: 18px; }
   .tp-links a { padding: 14px 16px; }
 }

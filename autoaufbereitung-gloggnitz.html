@@ -50,7 +50,7 @@
           "isPartOf": {"@id": "https://corneldetailing.com/#website"},
           "about": {"@id": "https://corneldetailing.com/#business"},
           "inLanguage": "de-AT",
-          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/pages/hero-gloggnitz.webp"}
+          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/pages/hero-gloggnitz-1200.webp"}
         },
         {
           "@type": "Service",
@@ -109,9 +109,11 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
-    <link rel="preload" as="image" href="assets/pages/hero-gloggnitz.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/pages/hero-gloggnitz-960.webp"
+          imagesrcset="assets/pages/hero-gloggnitz-640.webp 640w, assets/pages/hero-gloggnitz-960.webp 960w, assets/pages/hero-gloggnitz-1200.webp 1200w" imagesizes="(min-width: 1041px) 46vw, 92vw"
+          fetchpriority="high" />
 
-    <link rel="stylesheet" href="styles.css?v=46" />
+    <link rel="stylesheet" href="styles.css?v=47" />
     <script src="site-config.js?v=6" defer></script>
     <script src="script.js?v=29" defer></script>
     <script src="consent.js?v=9" defer></script>
@@ -160,7 +162,7 @@
               <h1>Autoaufbereitung in <span class="tp-gold">Gloggnitz</span>.</h1>
               <p class="tp-lead">Handwäsche, Innenreinigung, Lackpolitur und Keramikversiegelung. Unsere Werkstatt liegt in Enzenreith, wenige Minuten vom Gloggnitzer Hauptplatz.</p>
               <div class="tp-hero-actions">
-                <a class="button button-whatsapp cta-pulse" data-whatsapp-link href="/#kontakt">
+                <a class="button button-whatsapp" data-whatsapp-link href="/#kontakt">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
                   <span>Termin anfragen</span>
                 </a>
@@ -176,7 +178,10 @@
               </ul>
             </div>
             <figure class="tp-shot">
-              <img src="assets/pages/hero-gloggnitz.webp" width="960" height="640" alt="Roter Porsche 911 Cabrio nach der Aufbereitung in der Werkstatt"
+              <img src="assets/pages/hero-gloggnitz-960.webp"
+                   srcset="assets/pages/hero-gloggnitz-640.webp 640w, assets/pages/hero-gloggnitz-960.webp 960w, assets/pages/hero-gloggnitz-1200.webp 1200w"
+                   sizes="(min-width: 1041px) 46vw, 92vw"
+                   width="1200" height="800" alt="Roter Porsche 911 Cabrio nach der Aufbereitung in der Werkstatt"
                    fetchpriority="high" decoding="async" />
               <figcaption class="tp-shot-tag">Porsche 911 · Finish</figcaption>
             </figure>
@@ -227,18 +232,27 @@
           </div>
           <div class="tp-work">
             <figure>
-              <img src="assets/pages/work-g1.webp" width="760" height="570" loading="lazy"
-                   decoding="async" alt="Heckpartie eines Porsche 911 nach Politur und Versiegelung" />
+              <img src="assets/pages/work-g1-840.webp"
+                   srcset="assets/pages/work-g1-560.webp 560w, assets/pages/work-g1-840.webp 840w, assets/pages/work-g1-1120.webp 1120w"
+                   sizes="(min-width: 721px) 31vw, 92vw"
+                   width="1120" height="840" loading="lazy" decoding="async"
+                   alt="Heckpartie eines Porsche 911 nach Politur und Versiegelung" />
               <figcaption><strong>Porsche 911</strong>Finish für den letzten Eindruck, gleichmäßiger Glanz über die ganze Heckpartie.</figcaption>
             </figure>
             <figure>
-              <img src="assets/pages/work-g2.webp" width="760" height="570" loading="lazy"
-                   decoding="async" alt="Nahaufnahme einer Lackoberfläche unter Prüflicht" />
+              <img src="assets/pages/work-g2-840.webp"
+                   srcset="assets/pages/work-g2-560.webp 560w, assets/pages/work-g2-840.webp 840w, assets/pages/work-g2-1120.webp 1120w"
+                   sizes="(min-width: 721px) 31vw, 92vw"
+                   width="1120" height="840" loading="lazy" decoding="async"
+                   alt="Nahaufnahme einer Lackoberfläche unter Prüflicht" />
               <figcaption><strong>Lackanalyse</strong>Hexagonale Lichtmuster machen kleinste Unregelmäßigkeiten im Lack sichtbar.</figcaption>
             </figure>
             <figure>
-              <img src="assets/pages/work-g3.webp" width="760" height="570" loading="lazy"
-                   decoding="async" alt="Gereinigtes Cockpit eines Porsche 911 mit Lederausstattung" />
+              <img src="assets/pages/work-g3-840.webp"
+                   srcset="assets/pages/work-g3-560.webp 560w, assets/pages/work-g3-840.webp 840w, assets/pages/work-g3-1120.webp 1120w"
+                   sizes="(min-width: 721px) 31vw, 92vw"
+                   width="1120" height="840" loading="lazy" decoding="async"
+                   alt="Gereinigtes Cockpit eines Porsche 911 mit Lederausstattung" />
               <figcaption><strong>Porsche 911 Cockpit</strong>Leder, Kontraste und feine Oberflächen professionell aufbereitet.</figcaption>
             </figure>
           </div>

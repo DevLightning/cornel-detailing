@@ -50,10 +50,18 @@ class Page(HTMLParser):
             self.imgs.append(a)
             if a.get("src"):
                 self.assets.append(a["src"])
+            for cand in (a.get("srcset") or "").split(","):
+                cand = cand.strip().split(" ")[0]
+                if cand:
+                    self.assets.append(cand)
         if tag == "script" and a.get("src"):
             self.assets.append(a["src"])
         if tag == "link" and a.get("href") and a.get("rel") in ("stylesheet", "icon", "apple-touch-icon", "preload"):
             self.assets.append(a["href"])
+            for cand in (a.get("imagesrcset") or "").split(","):
+                cand = cand.strip().split(" ")[0]
+                if cand:
+                    self.assets.append(cand)
         if tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href")
         if tag == "meta":
