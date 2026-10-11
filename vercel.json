@@ -1,6 +1,15 @@
 {
   "redirects": [
     { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/index.php", "destination": "/", "permanent": true }
+    { "source": "/index.php", "destination": "/", "permanent": true },
+
+    { "source": "/innenreinigung-wuerflach.html", "destination": "/innenreinigung-gloggnitz.html", "permanent": true },
+    { "source": "/innenreinigung-wuerflach", "destination": "/innenreinigung-gloggnitz.html", "permanent": true },
+
+    { "source": "/autopflege-tipps-winter-wuerflach.html", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true },
+    { "source": "/autopflege-tipps-winter-wuerflach", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true },
+
+    { "source": "/fahrzeugaufbereitung-wuerflach-wichtig.html", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true },
+    { "source": "/fahrzeugaufbereitung-wuerflach-wichtig", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true }
   ]
 }

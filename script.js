@@ -611,10 +611,12 @@ function renderGallery() {
    client and the service the ceramic section and the FAQ already recommend. */
 const RECOMMENDED_PACKAGE = 9;
 
-function renderPackages() {
-  const grid = document.getElementById("packagesGrid");
-  if (!grid) return;
-
+/* buildPackagesHtml() is the single source of the package markup.
+   build/prerender_packages.py runs this very function in a real browser and
+   writes the result into index.html, so the packages and prices sit in the
+   served HTML (crawlers and the first paint both get them). renderPackages()
+   then only hydrates that markup. */
+function buildPackagesHtml() {
   const categoryIcons = {
     "Außen": '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h1l2-5h12l2 5h1"/><path d="M5 12v5a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-5"/><circle cx="7.5" cy="14.5" r="1.5"/><circle cx="16.5" cy="14.5" r="1.5"/></svg>',
     // Steering wheel: reads as "inside the car" at a glance
@@ -735,7 +737,22 @@ function renderPackages() {
     </div>
   `;
 
-  grid.innerHTML = `${selectorHtml}<div class="pkg-list">${groupsHtml}</div>`;
+  return `${selectorHtml}<div class="pkg-list">${groupsHtml}</div>`;
+}
+
+function renderPackages() {
+  const grid = document.getElementById("packagesGrid");
+  if (!grid) return;
+
+  // Pre-rendered at build time: keep that markup (no flash, no layout shift)
+  // and only re-apply the visitor's vehicle choice to it.
+  if (grid.getAttribute("data-prerendered") === "1" && grid.firstElementChild) {
+    setupVehicleSelect();
+    applyVehicleSelection(getSelectedVehicle());
+    return;
+  }
+
+  grid.innerHTML = buildPackagesHtml();
   setupVehicleSelect();
 }
 

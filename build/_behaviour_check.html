@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>behaviour check</title>
+    <style>
+      html, body { margin: 0; font: 13px/1.5 monospace; }
+      #frame { border: 0; display: block; }
+    </style>
+  </head>
+  <body>
+    <!-- Build-only page: drives the real index.html in an iframe and reports
+         what happened. Never deployed (see .vercelignore).
+         Run it through headless Chrome with --allow-file-access-from-files.
+         Width of the simulated viewport: ?w=375 (default 1280). -->
+    <pre id="report">running</pre>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var W = parseInt(params.get("w") || "1280", 10);
+      var H = parseInt(params.get("h") || "900", 10);
+      var page = params.get("page") || "../index.html";
+      document.write('<iframe id="frame" src="' + page + '" width="' + W + '" height="' + H + '"></iframe>');
+    </script>
+    <script>
+      var log = [], errs = [];
+      function t(name, cond, extra) {
+        log.push((cond ? "PASS  " : "FAIL  ") + name + (extra !== undefined ? "  [" + extra + "]" : ""));
+      }
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("frame");
+        var w = f.contentWindow, d = f.contentDocument;
+        w.addEventListener("error", function (e) { errs.push(String(e.message)); });
+        var origErr = w.console.error;
+        w.console.error = function () { errs.push([].join.call(arguments, " ")); origErr.apply(w.console, arguments); };
+        await sleep(300);
+
+        log.push("# viewport " + W + "x" + H + "  page " + page);
+        // the legal pages deliberately load legal.js instead of script.js
+        if (d.querySelector('script[src^="script.js"]')) {
+          t("script.js executed in the page", typeof w.buildPackagesHtml === "function");
+        } else {
+          t("legal page loads legal.js and consent.js",
+            !!d.querySelector('script[src^="legal.js"]') && !!d.querySelector('script[src^="consent.js"]'));
+        }
+
+        var grid = d.getElementById("packagesGrid");
+        if (grid) {
+          t("package grid is pre-rendered", grid.getAttribute("data-prerendered") === "1");
+          t("9 package cards present", d.querySelectorAll(".pkg-card").length === 9,
+            d.querySelectorAll(".pkg-card").length);
+          t("recommended card is paket 9",
+            (d.querySelector(".pkg-card.is-recommended h3") || {}).textContent === "Versiegelung bis zu 60 Monate",
+            (d.querySelector(".pkg-card.is-recommended h3") || {}).textContent);
+
+          // vehicle switcher
+          var suv = d.querySelector('[data-vehicle="suv"]');
+          suv.click();
+          await sleep(80);
+          var p = d.querySelector(".pkg-price-single strong").textContent.trim();
+          t("SUV price applied to the first card", p === "€ 69,-", p);
+          var wa = decodeURIComponent(d.querySelector('[data-pkg-wa="2"]').getAttribute("href"));
+          t("WhatsApp prefill follows the vehicle", wa.indexOf("SUV / Kombi") > -1 && wa.indexOf("€ 69,-") > -1,
+            wa.slice(wa.indexOf("text=") + 5, wa.indexOf("text=") + 75));
+          t("SUV button reports aria-pressed", suv.getAttribute("aria-pressed") === "true");
+          d.querySelector('[data-vehicle="pkw"]').click();
+          await sleep(80);
+          t("PKW price restored", d.querySelector(".pkg-price-single strong").textContent.trim() === "€ 49,-",
+            d.querySelector(".pkg-price-single strong").textContent.trim());
+
+          // open / close a package panel
+          var det = d.querySelector(".pkg-details");
+          var sum = det.querySelector("summary");
+          sum.click();
+          await sleep(120);
+          t("panel opens on tap", det.open === true);
+          var panel = det.querySelector(".pkg-items");
+          // CSS transitions do not advance under Chrome's virtual time, so the
+          // animated wrapper can still read 0: finish any running animation and
+          // assert on the state machine plus the laid-out content instead.
+          try { d.getAnimations().forEach(function (a) { a.finish(); }); } catch (e) {}
+          var inner = det.querySelector(".pkg-items-inner");
+          t("open panel is not in the collapsed state", !det.classList.contains("is-collapsed"));
+          t("open panel content is laid out", inner.getBoundingClientRect().height > 40,
+            Math.round(inner.getBoundingClientRect().height) + "px content, wrapper " +
+            Math.round(panel.getBoundingClientRect().height) + "px");
+          t("services are visible when open",
+            det.querySelectorAll(".pkg-items li").length > 0, det.querySelectorAll(".pkg-items li").length);
+          sum.click();
+          await sleep(700);
+          t("panel closes on second tap", det.open === false);
+        }
+
+        // price table (town pages)
+        var rows = d.querySelectorAll(".price-table .pt-pkg").length;
+        if (rows) { t("price table has 9 rows", rows === 9, rows); }
+
+        // layout
+        var sw = d.documentElement.scrollWidth, cw = d.documentElement.clientWidth;
+        var offenders = [];
+        if (sw > cw + 1) {
+          var els = d.body.querySelectorAll("*");
+          for (var i = 0; i < els.length; i++) {
+            var r = els[i].getBoundingClientRect();
+            if (r.width === 0 || r.right <= cw + 1) continue;
+            var el = els[i];
+            var sel = el.tagName.toLowerCase() + (el.className && typeof el.className === "string"
+              ? "." + el.className.trim().split(/\s+/).join(".") : "");
+            offenders.push(sel + " right=" + Math.round(r.right) + " w=" + Math.round(r.width));
+          }
+          offenders = offenders.slice(0, 8);
+        }
+        t("no horizontal overflow", sw <= cw + 1, sw + " vs " + cw +
+          (offenders.length ? " | " + offenders.join(" ; ") : ""));
+        t("h1 present and filled", !!(d.querySelector("h1") && d.querySelector("h1").textContent.trim()),
+          (d.querySelector("h1") || {}).textContent);
+        t("no page errors or console errors", errs.length === 0, errs.join(" | "));
+
+        document.getElementById("report").textContent = log.join("\n");
+      });
+    </script>
+  </body>
+</html>

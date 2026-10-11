@@ -1,10 +1,12 @@
 # Cornel Detailing
 
-Statische, mobil optimierte Website fuer ein Auto-Detailing-Unternehmen im Raum Neukirchen. Kein Build-Step ist noetig: Die Seite kann direkt auf GitHub Pages, Netlify, Vercel, Cloudflare Pages oder jedem anderen Static Host deployed werden.
+Statische, mobil optimierte Website fuer ein Auto-Detailing-Unternehmen im Bezirk Neunkirchen. Kein Build-Step ist noetig: Die Seite kann direkt auf GitHub Pages, Netlify, Vercel, Cloudflare Pages oder jedem anderen Static Host deployed werden.
 
 ## Dateien
 
 - `index.html`: Landingpage mit Hero, Paketbereich, FAQ und direkten CTA-Buttons
+- `autoaufbereitung-gloggnitz.html`: Ortsseite Gloggnitz (Standort, Abholung, Preise, FAQ)
+- `autoaufbereitung-neunkirchen.html`: Ortsseite Neunkirchen (Abholung, Anlaesse, Preise, FAQ)
 - `galerie.html`: separate Galerie-Seite fuer Referenzen und Showcase-Arbeiten
 - `impressum.html`: Impressum (Text steht direkt im HTML)
 - `datenschutz.html`: Datenschutzerklaerung (Text steht direkt im HTML, Stand-Datum bei Aenderungen anpassen)
@@ -17,6 +19,27 @@ Statische, mobil optimierte Website fuer ein Auto-Detailing-Unternehmen im Raum 
 - `assets/logo-cornel-detailing.svg`: neu gezeichnetes SVG-Logo im Stil der Vorlage
 - `assets/favicon.svg`: Favicon
 - `assets/gallery/README.txt`: erwartete Dateinamen fuer echte Galerie-Bilder
+
+## Preise aendern (wichtig)
+
+Paketnamen, Preise und Leistungen stehen **nur** im Array `packages` in `script.js`.
+Die Preise in `index.html` und die Preistabellen auf den Ortsseiten werden daraus
+erzeugt und duerfen nicht von Hand bearbeitet werden. Nach jeder Preisaenderung:
+
+```
+python build/prerender_packages.py     # schreibt die Pakete in index.html
+python build/gen_price_table.py        # schreibt die Preistabellen
+python build/verify_seo.py             # prueft alles (0 failures erwartet)
+python build/prerender_packages.py --check   # HTML == JavaScript?
+python build/run_behaviour_check.py    # klickt die Seite in Chrome durch
+```
+
+Danach die Versionsnummern `styles.css?v=` und `script.js?v=` in allen HTML-Dateien
+um eins erhoehen, damit Besucher die neue Version laden.
+
+`build/gen_sitemap.py` erzeugt `sitemap.xml` neu, wenn Seiten dazukommen oder
+umbenannt werden. Die Regeln, nach denen gearbeitet wird, stehen in
+`BUILD-GUIDELINE.md`. Der Ordner `build/` wird nicht deployed (`.vercelignore`).
 
 ## Rechtliche Angaben aendern
 

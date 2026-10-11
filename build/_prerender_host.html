@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="de-AT">
+  <head><meta charset="UTF-8" /><title>prerender host</title></head>
+  <body>
+    <!-- Build-only page: loads the real site scripts and prints the markup that
+         buildPackagesHtml() produces. Never deployed (see .vercelignore). -->
+    <pre id="out"></pre>
+    <script src="../site-config.js"></script>
+    <script src="../script.js"></script>
+    <script>
+      window.addEventListener("load", function () {
+        var out = document.getElementById("out");
+        try {
+          out.textContent = buildPackagesHtml();
+        } catch (e) {
+          out.textContent = "BUILD_ERROR: " + (e && e.message ? e.message : e);
+        }
+      });
+    </script>
+  </body>
+</html>
