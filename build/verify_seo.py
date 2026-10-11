@@ -32,6 +32,7 @@ class Page(HTMLParser):
     def __init__(self, src):
         HTMLParser.__init__(self, convert_charrefs=True)
         self.ids, self.links, self.imgs, self.h1s = set(), [], [], []
+        self.assets = []
         self.title, self.canonical, self.ogurl, self.desc = None, None, None, None
         self.ldjson, self.text = [], []
         self._in_title = self._in_h1 = False
@@ -47,6 +48,12 @@ class Page(HTMLParser):
             self.links.append(a["href"])
         if tag == "img":
             self.imgs.append(a)
+            if a.get("src"):
+                self.assets.append(a["src"])
+        if tag == "script" and a.get("src"):
+            self.assets.append(a["src"])
+        if tag == "link" and a.get("href") and a.get("rel") in ("stylesheet", "icon", "apple-touch-icon", "preload"):
+            self.assets.append(a["href"])
         if tag == "link" and a.get("rel") == "canonical":
             self.canonical = a.get("href")
         if tag == "meta":
@@ -243,6 +250,50 @@ def check_generated_blocks():
     ok("both town pages carry the generated price table with %d rows" % len(pkgs))
 
 
+def check_assets(pages):
+    """Every file the pages ask the browser for must exist, including the
+    images referenced from the stylesheet."""
+    missing = []
+    for f in pages:
+        for ref in Page(read(f)).assets:
+            if ref.startswith(("http://", "https://", "data:", "//")):
+                continue
+            path = ref.split("?")[0].split("#")[0].lstrip("/")
+            if path and not os.path.exists(os.path.join(ROOT, path)):
+                missing.append("%s -> %s" % (f, ref))
+    # a quoted data URI can contain its own ")" and url(#id), so strip those
+    # whole before looking for real file references
+    css = re.sub(r'url\(\s*(["\'])data:.*?\1\s*\)', "", read("styles.css"), flags=re.S)
+    for m in re.finditer(r'url\(["\']?([^"\')]+)["\']?\)', css):
+        ref = m.group(1)
+        if ref.startswith(("http", "data:", "#", "%23")):
+            continue
+        path = ref.split("?")[0].lstrip("/")
+        if not os.path.exists(os.path.join(ROOT, path)):
+            missing.append("styles.css -> %s" % ref)
+    if missing:
+        for m in sorted(set(missing)):
+            fail("missing asset", m)
+    else:
+        ok("every image, script, stylesheet and font the pages request exists")
+
+
+def check_images_sized(pages):
+    """Images need width and height so nothing jumps while the page loads."""
+    bad = []
+    for f in pages:
+        for a in Page(read(f)).imgs:
+            if not a.get("src"):
+                continue        # placeholder filled in by JS (the lightbox)
+            if not (a.get("width") and a.get("height")):
+                bad.append("%s: %s" % (f, a["src"]))
+    if bad:
+        for b in bad:
+            fail("image without width/height", b)
+    else:
+        ok("every <img> carries width and height (no layout shift on load)")
+
+
 def check_sitemap(pages):
     sm = read("sitemap.xml")
     locs = re.findall(r"<loc>(.*?)</loc>", sm)
@@ -355,6 +406,8 @@ def main():
     check_sitemap(pages)
     check_dashes(pages)
     check_images(pages)
+    check_assets(pages)
+    check_images_sized(pages)
     check_versions(pages)
     check_town_pages()
     check_h1_towns()

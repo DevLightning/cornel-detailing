@@ -33,7 +33,7 @@
     <!-- TWITTER CARD -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Autoaufbereitung Gloggnitz · Cornel Detailing" />
-    <meta name="twitter:description" content="Autoaufbereitung in Gloggnitz: Handwäsche, Politur, Keramikversiegelung. Ab € 49,-." />
+    <meta name="twitter:description" content="Handwäsche, Innenreinigung, Lackpolitur und Keramikversiegelung für Fahrzeuge aus Gloggnitz. Abholung im Bezirk inklusive." />
     <meta name="twitter:image" content="https://corneldetailing.com/assets/og-image.jpg?v=2" />
 
     <!-- STRUCTURED DATA -->
@@ -50,7 +50,7 @@
           "isPartOf": {"@id": "https://corneldetailing.com/#website"},
           "about": {"@id": "https://corneldetailing.com/#business"},
           "inLanguage": "de-AT",
-          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/og-image.jpg"}
+          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/pages/hero-gloggnitz.webp"}
         },
         {
           "@type": "Service",
@@ -89,7 +89,7 @@
           "@id": "https://corneldetailing.com/autoaufbereitung-gloggnitz.html#faq",
           "mainEntity": [
             {"@type": "Question", "name": "Wo genau befindet sich Ihre Werkstatt?",
-             "acceptedAnswer": {"@type": "Answer", "text": "Unsere Werkstatt liegt in der Fördergasse 290 in 2640 Enzenreith, direkt neben Gloggnitz. Von Gloggnitz aus sind Sie in wenigen Minuten bei uns. Termine vereinbaren wir vorab per WhatsApp oder Telefon, damit Ihr Fahrzeug sofort dran ist und Sie nicht warten müssen."}},
+             "acceptedAnswer": {"@type": "Answer", "text": "Unsere Werkstatt liegt in der Fördergasse 290 in 2640 Enzenreith, direkt neben Gloggnitz. Vom Gloggnitzer Hauptplatz sind Sie in wenigen Minuten bei uns. Termine vereinbaren wir vorab per WhatsApp oder Telefon, damit Ihr Fahrzeug sofort dran ist und Sie nicht warten müssen."}},
             {"@type": "Question", "name": "Holen Sie mein Auto in Gloggnitz ab?",
              "acceptedAnswer": {"@type": "Answer", "text": "Ja. Die Abholung im Bezirk Neunkirchen ist inklusive, also auch in Gloggnitz, Schlöglmühl, Aue, Stuppach und Prigglitz. Wir holen Ihr Fahrzeug ab, bereiten es auf und bringen es Ihnen fertig zurück. Sie müssen dafür keinen halben Tag einplanen."}},
             {"@type": "Question", "name": "Was kostet eine Autoaufbereitung in Gloggnitz?",
@@ -109,8 +109,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
+    <link rel="preload" as="image" href="assets/pages/hero-gloggnitz.webp" fetchpriority="high" />
 
-    <link rel="stylesheet" href="styles.css?v=45" />
+    <link rel="stylesheet" href="styles.css?v=46" />
     <script src="site-config.js?v=6" defer></script>
     <script src="script.js?v=29" defer></script>
     <script src="consent.js?v=9" defer></script>
@@ -148,78 +149,37 @@
       <main>
 
         <!-- HERO -->
-        <section class="gallery-hero reveal" aria-label="Autoaufbereitung Gloggnitz">
-          <div class="gallery-hero-bg" aria-hidden="true"></div>
-          <div class="gallery-hero-inner">
-            <span class="hero-location">
-              <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-              Gloggnitz · Bezirk Neunkirchen
-            </span>
-
-            <div class="section-heading gallery-hero-heading">
-              <span class="section-tag">Autoaufbereitung Gloggnitz</span>
-              <h1>Autoaufbereitung<br>in Gloggnitz.</h1>
-              <p>Handwäsche, Innenreinigung, Lackpolitur und Keramikversiegelung für Fahrzeuge
-              aus Gloggnitz und Umgebung. Unsere Werkstatt liegt in Enzenreith, wenige Minuten vom
-              Gloggnitzer Zentrum · Abholung im Bezirk inklusive.</p>
-            </div>
-
-            <div class="gallery-hero-stats">
-              <div class="gallery-stat">
-                <strong>ab € 49,-</strong>
-                <span>Außenreinigung PKW</span>
+        <section class="tp-hero reveal" aria-label="Autoaufbereitung Gloggnitz">
+          <div class="tp-hero-bg" aria-hidden="true"></div>
+          <div class="tp-hero-inner">
+            <div>
+              <span class="tp-eyebrow">
+                <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                Gloggnitz · Bezirk Neunkirchen
+              </span>
+              <h1>Autoaufbereitung in <span class="tp-gold">Gloggnitz</span>.</h1>
+              <p class="tp-lead">Handwäsche, Innenreinigung, Lackpolitur und Keramikversiegelung. Unsere Werkstatt liegt in Enzenreith, wenige Minuten vom Gloggnitzer Hauptplatz.</p>
+              <div class="tp-hero-actions">
+                <a class="button button-whatsapp cta-pulse" data-whatsapp-link href="/#kontakt">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+                  <span>Termin anfragen</span>
+                </a>
+                <a class="button button-light" data-call-link href="/#kontakt">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+                  <span>Anrufen</span>
+                </a>
               </div>
-              <div class="gallery-stat">
-                <strong>60</strong>
-                <span>Monate Lackschutz</span>
-              </div>
-              <div class="gallery-stat">
-                <strong>5,0 ★</strong>
-                <span>bei 50+ Bewertungen</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- STANDORT UND ABHOLUNG -->
-        <section class="section reveal" id="standort-gloggnitz" aria-label="Standort und Abholung Gloggnitz">
-          <div class="section-heading">
-            <span class="section-tag">Standort</span>
-            <h2>Gleich neben Gloggnitz.</h2>
-            <p>Viele Betriebe für Autoaufbereitung sitzen weit weg und verlangen, dass Sie Ihr
-            Fahrzeug selbst bringen und holen. Bei uns ist beides im Bezirk inklusive.</p>
-          </div>
-          <div class="glass-row">
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Anfahrt</span>
-              <h3>Fördergasse 290, 2640 Enzenreith</h3>
-              <p>Enzenreith grenzt direkt an Gloggnitz. Vom Gloggnitzer Hauptplatz sind Sie in wenigen
-              Minuten bei uns. Wir arbeiten ausschließlich nach Terminvereinbarung, damit Ihr
-              Fahrzeug sofort in Arbeit geht und nicht in einer Warteschlange steht.</p>
-              <ul class="u-sublist">
-                <li>Termin vorab per WhatsApp oder Telefon</li>
-                <li>Antwort meist innerhalb einer Stunde, werktags</li>
-                <li>Keine Waschstraße · alles von Hand</li>
+              <ul class="tp-facts">
+                <li><span class="tp-stars" aria-hidden="true">★★★★★</span><strong>5,0</strong> bei 50+ Bewertungen</li>
+                <li><strong>ab € 49,-</strong> Außenreinigung PKW</li>
+                <li><strong>Abholung</strong> im Bezirk inklusive</li>
               </ul>
-              <a class="u-mt-2 button button-secondary" href="/#kontakt">Standort und Kontakt</a>
             </div>
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Abholung</span>
-              <h3>Wir holen Ihr Auto in Gloggnitz ab</h3>
-              <p>Sie geben uns einen Termin, wir holen das Fahrzeug bei Ihnen ab und bringen es fertig
-              aufbereitet zurück. Im Bezirk Neunkirchen kostet das nichts extra. Regelmäßig
-              unterwegs sind wir in:</p>
-              <ul class="u-sublist">
-                <li>Gloggnitz, Schlöglmühl, Aue, Stuppach</li>
-                <li>Enzenreith, Prigglitz, Raach am Hochgebirge</li>
-                <li>Payerbach, Reichenau an der Rax, Schottwien</li>
-                <li>Grafenbach-St. Valentin, Ternitz, Neunkirchen</li>
-              </ul>
-              <a class="u-mt-2 button button-whatsapp cta-pulse" data-whatsapp-link href="/#kontakt">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
-                <span>Abholung anfragen</span>
-              </a>
-            </div>
+            <figure class="tp-shot">
+              <img src="assets/pages/hero-gloggnitz.webp" width="960" height="640" alt="Roter Porsche 911 Cabrio nach der Aufbereitung in der Werkstatt"
+                   fetchpriority="high" decoding="async" />
+              <figcaption class="tp-shot-tag">Porsche 911 · Finish</figcaption>
+            </figure>
           </div>
         </section>
 
@@ -227,43 +187,63 @@
         <section class="section reveal" aria-label="Leistungen Autoaufbereitung Gloggnitz">
           <div class="section-heading">
             <span class="section-tag">Leistungen</span>
-            <h2>Was wir in Gloggnitz anbieten.</h2>
-            <p>Vier Bereiche, einzeln oder kombiniert buchbar. Was Ihr Fahrzeug wirklich braucht,
-            sehen wir beim Termin · wir verkaufen Ihnen nichts, was keinen Unterschied macht.</p>
+            <h2>Was wir für Ihr Fahrzeug tun.</h2>
+            <p>Vier Bereiche, einzeln oder kombiniert buchbar. Was Ihr Auto wirklich braucht, sehen wir beim Termin.</p>
           </div>
-          <div class="value-grid">
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h1l2-5h12l2 5h1"/><path d="M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"/><circle cx="7.5" cy="15" r="1.4"/><circle cx="16.5" cy="15" r="1.4"/></svg>
-              </span>
+          <div class="tp-svc">
+            <article>
+              <span class="tp-svc-icon tp-ic-aussen" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13h1l2-5h12l2 5h1"/><path d="M5 13v4a1 1 0 001 1h1a1 1 0 001-1v-1h8v1a1 1 0 001 1h1a1 1 0 001-1v-4"/><circle cx="7.5" cy="15" r="1.4"/><circle cx="16.5" cy="15" r="1.4"/></svg></span>
               <h3>Außenreinigung</h3>
-              <p>Vorwäsche, Schaum, Felgen mit Bürste und Pinsel, lackschonende Handwäsche, händisches Abtrocknen und Keramiksprühversiegelung. Ab € 49,- für den PKW.</p>
-              <a class="button button-secondary button-small" href="/#autoaufbereitung-pakete">Pakete 2 und 3 ansehen</a>
+              <p>Vorwäsche, Schaum, Felgen mit Bürste und Pinsel, lackschonende Handwäsche und Keramiksprühversiegelung.</p>
+              <a href="/#autoaufbereitung-pakete">Pakete ansehen</a>
             </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M10 12 3.3 10M14 12l6.7-2M12 14v7"/></svg>
-              </span>
+            <article>
+              <span class="tp-svc-icon tp-ic-innen" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="2"/><path d="M10 12 3.3 10M14 12l6.7-2M12 14v7"/></svg></span>
               <h3>Innenreinigung</h3>
-              <p>Kompletter Innenraum mit Tornador Gun, Fußmatten, Teppiche, Armaturen, Türfalze und Kofferraum. Intensiv mit Dachhimmel sowie Polster- oder Lederreinigung.</p>
-              <a class="button button-secondary button-small" href="innenreinigung-gloggnitz.html">Innenreinigung im Detail</a>
+              <p>Tiefenstaub mit der Tornador Gun, Teppiche, Polster, Armaturen, Türfalze und Kofferraum.</p>
+              <a href="innenreinigung-gloggnitz.html">Innenreinigung</a>
             </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg>
-              </span>
+            <article>
+              <span class="tp-svc-icon tp-ic-politur" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5L12 3z"/></svg></span>
               <h3>Lackpolitur</h3>
-              <p>Lackdicke messen, zwei- oder dreistufig polieren, Endkontrolle gegen Hologramme. Entfernt Swirls, Waschstraßenkratzer und Grauschleier.</p>
-              <a class="button button-secondary button-small" href="lackpolitur-neunkirchen.html">Lackpolitur im Detail</a>
+              <p>Lackdicke messen, zweistufig oder dreistufig polieren, Endkontrolle gegen Hologramme und Grauschleier.</p>
+              <a href="lackpolitur-neunkirchen.html">Lackpolitur</a>
             </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 4v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg>
-              </span>
+            <article>
+              <span class="tp-svc-icon tp-ic-versiegelung" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 4v5c0 4.5-3 8.5-7 10-4-1.5-7-5.5-7-10V7l7-4z"/><path d="M9 12l2 2 4-4"/></svg></span>
               <h3>Keramikversiegelung</h3>
-              <p>Eine Schicht für bis zu 12 Monate oder zwei Schichten für bis zu 60 Monate Schutz, immer auf vorbereitetem Lack.</p>
-              <a class="button button-secondary button-small" href="keramikversiegelung-neunkirchen.html">Versiegelung im Detail</a>
+              <p>Bis zu 12 oder bis zu 60 Monate Schutz, immer auf vorbereitetem Lack. Danach perlt Wasser ab.</p>
+              <a href="keramikversiegelung-neunkirchen.html">Versiegelung</a>
             </article>
+          </div>
+        </section>
+
+        <!-- ARBEITEN -->
+        <section class="section reveal" aria-label="Arbeiten aus der Werkstatt">
+          <div class="section-heading">
+            <span class="section-tag">Aus der Werkstatt</span>
+            <h2>Echte Fahrzeuge, echte Ergebnisse.</h2>
+            <p>Drei Arbeiten aus unserer Werkstatt in Enzenreith, wenige Minuten von Gloggnitz.</p>
+          </div>
+          <div class="tp-work">
+            <figure>
+              <img src="assets/pages/work-g1.webp" width="760" height="570" loading="lazy"
+                   decoding="async" alt="Heckpartie eines Porsche 911 nach Politur und Versiegelung" />
+              <figcaption><strong>Porsche 911</strong>Finish für den letzten Eindruck, gleichmäßiger Glanz über die ganze Heckpartie.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/pages/work-g2.webp" width="760" height="570" loading="lazy"
+                   decoding="async" alt="Nahaufnahme einer Lackoberfläche unter Prüflicht" />
+              <figcaption><strong>Lackanalyse</strong>Hexagonale Lichtmuster machen kleinste Unregelmäßigkeiten im Lack sichtbar.</figcaption>
+            </figure>
+            <figure>
+              <img src="assets/pages/work-g3.webp" width="760" height="570" loading="lazy"
+                   decoding="async" alt="Gereinigtes Cockpit eines Porsche 911 mit Lederausstattung" />
+              <figcaption><strong>Porsche 911 Cockpit</strong>Leder, Kontraste und feine Oberflächen professionell aufbereitet.</figcaption>
+            </figure>
+          </div>
+          <div class="u-mt-2">
+            <a class="button button-secondary" href="galerie.html">Mehr Arbeiten ansehen</a>
           </div>
         </section>
 
@@ -273,35 +253,71 @@
             <span class="section-tag">Ablauf</span>
             <h2>In vier Schritten zum fertigen Auto.</h2>
           </div>
-          <div class="value-grid">
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a8 8 0 1 1-3.1-6.3"/><path d="M21 4v5h-5"/></svg>
-              </span>
-              <h3>1. Anfrage</h3>
-              <p>Sie schreiben uns per WhatsApp oder rufen an und beschreiben kurz Fahrzeug und Wunsch. Ein Foto hilft. Antwort meist innerhalb einer Stunde, werktags.</p>
-            </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14h1l1.5-4.5L8 7h8l2.5 2.5L20 14h1"/><path d="M4 14v3a1 1 0 001 1h1a1 1 0 001-1v-1h10v1a1 1 0 001 1h1a1 1 0 001-1v-3"/></svg>
-              </span>
-              <h3>2. Termin und Abholung</h3>
-              <p>Wir fixieren einen Termin. Sie bringen das Fahrzeug nach Enzenreith oder wir holen es in Gloggnitz ab, ganz wie es Ihnen lieber ist.</p>
-            </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-              </span>
-              <h3>3. Aufbereitung</h3>
-              <p>Wir arbeiten das gebuchte Paket Schritt für Schritt ab. Fallen uns dabei Dinge auf, die mehr Aufwand brauchen, melden wir uns vorher bei Ihnen.</p>
-            </article>
-            <article class="value-card">
-              <span class="value-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M15 7a4 4 0 1 1-3.5 5.9L4 20H2v-2l7.1-7.5A4 4 0 0 1 15 7z"/></svg>
-              </span>
-              <h3>4. Rückgabe</h3>
-              <p>Sie bekommen Ihr Fahrzeug fertig zurück, inklusive Hinweisen zur Pflege, damit das Ergebnis lange hält.</p>
-            </article>
+          <ol class="tp-steps">
+            <li>
+              <span class="tp-num" aria-hidden="true">01</span>
+              <h3>Anfrage</h3>
+              <p>Sie schreiben uns per WhatsApp oder rufen an. Ein Foto hilft. Antwort meist innerhalb einer Stunde, werktags.</p>
+            </li>
+            <li>
+              <span class="tp-num" aria-hidden="true">02</span>
+              <h3>Termin und Abholung</h3>
+              <p>Sie bringen das Fahrzeug nach Enzenreith oder wir holen es in Gloggnitz ab, ganz wie es Ihnen lieber ist.</p>
+            </li>
+            <li>
+              <span class="tp-num" aria-hidden="true">03</span>
+              <h3>Aufbereitung</h3>
+              <p>Wir arbeiten das gebuchte Paket Schritt für Schritt ab und melden uns, wenn etwas mehr Aufwand braucht.</p>
+            </li>
+            <li>
+              <span class="tp-num" aria-hidden="true">04</span>
+              <h3>Rückgabe</h3>
+              <p>Sie bekommen Ihr Fahrzeug fertig zurück, inklusive Hinweisen zur Pflege.</p>
+            </li>
+          </ol>
+        </section>
+
+        <!-- STANDORT -->
+        <section class="section-glass reveal" id="standort-gloggnitz" aria-label="Standort und Abholung Gloggnitz">
+          <div class="glass-card location-card location-card--left">
+            <div class="location-info">
+              <span class="section-tag">Standort</span>
+              <h2>Gleich neben Gloggnitz.</h2>
+              <p>Fördergasse 290, 2640 Enzenreith</p>
+              <p class="location-area">Enzenreith grenzt direkt an Gloggnitz. Termine nach Vereinbarung, damit Ihr Fahrzeug sofort in Arbeit geht. Abholung und Rückbringung im Bezirk Neunkirchen sind inklusive, unter anderem in:</p>
+              <ul class="tp-chips">
+                  <li>Gloggnitz</li>
+                  <li>Schlöglmühl</li>
+                  <li>Aue</li>
+                  <li>Stuppach</li>
+                  <li>Enzenreith</li>
+                  <li>Prigglitz</li>
+                  <li>Raach am Hochgebirge</li>
+                  <li>Payerbach</li>
+                  <li>Reichenau an der Rax</li>
+                  <li>Schottwien</li>
+                  <li>Grafenbach</li>
+                  <li>St. Valentin</li>
+                  <li>Ternitz</li>
+                  <li>Neunkirchen</li>
+              </ul>
+              <a class="button button-secondary" href="https://www.google.com/maps/dir/?api=1&amp;destination=F%C3%B6rdergasse+290,+2640+Enzenreith,+Austria" target="_blank" rel="noreferrer">
+                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                <span>Route planen</span>
+              </a>
+            </div>
+            <div class="location-map">
+              <!-- Click to load: the Google Maps iframe and its cookies only
+                   load after an explicit tap -->
+              <button class="map-facade" id="mapFacade" type="button" data-map-src="https://www.google.com/maps?q=F%C3%B6rdergasse+290,+2640+Enzenreith,+%C3%96sterreich&amp;output=embed" aria-label="Google Maps Karte laden">
+                <span class="map-facade-pin" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
+                </span>
+                <span class="map-facade-title">Karte anzeigen</span>
+                <span class="map-facade-sub">Fördergasse 290, 2640 Enzenreith</span>
+                <span class="map-facade-note">Beim Laden der Karte werden Daten an Google übertragen</span>
+              </button>
+            </div>
           </div>
         </section>
 
@@ -310,8 +326,7 @@
           <div class="section-heading">
             <span class="section-tag">Preise</span>
             <h2>Alle Preise auf einen Blick.</h2>
-            <p>Dieselben Preise für alle Kunden, ob aus Gloggnitz, Neunkirchen oder vom
-            Semmering. Keine Pauschalen, die sich erst nach der Besichtigung ändern.</p>
+            <p>Dieselben Preise für alle Kunden, ob aus Gloggnitz, Neunkirchen oder vom Semmering. Keine Pauschalen, die sich erst nach der Besichtigung ändern.</p>
           </div>
           <!-- BUILD:pricetable -->
           <!-- Generated by build/gen_price_table.py from the `packages` array in
@@ -416,29 +431,6 @@
           </div>
         </section>
 
-        <!-- WARUM -->
-        <section class="section reveal" aria-label="Warum Cornel Detailing Gloggnitz">
-          <div class="section-heading">
-            <span class="section-tag">Warum wir</span>
-            <h2>Weshalb Kunden aus Gloggnitz zu uns kommen.</h2>
-          </div>
-          <div class="glass-row">
-            <div class="glass-card glass-card-half">
-              <h3>Alles von Hand, kein Durchlauf</h3>
-              <p>Jedes Fahrzeug wird einzeln bearbeitet: lackschonende Handwäsche, Felgen mit
-              Bürste und Pinsel, Türfalze von Hand, Innenraum mit der Tornador Gun. Eine
-              Waschstraße schafft das in sechs Minuten · wir brauchen Stunden, und das
-              sieht man danach.</p>
-            </div>
-            <div class="glass-card glass-card-half">
-              <h3>Preise, die vorher feststehen</h3>
-              <p>Alle neun Pakete stehen mit Preis und vollständiger Leistungsliste auf dieser
-              Website. Sie wissen vor dem Termin, was Sie zahlen. Nur beim Premium-Paket und bei
-              extremer Verschmutzung sprechen wir vorher über den Aufwand.</p>
-            </div>
-          </div>
-        </section>
-
         <!-- FAQ -->
         <section class="section reveal" id="faq-autoaufbereitung-gloggnitz" aria-label="FAQ Autoaufbereitung Gloggnitz">
           <div class="section-heading">
@@ -448,7 +440,7 @@
           <div class="faq-list">
             <details class="faq-item">
               <summary>Wo genau befindet sich Ihre Werkstatt?</summary>
-              <p>Unsere Werkstatt liegt in der Fördergasse 290 in 2640 Enzenreith, direkt neben Gloggnitz. Von Gloggnitz aus sind Sie in wenigen Minuten bei uns. Termine vereinbaren wir vorab per WhatsApp oder Telefon, damit Ihr Fahrzeug sofort dran ist und Sie nicht warten müssen.</p>
+              <p>Unsere Werkstatt liegt in der Fördergasse 290 in 2640 Enzenreith, direkt neben Gloggnitz. Vom Gloggnitzer Hauptplatz sind Sie in wenigen Minuten bei uns. Termine vereinbaren wir vorab per WhatsApp oder Telefon, damit Ihr Fahrzeug sofort dran ist und Sie nicht warten müssen.</p>
             </details>
             <details class="faq-item">
               <summary>Holen Sie mein Auto in Gloggnitz ab?</summary>
@@ -473,43 +465,29 @@
           </div>
         </section>
 
-        <!-- WEITERE SEITEN -->
-        <section class="section reveal" aria-label="Weitere Leistungen und Standorte">
+        <!-- WEITERLESEN -->
+        <section class="section reveal" aria-label="Weitere Seiten">
           <div class="section-heading">
             <span class="section-tag">Mehr erfahren</span>
             <h2>Einzelne Leistungen im Detail.</h2>
           </div>
-          <div class="glass-row">
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Keramikversiegelung</span>
-              <h3>Lackschutz bis 60 Monate</h3>
-              <p>Zwei Schichten Keramik auf poliertem Lack · Easy-to-clean, UV-Schutz und
-              Tiefglanz. Was das bringt und was es kostet, steht auf der Detailseite.</p>
-              <a class="button button-secondary" href="keramikversiegelung-neunkirchen.html">Zur Keramikversiegelung</a>
-            </div>
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Lackpolitur</span>
-              <h3>Kratzer und Swirls entfernen</h3>
-              <p>Zwei- oder dreistufige Maschinenpolitur mit Lackdickenmessung, danach Endkontrolle
-              gegen Hologramme und Grauschleier.</p>
-              <a class="button button-secondary" href="lackpolitur-neunkirchen.html">Zur Lackpolitur</a>
-            </div>
-          </div>
-          <div class="glass-row u-mt-2">
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Innenreinigung</span>
-              <h3>Innenraum wie neu</h3>
-              <p>Tornador Gun, Teppich- und Polsterreinigung, Dachhimmel, Lederpflege. Auch einzeln
-              buchbar, ohne Außenreinigung.</p>
-              <a class="button button-secondary" href="innenreinigung-gloggnitz.html">Zur Innenreinigung</a>
-            </div>
-            <div class="glass-card glass-card-half">
-              <span class="section-tag">Nachbarstadt</span>
-              <h3>Autoaufbereitung Neunkirchen</h3>
-              <p>Sie kommen aus Neunkirchen, Ternitz oder Wimpassing? Auf der Seite für
-              Neunkirchen finden Sie Abholung, Ablauf und Preise für Ihre Umgebung.</p>
-              <a class="button button-secondary button-wrap" href="autoaufbereitung-neunkirchen.html">Autoaufbereitung Neunkirchen</a>
-            </div>
+          <div class="tp-links">
+            <a href="keramikversiegelung-neunkirchen.html">
+              <span><b>Keramikversiegelung</b><small>Lackschutz bis 60 Monate, Easy to clean und Tiefglanz.</small></span>
+              <span class="tp-arrow" aria-hidden="true">&rsaquo;</span>
+            </a>
+            <a href="lackpolitur-neunkirchen.html">
+              <span><b>Lackpolitur</b><small>Kratzer und Swirls entfernen, mit Lackdickenmessung.</small></span>
+              <span class="tp-arrow" aria-hidden="true">&rsaquo;</span>
+            </a>
+            <a href="innenreinigung-gloggnitz.html">
+              <span><b>Innenreinigung</b><small>Tornador Gun, Polster, Dachhimmel und Lederpflege.</small></span>
+              <span class="tp-arrow" aria-hidden="true">&rsaquo;</span>
+            </a>
+            <a href="autoaufbereitung-neunkirchen.html">
+              <span><b>Autoaufbereitung Neunkirchen</b><small>Die Seite für Neunkirchen, Ternitz und Wimpassing.</small></span>
+              <span class="tp-arrow" aria-hidden="true">&rsaquo;</span>
+            </a>
           </div>
         </section>
 

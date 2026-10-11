@@ -29,6 +29,11 @@ RUNS = [
     ("why page, phone", "w=375&h=720&page=../fahrzeugaufbereitung-gloggnitz-wichtig.html"),
     ("imprint, phone", "w=375&h=720&page=../impressum.html"),
     ("privacy, phone", "w=375&h=720&page=../datenschutz.html"),
+    ("Gloggnitz page, ultrawide", "w=2560&h=1200&page=../autoaufbereitung-gloggnitz.html"),
+    ("Neunkirchen page, ultrawide", "w=2560&h=1200&page=../autoaufbereitung-neunkirchen.html"),
+    ("homepage, ultrawide", "w=2560&h=1200&page=../index.html"),
+    ("Gloggnitz page, tablet", "w=768&h=1024&page=../autoaufbereitung-gloggnitz.html"),
+    ("Neunkirchen page, narrow phone", "w=360&h=740&page=../autoaufbereitung-neunkirchen.html"),
     ("homepage, desktop wide", "w=1920&h=1000&page=../index.html"),
     ("Gloggnitz page, desktop wide", "w=1920&h=1000&page=../autoaufbereitung-gloggnitz.html"),
 ]
