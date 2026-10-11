@@ -1750,7 +1750,7 @@ body::after {
 .gallery-hero-bg {
   position: absolute;
   inset: 0;
-  background: url("assets/pages/hero-bg.webp") center 35% / cover no-repeat;
+  background: url("assets/gallery/p-hero-bg.webp") center 35% / cover no-repeat;
   opacity: 0.1;
   z-index: 0;
 }
@@ -5997,10 +5997,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    TOWN PAGES · Gloggnitz and Neunkirchen
-   Built from the site's own tokens. Photo led hero, real work photos, a
-   numbered process rail, service tiles that reuse the pricing category
-   colours, and link rows. One column on phones, two from 1041px, wider type
-   and more columns from 1921px.
+   Six blocks, no glow, photo led: dark hero, four service cards that are
+   mostly photo, a numbered rail with the location card, the price table,
+   the FAQ and the closing CTA. One column on phones, more columns from
+   721px and 1041px, bigger type from 1921px.
    ════════════════════════════════════════════════════════════════════════════ */
 
 .tp-hero {
@@ -6013,16 +6013,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .tp-hero-bg {
   position: absolute;
   inset: 0;
-  /* deliberately tiny and soft: it lives under a near solid wash and only
-     adds depth, so it costs 15 kB instead of 57 kB on the critical path */
-  background: url("assets/pages/hero-bg-soft.webp") center 38% / cover no-repeat;
+  /* deliberately tiny and soft: it sits under a near solid wash and only
+     adds depth, so it costs 12 kB on the critical path */
+  background: url("assets/gallery/p-hero-bg-soft.webp") center 38% / cover no-repeat;
   opacity: 0.22;
   filter: saturate(0.5);
   z-index: 0;
 }
-/* The photo card is the hero's image. The backdrop only adds depth, so it is
-   covered by a near solid wash on the text side and fades out towards the
-   card. */
 .tp-hero::after {
   content: "";
   position: absolute;
@@ -6106,7 +6103,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   display: flex;
   flex-wrap: wrap;
   gap: 10px 22px;
-  margin: clamp(22px, 3vw, 28px) 0 0;
+  margin: clamp(20px, 2.6vw, 26px) 0 0;
   padding: 0;
   list-style: none;
 }
@@ -6135,6 +6132,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
   border: 1px solid rgba(255,255,255,0.09);
   background: #0b0e14;
 }
+.tp-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+}
 /* a short scrim so the label stays readable on any photo */
 .tp-shot::after {
   content: "";
@@ -6145,13 +6149,6 @@ a, button { -webkit-tap-highlight-color: transparent; }
   height: 36%;
   background: linear-gradient(to top, rgba(10,13,18,0.62), rgba(10,13,18,0));
   pointer-events: none;
-}
-.tp-shot img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
 }
 .tp-shot-tag {
   position: absolute;
@@ -6171,43 +6168,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   z-index: 1;
 }
 
-/* ── work photos ── */
-.tp-work {
-  display: grid;
-  gap: 12px;
-  grid-template-columns: minmax(0, 1fr);
-  margin-top: 24px;
-}
-.tp-work figure {
-  margin: 0;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  background: #fff;
-}
-.tp-work img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 4 / 3;
-  object-fit: cover;
-}
-.tp-work figcaption {
-  padding: 13px 16px 15px;
-  font-size: 0.86rem;
-  line-height: 1.5;
-  color: var(--grey-600);
-}
-.tp-work figcaption strong {
-  display: block;
-  color: var(--ink);
-  font-family: var(--font-heading);
-  font-size: 0.95rem;
-  font-weight: 700;
-  margin-bottom: 3px;
-}
-
-/* ── service tiles ── */
+/* ── service cards: mostly photo ── */
 .tp-svc {
   display: grid;
   gap: 12px;
@@ -6217,35 +6178,36 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .tp-svc article {
   display: flex;
   flex-direction: column;
-  gap: 11px;
-  padding: 22px 22px 20px;
   border: 1px solid var(--border-strong);
   border-radius: var(--r-lg);
   background: #fff;
+  overflow: hidden;
   text-align: left;
 }
-.tp-svc-icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 13px;
-  display: grid;
-  place-items: center;
-  flex-shrink: 0;
+.tp-svc img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  background: var(--grey-100);
 }
-.tp-svc-icon svg { width: 22px; height: 22px; }
-.tp-ic-aussen       { background: linear-gradient(140deg, #eef1f5, #dfe5ec); color: #44505f; }
-.tp-ic-innen        { background: linear-gradient(140deg, #2b323c, #1d222a); color: #e8ecf2; }
-.tp-ic-politur      { background: var(--brand-soft); color: var(--brand-deep); }
-.tp-ic-versiegelung { background: var(--brand); color: var(--on-brand); }
+.tp-svc-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  padding: 16px 18px 18px;
+}
 .tp-svc h3 {
   margin: 0;
-  font-size: 1.04rem;
+  font-size: 1.02rem;
   letter-spacing: -0.015em;
 }
 .tp-svc p {
   margin: 0;
-  font-size: 0.88rem;
-  line-height: 1.62;
+  font-size: 0.87rem;
+  line-height: 1.6;
   color: var(--grey-600);
 }
 .tp-svc a {
@@ -6264,12 +6226,13 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .tp-svc a::after { content: "\203a"; font-size: 1.1rem; line-height: 1; }
 .tp-svc a:hover, .tp-svc a:focus-visible { color: var(--ink); }
 
-/* ── numbered process rail ── */
+/* ── numbered rail ── */
 .tp-steps {
   display: grid;
   gap: 18px;
   grid-template-columns: minmax(0, 1fr);
-  margin-top: 26px;
+  margin: 24px 0 0;
+  padding: 0;
 }
 .tp-steps li {
   position: relative;
@@ -6315,19 +6278,29 @@ a, button { -webkit-tap-highlight-color: transparent; }
   color: var(--grey-600);
 }
 
+/* the location card sits in the same block as the rail */
+.tp-place { margin-top: clamp(24px, 3vw, 38px); }
+
 /* The shared location card is centred on the homepage; on a town page the
    whole column reads left aligned, so it follows suit. */
 .location-card--left .location-info { align-items: flex-start; text-align: left; }
 .location-card--left .location-info h2,
+.location-card--left .location-info h3,
 .location-card--left .location-info p { text-align: left; }
 .location-card--left .location-info .section-tag { margin-left: 0; }
+.location-card--left .location-info h3 {
+  margin: 8px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3, 1.4rem);
+  letter-spacing: -0.03em;
+}
 
 /* ── town chips ── */
 .tp-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin: 16px 0 0;
+  margin: 14px 0 0;
   padding: 0;
   list-style: none;
 }
@@ -6341,56 +6314,25 @@ a, button { -webkit-tap-highlight-color: transparent; }
   line-height: 1.3;
 }
 
-/* ── link rows ── */
-.tp-links {
-  display: grid;
-  gap: 10px;
-  grid-template-columns: minmax(0, 1fr);
-  margin-top: 24px;
-}
-.tp-links a {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px 18px;
-  border: 1px solid var(--border-strong);
-  border-radius: var(--r-lg);
-  background: #fff;
-  color: inherit;
-  text-decoration: none;
-  min-height: 60px;
-  transition: border-color 0.18s var(--ease), transform 0.18s var(--ease);
-}
-.tp-links a:hover, .tp-links a:focus-visible {
-  border-color: rgba(15,20,34,0.3);
-  transform: translateY(-1px);
-}
-.tp-links b {
-  font-family: var(--font-heading);
-  font-size: 0.96rem;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-}
-.tp-links small {
-  display: block;
-  margin-top: 3px;
-  font-size: 0.82rem;
-  line-height: 1.45;
+/* ── one line of links under the FAQ ── */
+.tp-more {
+  margin: 22px 0 0;
+  font-size: 0.88rem;
+  line-height: 2;
   color: var(--grey-600);
 }
-.tp-links .tp-arrow {
-  margin-left: auto;
-  flex-shrink: 0;
+.tp-more a {
   color: var(--brand-deep);
-  font-size: 1.2rem;
-  line-height: 1;
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
 }
+.tp-more a:hover, .tp-more a:focus-visible { color: var(--ink); }
 
 /* ── tablet and up ── */
 @media (min-width: 721px) {
-  .tp-work { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
   .tp-svc { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
-  .tp-links { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .tp-steps {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 22px;
@@ -6407,7 +6349,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .tp-steps h3 { margin-top: 0; }
 }
 
-/* ── desktop: hero becomes two columns ── */
+/* ── desktop: hero in two columns, four service cards in a row ── */
 @media (min-width: 1041px) {
   .tp-hero-inner {
     grid-template-columns: minmax(0, 1.02fr) minmax(0, 0.98fr);
@@ -6416,29 +6358,23 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .tp-svc { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 
-/* ── big screens: more air, bigger type, four link rows ── */
+/* ── big screens ── */
 @media (min-width: 1921px) {
   .tp-hero { padding: clamp(60px, 4vw, 110px) var(--pad-x); }
   .tp-hero h1 { font-size: clamp(3.2rem, 3.4vw, 4.6rem); }
   .tp-lead { font-size: clamp(1.08rem, 0.9vw, 1.3rem); max-width: 52ch; }
   .tp-facts li { font-size: 0.95rem; }
   .tp-facts strong { font-size: 1.12rem; }
-  .tp-work { gap: 20px; }
-  .tp-work figcaption { padding: 17px 22px 19px; font-size: 0.98rem; }
-  .tp-work figcaption strong { font-size: 1.08rem; }
   .tp-svc { gap: 20px; }
-  .tp-svc article { padding: 30px 30px 26px; gap: 14px; }
+  .tp-svc-body { padding: 22px 26px 24px; gap: 10px; }
   .tp-svc h3 { font-size: 1.22rem; }
   .tp-svc p { font-size: 1rem; }
   .tp-svc a { font-size: 0.95rem; }
-  .tp-svc-icon { width: 54px; height: 54px; border-radius: 16px; }
-  .tp-svc-icon svg { width: 27px; height: 27px; }
   .tp-steps { gap: 34px; }
   .tp-steps h3 { font-size: 1.16rem; }
   .tp-steps p { font-size: 0.98rem; }
-  .tp-links { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
-  .tp-links a { min-height: 76px; padding: 20px 24px; }
   .tp-chips li { font-size: 0.92rem; padding: 9px 16px; }
+  .tp-more { font-size: 1rem; }
   .price-table { font-size: 1.04rem; }
   .price-table th, .price-table td { padding: 18px 26px; }
   .price-table thead th { font-size: 0.82rem; }
@@ -6447,11 +6383,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 
 @media (min-width: 2400px) {
   .tp-hero h1 { font-size: clamp(4rem, 3vw, 5.4rem); }
-  .tp-work { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 26px; }
   .price-table th, .price-table td { padding: 22px 34px; }
 }
 
-/* ── phones: tighter rhythm, photo stays readable ── */
+/* ── phones ── */
 @media (max-width: 720px) {
   .tp-hero { padding: 26px var(--pad-x) 30px; }
   .tp-hero h1 { font-size: clamp(1.95rem, 8.4vw, 2.6rem); }
@@ -6467,18 +6402,12 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .tp-facts { gap: 8px 16px; margin-top: 18px; }
   .tp-facts li { font-size: 0.78rem; }
   .tp-facts strong { font-size: 0.92rem; }
-  /* keep the photo's own 3:2 ratio on phones too, so nothing is cropped */
-  .tp-svc article { padding: 18px; }
-  .tp-links a { padding: 14px 16px; }
+  .tp-svc-body { padding: 15px 16px 17px; }
 }
 
 @media (orientation: landscape) and (max-height: 500px) {
   .tp-hero { padding: 22px var(--pad-x) 26px; }
   .tp-hero h1 { font-size: clamp(1.8rem, 4.4vw, 2.4rem); }
+  .tp-hero-actions { flex-direction: row; }
   .tp-hero-actions .button { width: auto; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tp-links a { transition: none; }
-  .tp-links a:hover { transform: none; }
 }

@@ -30,6 +30,11 @@ passes with 0 failures.
 7. The generated static markup must be byte-identical to what `buildPackagesHtml()`
    produces in the browser. This is checked in a real browser, not by eye.
 8. Contact data (phone, WhatsApp, address, service area) stays in `site-config.js`.
+8b. Generated page images are written by `build/make_page_images.py` into
+    **`assets/gallery/` with a `p-` prefix**, never into a new folder. The
+    site's upload carries existing folders but has twice failed to carry a
+    newly created one, which left the pages with broken images in production.
+    Each photo is written at two widths and referenced with `srcset`.
 
 ## 3. Design and code constraints
 
