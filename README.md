@@ -47,6 +47,7 @@ Zweimal sind beim Hochladen Dateien liegengeblieben, ohne dass die Seite kaputt
 aussah. Diese zwei Befehle zeigen es sofort:
 
 ```
+python build/gen_llms.py
 python build/verify_deploy.py
 python build/run_live_tag_check.py --url https://corneldetailing.com --all
 ```

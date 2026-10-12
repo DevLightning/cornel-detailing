@@ -345,6 +345,37 @@ def check_conversion_coverage(pages):
         ok("every tel: and wa.me link on every page is covered by the tracked CTA selectors")
 
 
+def check_llms_txt(pages):
+    """llms.txt is the summary AI assistants read. Every link in it must point
+    at a page that exists, and the domain must be spelled correctly."""
+    path = os.path.join(ROOT, "llms.txt")
+    if not os.path.exists(path):
+        fail("llms.txt", "missing")
+        return
+    text = io.open(path, encoding="utf-8").read()
+    if "corneldetailling" in text:
+        fail("llms.txt", "misspelled domain (corneldetailling)")
+    links = re.findall(r"\]\((https://corneldetailing\.com/[^)]*)\)", text)
+    bad = []
+    for url in links:
+        rel = url.replace("https://corneldetailing.com/", "")
+        page, _, frag = rel.partition("#")
+        target = page or "index.html"
+        if not os.path.exists(os.path.join(ROOT, target)):
+            bad.append(url)
+            continue
+        if frag and ('id="%s"' % frag) not in read(target):
+            bad.append(url + " (no such section)")
+    other = re.findall(r"\]\((?!https://corneldetailing\.com/)([^)]*)\)", text)
+    for o in other:
+        bad.append(o + " (not on this domain)")
+    if bad:
+        for b in bad:
+            fail("llms.txt link", b)
+    else:
+        ok("llms.txt: all %d links point at pages that exist" % len(links))
+
+
 def check_sitemap(pages):
     sm = read("sitemap.xml")
     locs = re.findall(r"<loc>(.*?)</loc>", sm)
@@ -460,6 +491,7 @@ def main():
     check_assets(pages)
     check_images_sized(pages)
     check_conversion_coverage(pages)
+    check_llms_txt(pages)
     check_versions(pages)
     check_town_pages()
     check_h1_towns()

@@ -9,5 +9,8 @@ Disallow: /assets/favicon.png
 # Sitemap
 Sitemap: https://corneldetailing.com/sitemap.xml
 
+# Kurzfassung der Website fuer KI-Assistenten
+# https://corneldetailing.com/llms.txt
+
 # Crawl-delay hint for polite bots
 Crawl-delay: 1
