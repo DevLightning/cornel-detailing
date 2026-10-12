@@ -1266,22 +1266,43 @@ function setupPackageDetails() {
   }));
 }
 
-function setupReveal() {
-  const items = document.querySelectorAll(".reveal");
-  if (!items.length) return;
+/* Fade-in on scroll. The observer is kept at module scope because the
+   showcase, gallery and review cards are built in the second startup wave,
+   after this has already run: revealScan() picks those up. An element that
+   is never observed is invisible, not merely unanimated, so a browser
+   without IntersectionObserver shows everything instead of nothing. */
+let revealObserver = null;
 
-  const observer = new IntersectionObserver(
+function revealAll() {
+  document.querySelectorAll(".reveal").forEach((el) => el.classList.add("is-visible"));
+}
+
+// Safe to call as often as we like: observing an observed element is a no-op.
+function revealScan() {
+  if (!revealObserver) return;
+  document
+    .querySelectorAll(".reveal:not(.is-visible)")
+    .forEach((el) => revealObserver.observe(el));
+}
+
+function setupReveal() {
+  if (!("IntersectionObserver" in window)) {
+    revealAll();
+    return;
+  }
+
+  revealObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (!entry.isIntersecting) return;
         entry.target.classList.add("is-visible");
-        observer.unobserve(entry.target);
+        revealObserver.unobserve(entry.target);
       });
     },
     { threshold: 0.1 }
   );
 
-  items.forEach((item) => observer.observe(item));
+  revealScan();
 }
 
 // Schema.org structured data is defined inline in <head> for optimal SEO crawlability.
@@ -1922,25 +1943,38 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCtaBarAutoHide();
   setupReveal();
   renderPackages();        // only hydrates: the markup is already in the HTML
+  revealScan();            // in case the hydration added anything
 
   const later = () => {
-    renderFeaturedProjects();
-    renderShowcaseStrip();
-    renderGallery();
-    renderReviews();
-    renderGalleryFilters();
-    setupGalleryStats();
-    setupMapFacade();
-    setupPackageDetails();
-    setupShowcaseSwipe();
-    setupReviewsCarousel();
-    setupHeaderSheen();
-    setupActiveNav();
-    setupNavPill();
-    setupGalleryFilter();
-    setupLightbox();
-    setupVideoShowcase();
-    setupReviewCount();
+    // Everything below the fold is built here. One failing section must
+    // not take the rest of the page down with it, so each step is isolated.
+    const run = (fn) => {
+      try {
+        fn();
+      } catch (err) {
+        console.error("[cornel] " + fn.name + " failed:", err);
+      }
+    };
+
+    run(renderFeaturedProjects);
+    run(renderShowcaseStrip);
+    run(renderGallery);
+    run(renderReviews);
+    run(renderGalleryFilters);
+    run(setupGalleryStats);
+    run(setupMapFacade);
+    run(setupPackageDetails);
+    run(setupShowcaseSwipe);
+    run(setupReviewsCarousel);
+    run(setupHeaderSheen);
+    run(setupActiveNav);
+    run(setupNavPill);
+    run(setupGalleryFilter);
+    run(setupLightbox);
+    run(setupVideoShowcase);
+    run(setupReviewCount);
+    // the cards above were built after setupReveal() observed the page
+    run(revealScan);
   };
   if (window.requestIdleCallback) requestIdleCallback(later, { timeout: 1200 });
   else setTimeout(later, 1);

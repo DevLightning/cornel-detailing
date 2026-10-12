@@ -53,11 +53,21 @@ def run(query):
     return htmllib.unescape(m.group(1)).strip().splitlines()
 
 
+# Every run ends with this assertion. If it is missing, the harness threw or
+# hung part way through and the run proved nothing: without this sentinel a
+# broken check reports a clean sweep.
+LAST_ASSERTION = "no page errors or console errors"
+
+
 def main():
     failed = 0
     for name, query in RUNS:
         print("== %s" % name)
-        for line in run(query):
+        lines = run(query)
+        if not any(LAST_ASSERTION in l for l in lines):
+            lines.append("FAIL  the check did not run to the end "
+                         "(harness error, hang or no assertions at all)")
+        for line in lines:
             print("   " + line)
             if line.startswith("FAIL"):
                 failed += 1

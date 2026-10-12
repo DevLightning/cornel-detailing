@@ -147,3 +147,29 @@ Before the work is called done:
     inside requestIdleCallback. No single task may exceed 50ms.
 46. Long pages set `content-visibility: auto` on below-fold sections
     (`.tp-page .section`) so the first paint does not lay out the whole page.
+
+## 12. Nothing may render blank
+
+47. `class="reveal"` starts at `opacity: 0` and is only shown once an
+    IntersectionObserver has seen it. The observer is created in the first
+    startup wave, so anything rendered in the second wave must be handed to
+    it afterwards with `revealScan()`. A card that is never observed is
+    invisible, not merely unanimated: the image loads and the section is
+    blank. This is what broke the homepage showcase and the gallery after
+    rule 45 split startup into two waves.
+48. `revealScan()` may be called as often as needed; observing an already
+    observed element is a no-op. `setupReveal()` falls back to revealing
+    everything when the browser has no IntersectionObserver, so a missing
+    API never leaves the page empty.
+49. The second startup wave runs each step through `run()`, which catches and
+    logs. One failing section must not take the rest of the page down with it.
+50. `build/verify_seo.py` fails the build when script.js generates markup with
+    `class="reveal"` and the startup sequence does not call `revealScan()`
+    after it. `build/run_behaviour_check.py` asserts every `<img>` on every
+    page actually decoded.
+51. A verification harness that produces no assertions is a failure, not a
+    pass. `run_behaviour_check.py` checks every run reached its final
+    assertion, so a harness that throws or hangs can never report a clean
+    sweep. Note that IntersectionObserver callbacks and requestAnimationFrame
+    do not fire reliably under Chrome's `--virtual-time-budget`: assert
+    reveal wiring statically, not by scrolling in the harness.

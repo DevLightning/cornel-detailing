@@ -96,6 +96,14 @@
         var rows = d.querySelectorAll(".price-table .pt-pkg").length;
         if (rows) { t("price table has 9 rows", rows === 9, rows); }
 
+        // every <img> that is on the page must have actually decoded
+        var broken = [].slice.call(d.querySelectorAll("img")).filter(function (i) {
+          return i.getAttribute("src") && i.complete && i.naturalWidth === 0;
+        }).map(function (i) { return i.getAttribute("src"); });
+        t("every image loaded", broken.length === 0,
+          d.querySelectorAll("img").length + " images" +
+          (broken.length ? " | broken: " + broken.slice(0, 5).join(" ; ") : ""));
+
         // layout
         var sw = d.documentElement.scrollWidth, cw = d.documentElement.clientWidth;
         var offenders = [];

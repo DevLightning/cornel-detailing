@@ -477,6 +477,53 @@ def check_h1_towns():
     ok("the homepage and both town pages name their town in the h1")
 
 
+def check_reveal_wiring():
+    """Cards built after startup must be handed to the fade-in observer.
+
+    class="reveal" starts at opacity 0 and only shows once an
+    IntersectionObserver has seen it. The observer is built in the first
+    startup wave, so anything rendered in the second wave has to be scanned
+    in afterwards. Without that the images load and the section is blank.
+    """
+    js = read("script.js")
+
+    # markup generated in JS that fades in, minus anything already revealed
+    classes = re.findall(r'class="([^"]*)"', js)
+    generated = [c for c in classes
+                 if "reveal" in c.split() and "is-visible" not in c.split()]
+
+    if not generated:
+        ok("no fade-in markup is generated in script.js")
+        return
+
+    if "function revealScan" not in js:
+        fail("fade-in", "script.js builds %d element(s) with class 'reveal' but has "
+             "no revealScan(): they would stay invisible" % len(generated))
+        return
+
+    # The second startup wave must end by scanning the new cards in. Its
+    # closing brace is the one at exactly two spaces of indent: the wave also
+    # contains an inner helper that closes at four.
+    start = "const later = () => {"
+    close = "\n  };"
+    wave = js[js.index(start):] if start in js else ""
+    wave = wave[:wave.index(close)] if close in wave else wave
+    # a commented out call is not a call
+    wave = "\n".join(l.split("//")[0] for l in wave.split("\n"))
+    if "revealScan" not in wave:
+        fail("fade-in", "the second startup wave renders fade-in cards but never "
+             "calls revealScan(): those sections would render blank")
+        return
+
+    # and the observer has to survive a browser without IntersectionObserver
+    if "IntersectionObserver" not in js or "revealAll" not in js:
+        fail("fade-in", "no fallback when IntersectionObserver is missing: "
+             "every fading element would stay at opacity 0")
+        return
+
+    ok("every fade-in element built by script.js is scanned in after rendering "
+       "(%d generated)" % len(generated))
+
 def main():
     pages = html_files()
     check_legacy_slug()
@@ -495,6 +542,7 @@ def main():
     check_versions(pages)
     check_town_pages()
     check_h1_towns()
+    check_reveal_wiring()
 
     print("VERIFY  %d pages\n" % len(pages))
     for o in OKS:
