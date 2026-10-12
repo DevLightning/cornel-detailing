@@ -302,6 +302,49 @@ def check_images_sized(pages):
         ok("every <img> carries width and height (no layout shift on load)")
 
 
+def check_conversion_coverage(pages):
+    """Every tel: and wa.me link must be covered by the tracked CTA selectors
+    in script.js, otherwise a real contact click sends no Google Ads
+    conversion. The allowed tokens are read out of script.js, so this check
+    follows the code instead of repeating it."""
+    js = read("script.js")
+    tokens = set()
+    for name in ("WA_CTA", "CALL_CTA"):
+        m = re.search(r'var %s = "(.*?)";' % name, js)
+        if not m:
+            fail("conversion tracking", "%s not found in script.js" % name)
+            return
+        for part in m.group(1).split(","):
+            part = part.strip().split(" ")[-1]          # ".mobile-cta a.x" -> "a.x"
+            for cls in re.findall(r"\.([A-Za-z0-9_-]+)", part):
+                tokens.add(("class", cls))
+            for attr in re.findall(r"\[([A-Za-z0-9_-]+)\]", part):
+                tokens.add(("attr", attr))
+
+    untracked = []
+    for f in pages:
+        for m in re.finditer(r"<a\s[^>]*>", read(f)):
+            tag = m.group(0)
+            href = re.search(r'href="([^"]*)"', tag)
+            if not href:
+                continue
+            h = href.group(1)
+            if not (h.startswith("tel:") or "wa.me/" in h):
+                continue
+            classes = set((re.search(r'class="([^"]*)"', tag) or
+                           type("x", (), {"group": lambda s, i: ""})()).group(1).split())
+            covered = any((k == "class" and v in classes) or (k == "attr" and (v + "=") in tag or
+                          (k == "attr" and v in tag))
+                          for k, v in tokens)
+            if not covered:
+                untracked.append("%s: %s" % (f, tag[:90]))
+    if untracked:
+        for u in untracked:
+            fail("contact link sends no conversion", u)
+    else:
+        ok("every tel: and wa.me link on every page is covered by the tracked CTA selectors")
+
+
 def check_sitemap(pages):
     sm = read("sitemap.xml")
     locs = re.findall(r"<loc>(.*?)</loc>", sm)
@@ -416,6 +459,7 @@ def main():
     check_images(pages)
     check_assets(pages)
     check_images_sized(pages)
+    check_conversion_coverage(pages)
     check_versions(pages)
     check_town_pages()
     check_h1_towns()

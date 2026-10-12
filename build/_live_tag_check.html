@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>live tag check</title>
+    <style>html,body{margin:0;font:12px/1.5 monospace}#frame{border:0;width:1280px;height:900px}</style>
+  </head>
+  <body>
+    <!-- Build only page. Loads the REAL Google tag (gtag.js) over http on
+         localhost, accepts the cookie banner the way a visitor would, clicks
+         a call button and a WhatsApp button, and captures the conversion
+         request Google's own library builds.
+
+         Nothing reaches Google: every network API is patched to record and
+         block, and Chrome additionally resolves googleadservices.com and
+         friends to 127.0.0.1, so a conversion cannot be delivered even if a
+         path were missed. -->
+    <pre id="report">running</pre>
+    <script>
+      var qp = new URLSearchParams(location.search);
+      var site = qp.get("site") || "";
+      var page = qp.get("page") || "/index.html";
+      document.write('<iframe id="frame" src="' + site + page + '"></iframe>');
+    </script>
+    <script>
+      var log = [];
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+      function isConv(u) {
+        return /googleadservices\.com|\/pagead\/|doubleclick|google\.[a-z.]+\/ccm|google\.[a-z.]+\/pagead/i.test(u);
+      }
+
+      function params(h) {
+        var q = {};
+        (h.url.split("?")[1] || "").split("&").forEach(function (kv) {
+          var i = kv.indexOf("=");
+          q[kv.slice(0, i)] = decodeURIComponent(kv.slice(i + 1));
+        });
+        return "via " + h.via
+             + "  endpoint=" + h.url.split("?")[0].replace("https://www.googleadservices.com", "")
+             + "  label=" + (q.label || "(none)")
+             + "  value=" + (q.value || "(none)")
+             + "  currency=" + (q.currency_code || q.currency || "(none)")
+             + "  consent(gcs)=" + (q.gcs || "(none)")
+             ;
+      }
+
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("frame");
+        var w = f.contentWindow, d = f.contentDocument;
+        await sleep(900);
+        log.push("# frame: " + (f.src || "?") + "  title: " +
+                 ((d && d.title) || "(no document)"));
+
+        // ---- record and block every outgoing request --------------------
+        var captured = [];
+        function record(src, url) {
+          if (url && isConv(String(url))) captured.push({ via: src, url: String(url) });
+        }
+        var nav = w.navigator;
+        var realBeacon = nav.sendBeacon && nav.sendBeacon.bind(nav);
+        try {
+          Object.defineProperty(nav, "sendBeacon", {
+            value: function (url) { record("sendBeacon", url); return true; }, configurable: true
+          });
+        } catch (e) { log.push("could not patch sendBeacon: " + e); }
+        var realFetch = w.fetch;
+        w.fetch = function (input) {
+          var u = typeof input === "string" ? input : (input && input.url);
+          if (isConv(String(u))) { record("fetch", u); return Promise.resolve(new w.Response("")); }
+          return realFetch.apply(w, arguments);
+        };
+        var realOpen = w.XMLHttpRequest.prototype.open;
+        w.XMLHttpRequest.prototype.open = function (m, u) {
+          this.__u = u;
+          if (isConv(String(u))) { this.__blocked = true; record("xhr", u); }
+          return realOpen.apply(this, arguments);
+        };
+        var realSend = w.XMLHttpRequest.prototype.send;
+        w.XMLHttpRequest.prototype.send = function () {
+          if (this.__blocked) return;
+          return realSend.apply(this, arguments);
+        };
+        var imgSrc = Object.getOwnPropertyDescriptor(w.HTMLImageElement.prototype, "src");
+        Object.defineProperty(w.HTMLImageElement.prototype, "src", {
+          set: function (v) {
+            if (isConv(String(v))) { record("image", v); return; }
+            imgSrc.set.call(this, v);
+          },
+          get: function () { return imgSrc.get.call(this); },
+          configurable: true
+        });
+
+        // ---- accept cookies, exactly like a visitor ---------------------
+        var accept = null;
+        var btns = d.querySelectorAll("#cookie-banner button, .cb-actions button, button");
+        for (var i = 0; i < btns.length; i++) {
+          if (/akzeptieren/i.test(btns[i].textContent || "")) { accept = btns[i]; break; }
+        }
+        if (!accept) { log.push("FAIL  cookie banner accept button not found"); }
+        else {
+          accept.click();
+          log.push("PASS  cookie banner accepted, Google tag requested");
+        }
+
+        // ---- wait for the real gtag.js to load and run ------------------
+        var loaded = false;
+        for (var t = 0; t < 60 && !loaded; t++) {
+          await sleep(100);
+          loaded = !!(w.google_tag_manager || (w.dataLayer && w.dataLayer.length > 4));
+        }
+        var tagScript = d.querySelector('script[src*="googletagmanager.com/gtag/js"]');
+        log.push((tagScript ? "PASS" : "FAIL") + "  gtag.js script injected  [" +
+                 (tagScript ? tagScript.src : "none") + "]");
+        log.push((loaded ? "PASS" : "FAIL") + "  Google tag initialised  [google_tag_manager=" +
+                 (typeof w.google_tag_manager) + "]");
+
+        // ---- install the test copy (only the isTrusted line removed) ----
+        var src = await (await fetch(site + "/script.js")).text();
+        var a0 = src.indexOf("(function setupConversionDelegation() {");
+        var b0 = src.indexOf("\n})();", a0);
+        var code = src.slice(a0, b0 + 6)
+          .replace("if (!e.isTrusted) return;", "/* test */")
+          .split("window.location = url;").join("window.__navigated = url;");
+        w.__convDelegated = false;
+        w.eval(code);
+        w.dispatchEvent(new w.Event("scroll"));
+        d.addEventListener("click", function (e) { e.preventDefault(); }, true);
+
+        async function clickAndCapture(what, el, allowHandoff) {
+          captured.length = 0;
+          try { w.sessionStorage.clear(); } catch (e) {}
+          if (!el) { log.push("SKIP  " + what + " not present on this page"); return; }
+          el.click();
+          await sleep(1200);
+          if (!captured.length && allowHandoff) {
+            // the older build only counted WhatsApp once the app took over
+            try {
+              Object.defineProperty(d, "visibilityState",
+                { get: function () { return "hidden"; }, configurable: true });
+            } catch (e) {}
+            d.dispatchEvent(new w.Event("visibilitychange"));
+            await sleep(1200);
+          }
+          var hits = captured.slice();
+          log.push((hits.length ? "PASS" : "FAIL") + "  " + what +
+                   "  [" + hits.length + " request(s)]");
+          hits.forEach(function (h) { log.push("      " + params(h)); });
+        }
+
+        // ---- the header call button --------------------------------------
+        await clickAndCapture("header call button", d.querySelector('a.topbar-phone[href^="tel:"]'), false);
+
+        // ---- the call button in the closing CTA card (the one that was
+        //      silently untracked before this round of work) ---------------
+        await clickAndCapture("CTA card call button",
+          d.querySelector('.cta-card a[href^="tel:"], a.button-light[href^="tel:"]'), false);
+
+        // ---- a WhatsApp button -------------------------------------------
+        await clickAndCapture("WhatsApp button",
+          d.querySelector('a.button-whatsapp[href*="wa.me"], a[href*="wa.me"]'), true);
+
+        document.getElementById("report").textContent = log.join("\n");
+      });
+    </script>
+  </body>
+</html>

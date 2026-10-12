@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>conversion tracking check</title>
+    <style>html,body{margin:0;font:12px/1.5 monospace}#frame{border:0;width:1280px;height:900px}</style>
+  </head>
+  <body>
+    <!-- Build only page. Opens a real page in an iframe and clicks every
+         contact link.
+
+         window.gtag is replaced by a RECORDER, so Google's tag is never
+         loaded and no test hit can reach the live Ads account.
+
+         isTrusted is an own, non configurable property of every event, so a
+         script cannot forge a real click (which is precisely what gate 2
+         relies on). The suite therefore runs in two phases:
+           A) against the shipped code, a scripted click must send nothing
+           B) against the same code with the single line
+              "if (!e.isTrusted) return;" removed, so the rest of the chain
+              (selectors, labels, consent, dedupe, hand off) can be exercised.
+         Run through headless Chrome with --allow-file-access-from-files. -->
+    <pre id="report">running</pre>
+    <script>
+      var params = new URLSearchParams(location.search);
+      document.write('<iframe id="frame" src="../' + params.get("page") + '"></iframe>');
+    </script>
+    <script>
+      var CALL_LABEL = "AW-17936964522/DWGhCNenjI0cEKq3gelC";
+      var WA_LABEL = "AW-17936964522/fOZQCIjd37UcEKq3gelC";
+      var log = [];
+      function line(ok, what, detail) {
+        log.push((ok ? "PASS  " : "FAIL  ") + what + (detail ? "  [" + detail + "]" : ""));
+      }
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("frame");
+        var w = f.contentWindow, d = f.contentDocument;
+        var page = params.get("page");
+        await sleep(400);
+
+        var sent = [];
+        w.gtag = function () {
+          var a = Array.prototype.slice.call(arguments);
+          if (a[0] === "event" && a[1] === "conversion") {
+            var p = a[2] || {};
+            sent.push(p);
+            // acknowledge like Google's tag does, so event_callback runs and
+            // we can check the visitor is taken to the right place
+            if (typeof p.event_callback === "function") p.event_callback();
+          }
+        };
+        d.addEventListener("click", function (e) { e.preventDefault(); }, true);
+
+        function clearSession() {
+          try {
+            w.sessionStorage.removeItem("cornel_call_lead");
+            w.sessionStorage.removeItem("cornel_wa_lead");
+          } catch (e) {}
+        }
+        function handoff() {
+          try {
+            Object.defineProperty(d, "visibilityState",
+              { get: function () { return "hidden"; }, configurable: true });
+          } catch (e) {}
+          d.dispatchEvent(new w.Event("visibilitychange"));
+        }
+        function describe(a) {
+          var cls = (a.getAttribute("class") || "").split(/\s+/).filter(Boolean).slice(0, 2).join(".");
+          var data = a.hasAttribute("data-call-link") ? "[data-call-link]"
+                   : a.hasAttribute("data-whatsapp-link") ? "[data-whatsapp-link]"
+                   : a.hasAttribute("data-pkg-wa") ? "[data-pkg-wa]" : "";
+          return ("a" + (cls ? "." + cls : "") + data).slice(0, 48);
+        }
+        function contactLinks() {
+          return Array.prototype.filter.call(d.querySelectorAll("a[href]"), function (a) {
+            var h = a.getAttribute("href") || "";
+            return /^tel:/i.test(h) || /^https?:\/\/wa\.me\//i.test(h);
+          });
+        }
+
+        var waMode = "click";
+        var links = contactLinks();
+        log.push("# " + page + " · " + links.length + " contact links");
+
+        // ---- phase A: the shipped code must ignore a scripted click --------
+        if (links.length) {
+          clearSession();
+          sent.length = 0;
+          links[0].click();
+          await sleep(60);
+          line(sent.length === 0, "shipped code ignores a scripted (bot) click", sent.length + " sent");
+        }
+
+        // ---- install the same code with only the isTrusted line removed ----
+        var patched = false;
+        try {
+          var usesMain = !!d.querySelector('script[src^="script.js"]');
+          var src = await (await fetch(usesMain ? "../script.js" : "../legal.js")).text();
+          var code;
+          if (usesMain) {
+            var a0 = src.indexOf("(function setupConversionDelegation() {");
+            var b0 = src.indexOf("\n})();", a0);
+            code = src.slice(a0, b0 + 6);
+            w.__convDelegated = false;
+          } else {
+            var a1 = src.indexOf("function setupCallConversion() {");
+            var b1 = src.indexOf("\n}\n", a1);
+            code = src.slice(a1, b1 + 2) + "\nsetupCallConversion();";
+          }
+          var stripped = code
+            .replace("if (!e.isTrusted) return;", "/* trusted check removed for the test */")
+            .split("window.location = url;").join("window.__navigated = url;");
+          patched = stripped !== code && stripped.indexOf("__navigated") > -1;
+          waMode = (/WHATSAPP_COUNTS = "(\w+)"/.exec(src) || [, "click"])[1];
+          w.eval(stripped);
+          w.dispatchEvent(new w.Event("scroll"));     // visitor has interacted
+          line(patched, "test copy installed (isTrusted gate and the real navigation stubbed)",
+               patched ? "2 lines differ, WhatsApp mode: " + waMode : "could not patch the copy");
+        } catch (e) {
+          line(false, "could not install the test copy", String(e).slice(0, 80));
+        }
+
+        if (patched) {
+          // ---- every contact link fires its conversion --------------------
+          for (var i = 0; i < links.length; i++) {
+            var a = links[i];
+            var isCall = /^tel:/i.test(a.getAttribute("href"));
+            clearSession();
+            sent.length = 0;
+            w.__navigated = null;
+            a.click();
+            if (!isCall && waMode === "handoff") { await sleep(20); handoff(); }
+            await sleep(60);
+            var want = isCall ? CALL_LABEL : WA_LABEL;
+            var got = sent.map(function (x) { return x.send_to; });
+            // Google's snippet shape: calls carry event_callback, the deferred
+            // WhatsApp hand off carries beacon transport
+            // Google's snippet for calls and for WhatsApp in "click" mode;
+            // beacon for WhatsApp in the stricter "handoff" mode
+            var viaCallback = typeof (sent[0] || {}).event_callback === "function";
+            var viaBeacon = (sent[0] || {}).transport_type === "beacon";
+            var shape = (isCall || waMode === "click") ? viaCallback : viaBeacon;
+            var href = a.getAttribute("href");
+            var followed = (isCall || waMode === "click") ? w.__navigated === href : true;
+            var ok = sent.length === 1 && got[0] === want
+                  && sent[0].value === 1 && sent[0].currency === "EUR" && shape && followed;
+            line(ok, (isCall ? "call " : "wa   ") + describe(a),
+                 sent.length === 0 ? "NO CONVERSION SENT"
+                 : sent.length > 1 ? sent.length + " conversions for one click"
+                 : got[0] !== want ? "wrong label " + got[0]
+                 : !shape ? "wrong send mechanism"
+                 : !followed ? "visitor was not taken to " + href
+                 : "value " + sent[0].value + " " + sent[0].currency +
+                   (viaCallback ? " via event_callback" : " via beacon"));
+          }
+
+          // ---- no consent, nothing sent ----------------------------------
+          clearSession();
+          sent.length = 0;
+          var saved = w.gtag;
+          w.gtag = undefined;
+          links[0].click();
+          await sleep(40);
+          line(sent.length === 0, "nothing is sent before cookie consent", sent.length + " sent");
+          w.gtag = saved;
+
+          // ---- one per channel per session --------------------------------
+          var call = links.filter(function (x) { return /^tel:/i.test(x.getAttribute("href")); })[0];
+          if (call) {
+            clearSession();
+            sent.length = 0;
+            call.click(); await sleep(30);
+            call.click(); await sleep(30);
+            line(sent.length === 1, "a second call click in the same session is ignored", sent.length + " sent");
+          }
+          var wa = links.filter(function (x) { return !/^tel:/i.test(x.getAttribute("href")); })[0];
+          if (wa) {
+            clearSession();
+            sent.length = 0;
+            wa.click(); if (waMode === "handoff") { await sleep(10); handoff(); } await sleep(30);
+            wa.click(); if (waMode === "handoff") { await sleep(10); handoff(); } await sleep(30);
+            line(sent.length === 1, "a second WhatsApp click in the same session is ignored", sent.length + " sent");
+          }
+
+          // ---- the WhatsApp conversion fires on the click itself ----------
+          if (wa) {
+            clearSession();
+            sent.length = 0;
+            wa.click();
+            await sleep(80);
+            if (waMode === "click") {
+              line(sent.length === 1 && typeof sent[0].event_callback === "function",
+                   "WhatsApp fires on the click, with event_callback", sent.length + " sent");
+            } else {
+              line(sent.length === 0, "WhatsApp does not count without the hand off", sent.length + " sent");
+              handoff();
+              await sleep(60);
+              line(sent.length === 1 && sent[0].transport_type === "beacon",
+                   "WhatsApp counts once the hand off happens", sent.length + " sent");
+            }
+          }
+
+          // ---- only the two known labels ----------------------------------
+          var labels = {};
+          sent.length = 0;
+          for (var j = 0; j < links.length; j++) {
+            clearSession();
+            links[j].click();
+            if (waMode === "handoff" && !/^tel:/i.test(links[j].getAttribute("href"))) { await sleep(10); handoff(); }
+            await sleep(20);
+          }
+          sent.forEach(function (x) { labels[x.send_to] = 1; });
+          var unknown = Object.keys(labels).filter(function (l) {
+            return l !== CALL_LABEL && l !== WA_LABEL;
+          });
+          line(unknown.length === 0, "no conversion uses an unknown label",
+               unknown.join(", ") || "only the 2 known labels");
+        }
+
+        document.getElementById("report").textContent = log.join("\n");
+      });
+    </script>
+  </body>
+</html>

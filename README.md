@@ -41,6 +41,22 @@ um eins erhoehen, damit Besucher die neue Version laden.
 umbenannt werden. Die Regeln, nach denen gearbeitet wird, stehen in
 `BUILD-GUIDELINE.md`. Der Ordner `build/` wird nicht deployed (`.vercelignore`).
 
+## Nach jedem Deployment pruefen
+
+Zweimal sind beim Hochladen Dateien liegengeblieben, ohne dass die Seite kaputt
+aussah. Diese zwei Befehle zeigen es sofort:
+
+```
+python build/verify_deploy.py
+python build/run_live_tag_check.py --url https://corneldetailing.com --all
+```
+
+Der erste vergleicht jede Datei im Ordner mit der Live-Seite und listet, was
+fehlt oder veraltet ist. Der zweite klickt auf der Live-Seite jeden Anruf- und
+WhatsApp-Button und prueft, ob Google eine Conversion bekommt; jede Zeile muss
+"ok" sein (fuer den zweiten Befehl muss die lokale Vorschau auf Port 3456
+laufen).
+
 ## Rechtliche Angaben aendern
 
 Aendern sich Adresse, Telefon, E-Mail, Gewerbe oder Hosting-Anbieter, muessen drei Stellen angepasst werden: `site-config.js` (Hauptseiten), `impressum.html` und `datenschutz.html` (dort auch das Stand-Datum).

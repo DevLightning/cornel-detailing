@@ -90,3 +90,40 @@ Before the work is called done:
 30. Pre-JS visible word count recorded per page (what a crawler sees without
     running JavaScript) and compared against the previous build.
 31. Screenshots at 375px and 1920px reviewed for layout regressions.
+
+## 8. Conversion tracking
+
+32. Every `tel:` and `wa.me` link must match the CTA selectors in `script.js`.
+    `build/verify_seo.py` fails the build when one does not.
+33. Conversions follow Google's click-conversion guideline: a `conversion`
+    event with `send_to`, `value` and `currency`, sent on the click, with
+    `event_callback` carrying the visitor to the link (beacon only where the
+    page is already being hidden, which a callback cannot survive).
+34. Exactly one place sends a conversion: the delegated click listener. No
+    inline `onclick` helpers, so a click can never be counted twice.
+35. Before shipping a change to tracking, run `build/run_track_check.py`
+    (clicks every contact link on every page) and, with the local preview
+    running, `build/run_live_tag_check.py --all` (loads Google's real tag on
+    every page and reads back the conversion request). Neither can reach the
+    live Ads account: the endpoints are resolved to 127.0.0.1 and every
+    network API is intercepted.
+36. After deploying, run the same sweep against production:
+    `python build/run_live_tag_check.py --url https://corneldetailing.com --all`
+    Every row must read ok. A row reading NONE is a contact button whose
+    clicks Google never sees.
+
+## 9. Google Tag Manager
+
+37. The container (GTM-WRSNR9RR) is loaded by `consent.js` after the visitor
+    accepts, never from `<head>` and never for a visitor who declines. The
+    standard snippet would contact Google on page load, which is what the
+    consent gate exists to prevent.
+38. The `<noscript>` iframe from Google's snippet is deliberately NOT on the
+    pages: without JavaScript there is no banner, so there is no consent to
+    rely on, and the iframe would contact Google anyway.
+39. Do not add a Google Ads conversion tag inside the container for the labels
+    the site already sends (`-_FGCIXd37UcEKq3geIC`, `fOZQCIjd37UcEKq3gelC`).
+    The site fires those itself; a second tag would count every lead twice.
+40. `build/run_gtm_check.py` must pass: nothing from Google before consent,
+    the container and the Ads tag after it, and nothing at all when the
+    visitor declines.

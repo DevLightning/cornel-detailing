@@ -789,57 +789,55 @@ function setupVehicleSelect() {
 }
 
 /* ──────────────────────────────────────────────────────────────────────────
-   Google Ads conversion tracking — 2 actions, both under AW-17936964522
-   ──────────────────────────────────────────────────────────────────────────
-   1) Call           label: -_FGCIXd37UcEKq3geIC   (value €1)
+   Google Ads conversion tracking · 2 actions, both under AW-17936964522
+   ───────────────────────────────────────────────────────────────────────
+   1) Call           label: DWGhCNenjI0cEKq3gelC   (value €1)
+      This is the "Contact" conversion action, read out of the Google Ads
+      account on 12 Oct 2026. The site used to send -_FGCIXd37UcEKq3geIC,
+      which belongs to no conversion action in this account at all, so no
+      call click has ever been counted and Google reported the action as
+      misconfigured. Labels end in cEKq3gelC with a lowercase L: l, I and 1
+      look identical in most fonts, so copy them, never retype them.
    2) WhatsApp Click label: fOZQCIjd37UcEKq3gelC   (value €1)
 
-   The helper functions match the Google-provided snippet exactly so they
-   can be used inline:
-     <a onclick="return gtag_report_conversion('tel:+...')">…</a>
-     <a onclick="return gtag_report_conversion_whatsapp('https://wa.me/…')">…</a>
+   Google's guideline for click conversions (support.google.com/google-ads/
+   answer/6331304): the conversion action is of type "Click", the page runs
+   the Google tag, and a click on the tracked element sends
+   gtag('event', 'conversion', { send_to: 'TAG_ID/LABEL', value, currency }).
 
-   They're also wired up via a single delegated click listener so any
-   anchor with a tel: / wa.me / api.whatsapp.com / whatsapp: href is
-   auto-tracked — no per-button tagging needed.
-   ────────────────────────────────────────────────────────────────────────── */
-function gtag_report_conversion(url) {
-  var callback = function () {
-    if (typeof url !== "undefined") { window.location = url; }
-  };
-  if (typeof gtag === "function") {
-    gtag("event", "conversion", {
-      send_to: "AW-17936964522/-_FGCIXd37UcEKq3geIC",
-      value: 1.0,
-      currency: "EUR",
-      event_callback: callback,
-    });
-  } else {
-    callback();
-  }
-  return false;
-}
+   This file sends exactly that, for both channels, with no deviation: the
+   click is cancelled, the conversion goes out, and event_callback takes the
+   visitor to the tel: or wa.me target. A 900ms fallback follows the link
+   anyway if the callback never arrives (ad blocker, offline, slow network),
+   so a visitor can always reach us even when measurement fails.
 
-function gtag_report_conversion_whatsapp(url) {
-  var callback = function () {
-    if (typeof url !== "undefined") { window.location = url; }
-  };
-  if (typeof gtag === "function") {
-    gtag("event", "conversion", {
-      send_to: "AW-17936964522/fOZQCIjd37UcEKq3gelC",
-      value: 1.0,
-      currency: "EUR",
-      event_callback: callback,
-    });
-  } else {
-    callback();
-  }
-  return false;
-}
-
+   One delegated click listener is the only place a conversion is sent, so
+   the same click can never be counted twice. Every tel: and wa.me link must
+   match the CTA selectors below; build/verify_seo.py fails if one does not,
+   and build/run_track_check.py clicks every one of them in a real browser.
+   ─────────────────────────────────────────────────────────────────────── */
 (function setupConversionDelegation() {
   if (window.__convDelegated) return;
   window.__convDelegated = true;
+
+  /* ── When does a WhatsApp click count? ────────────────────────────────────
+     "click"   Google's guideline: the click IS the conversion, sent with the
+               documented snippet. A visitor who taps WhatsApp and then backs
+               out still counts, exactly as Google defines it. (default)
+     "handoff" Stricter: count only once the browser really hands off to
+               WhatsApp. Fewer conversions, all of them confirmed. This sends
+               while the page is being hidden, so it must use gtag's beacon
+               transport instead of event_callback, which is a deliberate
+               deviation from Google's snippet.
+     Calls always use the documented snippet; a phone dialler does not hide
+     the page, so there is nothing to confirm.
+
+     Default is "handoff": the owner had real trouble with false conversions
+     from misclicks, and this is the behaviour that has been recording
+     WhatsApp leads in the Ads account. transport_type is a documented gtag
+     field, so this stays within Google's tagging API; it is only the sample
+     snippet in the help article that uses event_callback instead. */
+  var WHATSAPP_COUNTS = "handoff";
 
   function isWhatsAppHref(href) {
     if (!href) return false;
@@ -867,22 +865,35 @@ function gtag_report_conversion_whatsapp(url) {
         Instant taps straight off an ad click are bounces/fat-fingers.
      5) Bar cooldown   — taps on the floating bar within 450ms of it sliding
         in are swallowed entirely (the "under the finger" misclick).
-     6) App-open confirmation (WhatsApp only) — the conversion is sent via
-        beacon ONLY when the page actually hands off to WhatsApp
-        (visibilitychange/pagehide within 3.5s of the tap). A click whose
-        hand-off is cancelled never converts. Calls fire at click time with
-        gates 1–5 (the iOS call sheet doesn't hide the page, so an app-open
-        gate would erase legitimate iPhone call conversions).
+     Both channels then send Google's documented click conversion and follow
+     the link from event_callback. WhatsApp can be switched to the stricter
+     hand off rule with WHATSAPP_COUNTS above.
   */
-  var WA_CTA = "a.button-whatsapp, a.topnav-cta, a.glass-wa, a[data-whatsapp-link], a[data-pkg-wa]";
-  var CALL_CTA = "a.glass-call, a.topnav-call, a.topbar-phone, a[data-call-link], .mobile-cta a.button-secondary";
+  /* Every styled contact button counts, plus the explicit data attributes, so
+     a new button is still tracked if someone forgets the attribute.
+     build/verify_seo.py fails the build when a tel: or wa.me link on any page
+     is not covered by one of these selectors. */
+  var WA_CTA = "a.button, a.button-whatsapp, a.topnav-cta, a.glass-wa, a[data-whatsapp-link], a[data-pkg-wa]";
+  var CALL_CTA = "a.button, a.glass-call, a.topnav-call, a.topbar-phone, a[data-call-link], .mobile-cta a.button-secondary";
 
+  /* (4) engagement: a real visitor has interacted with the page before
+     tapping, or has been here a moment. Kept short so a decided visitor who
+     taps straight away still counts; the misclick this gate was built for is
+     caught by the 450ms bar cooldown in (5). */
+  var ENGAGED_AFTER_MS = 1500;
   var pageLoadedAt = Date.now();
-  var hasScrolled = false;
-  window.addEventListener("scroll", function () { hasScrolled = true; }, { passive: true, once: true });
+  var hasInteracted = false;
+  function markInteracted() { hasInteracted = true; }
+  ["scroll", "pointermove", "wheel", "keydown"].forEach(function (ev) {
+    window.addEventListener(ev, markInteracted, { passive: true, once: true });
+  });
   function visitorEngaged() {
-    return hasScrolled || (Date.now() - pageLoadedAt > 4000);
+    return hasInteracted || (Date.now() - pageLoadedAt > ENGAGED_AFTER_MS);
   }
+  // exposed so build/track_check can read the gate state during the test
+  window.__convGates = function () {
+    return { engaged: visitorEngaged(), waCta: WA_CTA, callCta: CALL_CTA };
+  };
 
   function alreadyCounted(key) {
     try { return sessionStorage.getItem(key) === "1"; } catch (e) { return false; }
@@ -891,26 +902,48 @@ function gtag_report_conversion_whatsapp(url) {
     try { sessionStorage.setItem(key, "1"); } catch (e) { /* storage blocked — still fire */ }
   }
 
-  function sendConversionBeacon(label) {
+  /* Google's documented click-conversion snippet (support.google.com/
+     google-ads/answer/6331304): send the conversion, then let event_callback
+     take the visitor to the link target. Used for tel: links, which are a
+     normal same tab navigation, exactly the case the snippet is written for.
+     The 900ms fallback makes sure the dialler still opens if the callback
+     never arrives (ad blocker, offline, slow network). */
+  function reportConversionAndFollow(label, url, e) {
     if (typeof gtag !== "function") return;
+    e.preventDefault();
+    var navigated = false;
+    function callback() {
+      if (navigated) return;
+      navigated = true;
+      if (typeof url !== "undefined") { window.location = url; }
+    }
     gtag("event", "conversion", {
       send_to: label,
       value: 1.0,
       currency: "EUR",
-      transport_type: "beacon",
+      event_callback: callback,
     });
+    setTimeout(callback, 900);
   }
 
-  /* Fire only when the browser actually leaves for the app. Beacon transport
-     survives the page being backgrounded/unloaded mid-send. */
-  function fireOnAppOpen(label, key) {
+  /* Only used when WHATSAPP_COUNTS is "handoff": wait for the browser to
+     actually leave for the app, then send. The page is being hidden at that
+     moment, so the hit goes out as a beacon; an event_callback would never
+     run. Nothing to navigate to either, the hand off already happened. */
+  function fireOnWhatsAppOpen(label, key) {
     var done = false;
     function fire() {
       if (done) return;
       done = true;
       cleanup();
       markCounted(key);
-      sendConversionBeacon(label);
+      if (typeof gtag !== "function") return;
+      gtag("event", "conversion", {
+        send_to: label,
+        value: 1.0,
+        currency: "EUR",
+        transport_type: "beacon",
+      });
     }
     function onVis() { if (document.visibilityState === "hidden") fire(); }
     function cleanup() {
@@ -921,8 +954,6 @@ function gtag_report_conversion_whatsapp(url) {
     window.addEventListener("pagehide", fire);
     setTimeout(function () { if (!done) cleanup(); }, 3500);
   }
-  // exposed for verification/testing
-  window.__fireOnAppOpen = fireOnAppOpen;
 
   function onDocumentClick(e) {
     if (!e.isTrusted) return;                                       // (2)
@@ -949,14 +980,18 @@ function gtag_report_conversion_whatsapp(url) {
       if (!link.matches(WA_CTA)) return;                            // (1)
       if (alreadyCounted("cornel_wa_lead")) return;                 // (3)
       if (!visitorEngaged()) return;                                // (4) — link still works, untracked
-      /* (6) navigate naturally; count only on confirmed hand-off */
-      fireOnAppOpen("AW-17936964522/fOZQCIjd37UcEKq3gelC", "cornel_wa_lead");
+      if (WHATSAPP_COUNTS === "handoff") {
+        fireOnWhatsAppOpen("AW-17936964522/fOZQCIjd37UcEKq3gelC", "cornel_wa_lead");
+      } else {
+        markCounted("cornel_wa_lead");
+        reportConversionAndFollow("AW-17936964522/fOZQCIjd37UcEKq3gelC", rawHref, e);
+      }
     } else if (isCallHref(rawHref)) {
       if (!link.matches(CALL_CTA)) return;
       if (alreadyCounted("cornel_call_lead")) return;
       if (!visitorEngaged()) return;
       markCounted("cornel_call_lead");
-      sendConversionBeacon("AW-17936964522/-_FGCIXd37UcEKq3geIC");
+      reportConversionAndFollow("AW-17936964522/DWGhCNenjI0cEKq3gelC", rawHref, e);
     }
   }
 

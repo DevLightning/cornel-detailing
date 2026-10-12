@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>tag manager check</title>
+    <style>html,body{margin:0;font:12px/1.5 monospace}#frame{border:0;width:1280px;height:900px}</style>
+  </head>
+  <body>
+    <!-- Build only page. Checks that the Tag Manager container loads when it
+         should and never before: nothing may reach Google until the visitor
+         accepts the cookie banner. Run through headless Chrome against the
+         local server. -->
+    <pre id="report">running</pre>
+    <script>
+      var qp = new URLSearchParams(location.search);
+      document.write('<iframe id="frame" src="' + (qp.get("page") || "/index.html") + '"></iframe>');
+    </script>
+    <script>
+      var GTM_ID = "GTM-WRSNR9RR";
+      var log = [];
+      function line(ok, what, detail) {
+        log.push((ok ? "PASS  " : "FAIL  ") + what + (detail ? "  [" + detail + "]" : ""));
+      }
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("frame");
+        var w = f.contentWindow, d = f.contentDocument;
+        await sleep(1200);
+
+        function googleRequests() {
+          try {
+            return w.performance.getEntriesByType("resource")
+              .map(function (e) { return e.name; })
+              .filter(function (n) { return /googletagmanager\.com|google-analytics|googleadservices/i.test(n); });
+          } catch (e) { return []; }
+        }
+
+        log.push("# " + (qp.get("page") || "/index.html"));
+
+        // ---- before consent -------------------------------------------
+        var before = googleRequests();
+        line(before.length === 0, "nothing loaded from Google before consent",
+             before.length ? before.join(" | ").slice(0, 160) : "0 requests");
+        line(!w.google_tag_manager, "no container running before consent",
+             typeof w.google_tag_manager);
+
+        // ---- accept ----------------------------------------------------
+        var accept = null, btns = d.querySelectorAll("button");
+        for (var i = 0; i < btns.length; i++) {
+          if (/akzeptieren/i.test(btns[i].textContent || "")) { accept = btns[i]; break; }
+        }
+        if (!accept) { line(false, "cookie banner accept button found"); }
+        else { accept.click(); }
+
+        for (var t = 0; t < 70; t++) {
+          await sleep(100);
+          if (w.google_tag_manager && w.google_tag_manager[GTM_ID]) break;
+        }
+
+        // ---- after consent ---------------------------------------------
+        var after = googleRequests();
+        var gtmReq = after.filter(function (n) { return n.indexOf("gtm.js?id=" + GTM_ID) > -1; });
+        var adsReq = after.filter(function (n) { return n.indexOf("gtag/js?id=AW-") > -1; });
+        line(gtmReq.length === 1, "container " + GTM_ID + " requested once after consent",
+             gtmReq.length + " request(s)");
+        line(adsReq.length >= 1, "the Google Ads tag still loads", adsReq.length + " request(s)");
+        line(!!(w.google_tag_manager && w.google_tag_manager[GTM_ID]),
+             "container initialised in the page",
+             w.google_tag_manager ? Object.keys(w.google_tag_manager).join(",") : "none");
+
+        // ---- consent mode state ----------------------------------------
+        var dl = w.dataLayer || [];
+        var txt = [];
+        for (var k = 0; k < dl.length; k++) {
+          var item = dl[k];
+          try {
+            var plain = (item && typeof item === "object" && !("length" in item))
+              ? item : Array.prototype.slice.call(item);
+            txt.push(JSON.stringify(plain));
+          } catch (e) { txt.push(String(item)); }
+        }
+        var joined = txt.join(" ");
+        line(joined.indexOf('"default"') > -1 && joined.indexOf('"denied"') > -1,
+             "consent defaults pushed before the tags", "consent default present");
+        line(joined.indexOf("gtm.start") > -1, "gtm.start pushed to the dataLayer");
+        line(joined.indexOf('"ad_personalization":"granted"') === -1,
+             "ad personalisation is never granted");
+
+        // ---- the decline path: a visitor who says no --------------------
+        // the stored choice is shared across the origin: clear it before the
+        // second frame loads, otherwise it never shows the banner
+        try { w.localStorage.clear(); } catch (e) {}
+        var f2 = document.createElement("iframe");
+        f2.style.cssText = "border:0;width:1280px;height:900px";
+        f2.src = (qp.get("page") || "/index.html");
+        document.body.appendChild(f2);
+        await new Promise(function (r) { f2.addEventListener("load", r); });
+        var w2 = f2.contentWindow, d2 = f2.contentDocument;
+        await sleep(700);
+        var decline = null, b2 = d2.querySelectorAll("button");
+        for (var j = 0; j < b2.length; j++) {
+          if (/ablehnen/i.test(b2[j].textContent || "")) { decline = b2[j]; break; }
+        }
+        if (decline) {
+          decline.click();
+          await sleep(1500);
+          var reqs = [];
+          try {
+            reqs = w2.performance.getEntriesByType("resource")
+              .map(function (e) { return e.name; })
+              .filter(function (n) { return /googletagmanager\.com|googleadservices/i.test(n); });
+          } catch (e) {}
+          line(reqs.length === 0, "declining loads nothing from Google",
+               reqs.length ? reqs.join(" | ").slice(0, 140) : "0 requests");
+        } else {
+          line(false, "decline button found");
+        }
+
+        document.getElementById("report").textContent = log.join("\n");
+      });
+    </script>
+  </body>
+</html>

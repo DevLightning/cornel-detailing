@@ -13,8 +13,8 @@
     <meta name="robots" content="index,follow" />
 
     <link rel="stylesheet" href="styles.css?v=48" />
-    <script src="legal.js?v=4" defer></script>
-    <script src="consent.js?v=9" defer></script>
+    <script src="legal.js?v=5" defer></script>
+    <script src="consent.js?v=10" defer></script>
   </head>
   <body class="legal-page">
     <div class="site-shell">
@@ -58,7 +58,7 @@
               <h2>Auf einen Blick</h2>
               <ul>
                 <li>Ohne Ihre Einwilligung setzen wir keine Cookies und übermitteln keine Daten an Google.</li>
-                <li>Mit Ihrer Einwilligung messen wir mit Google Ads, ob unsere Anzeigen zu Anfragen führen. Personalisierte Werbung und Remarketing sind ausgeschaltet.</li>
+                <li>Mit Ihrer Einwilligung messen wir mit Google Ads und dem Google Tag Manager, ob unsere Anzeigen zu Anfragen führen. Personalisierte Werbung und Remarketing sind ausgeschaltet.</li>
                 <li>Kein Kontaktformular, kein Newsletter, keine Analyse-Tools wie Google Analytics. Schriften und Videos kommen von unserem eigenen Webspace.</li>
               </ul>
             </article>
@@ -68,7 +68,7 @@
               <p>
                 Cornel Detailing, Inhaber Cornel Istrate<br />
                 Fördergasse 290, 2640 Enzenreith, Österreich<br />
-                Telefon: <a href="tel:+436764391253">+43 676 4391253</a><br />
+                Telefon: <a data-call-link href="tel:+436764391253">+43 676 4391253</a><br />
                 E-Mail: <a href="mailto:kontakt@corneldetailing.at">kontakt@corneldetailing.at</a>
               </p>
               <p>
@@ -133,9 +133,19 @@
               <h2>4. Google Ads Conversion-Messung (nur mit Einwilligung)</h2>
               <p>
                 Erst wenn Sie im Cookie-Banner auf „Akzeptieren“ tippen, laden
-                wir das Google-Tag von Google Ads. Anbieter ist die Google
-                Ireland Limited, Gordon House, Barrow Street, Dublin 4, Irland.
-                Ohne Einwilligung wird das Google-Tag nicht geladen.
+                wir das Google-Tag von Google Ads und den Google Tag Manager
+                (Container GTM-WRSNR9RR). Anbieter ist die Google Ireland
+                Limited, Gordon House, Barrow Street, Dublin 4, Irland. Ohne
+                Einwilligung wird weder das Google-Tag noch der Tag Manager
+                geladen.
+              </p>
+              <p>
+                <strong>Google Tag Manager:</strong> Der Tag Manager ist eine
+                Verwaltung für Mess-Tags. Er selbst setzt keine Cookies und
+                speichert keine personenbezogenen Daten, lädt aber die darin
+                hinterlegten Tags und &uuml;bertr&auml;gt dabei Ihre IP-Adresse an Google.
+                Alle Tags starten im Zustand „verweigert“ (Google Consent Mode)
+                und werden erst durch Ihre Einwilligung freigeschaltet.
               </p>
               <p>
                 <strong>Zweck:</strong> Wir messen, ob Besucher, die über eine
@@ -314,7 +324,7 @@
 
             <article class="legal-card">
               <h2>12. Stand</h2>
-              <p>13. September 2026</p>
+              <p>12. Oktober 2026</p>
             </article>
           </div>
         </section>

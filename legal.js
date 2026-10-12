@@ -67,27 +67,44 @@ function setupHeader() {
    with the same quality gates (consent given, trusted taps only, engaged
    visitors only, i.e. scrolled or >4s on the page, and once per session). */
 function setupCallConversion() {
+  // Same selectors and gates as script.js, so the header button and the phone
+  // number in the Impressum both count exactly once per session.
+  const CALL_CTA = 'a.topbar-phone[href^="tel:"], a[data-call-link][href^="tel:"], a.button[href^="tel:"]';
+  const ENGAGED_AFTER_MS = 1500;
   const loadedAt = Date.now();
-  let scrolled = false;
-  window.addEventListener("scroll", () => { scrolled = true; }, { passive: true, once: true });
+  let interacted = false;
+  ["scroll", "pointermove", "wheel", "keydown"].forEach((ev) => {
+    window.addEventListener(ev, () => { interacted = true; }, { passive: true, once: true });
+  });
 
   document.addEventListener("click", (e) => {
     if (!e.isTrusted) return;
     // consent.js defines gtag only after the visitor accepted Google Ads cookies
     if (typeof gtag !== "function") return;
-    const link = e.target.closest && e.target.closest('a.topbar-phone[href^="tel:"]');
+    const link = e.target.closest && e.target.closest(CALL_CTA);
     if (!link) return;
-    if (!scrolled && Date.now() - loadedAt <= 4000) return;
+    if (!interacted && Date.now() - loadedAt <= ENGAGED_AFTER_MS) return;
     try {
       if (sessionStorage.getItem("cornel_call_lead") === "1") return;
       sessionStorage.setItem("cornel_call_lead", "1");
     } catch (err) { /* storage blocked: still count */ }
+    // Google's documented click-conversion snippet: send, then follow the
+    // link from event_callback, with a fallback so the dialler always opens.
+    e.preventDefault();
+    const url = link.getAttribute("href");
+    let navigated = false;
+    const callback = () => {
+      if (navigated) return;
+      navigated = true;
+      window.location = url;
+    };
     gtag("event", "conversion", {
-      send_to: "AW-17936964522/-_FGCIXd37UcEKq3geIC",
+      send_to: "AW-17936964522/DWGhCNenjI0cEKq3gelC",
       value: 1.0,
       currency: "EUR",
-      transport_type: "beacon",
+      event_callback: callback,
     });
+    setTimeout(callback, 900);
   });
 }
 

@@ -2,8 +2,8 @@
    Cornel Detailing · DSGVO and § 165 Abs. 3 TKG 2021
    ───────────────────────────────────────────────────────────────────────
    Nothing from Google loads before the visitor agrees: no gtag.js, no
-   cookies, no connection to Google servers (Google's "basic" consent
-   mode). Ad personalisation and remarketing stay switched off even after
+   Tag Manager container, no cookies, no connection to Google servers
+   (Google's "basic" consent mode). Ad personalisation and remarketing stay switched off even after
    consent; the banner only asks for conversion measurement.
 
    The choice is kept for 12 months in localStorage (no identifier, never
@@ -15,6 +15,7 @@
   var KEY = 'cornel_consent_v2';
   var MAX_AGE = 365 * 24 * 60 * 60 * 1000;
   var ADS_ID = 'AW-17936964522';
+  var GTM_ID = 'GTM-WRSNR9RR';
   var googleLoaded = false;
   var returnFocusTo = null;
 
@@ -61,9 +62,22 @@
     window.gtag('js', new Date());
     window.gtag('config', ADS_ID, { allow_ad_personalization_signals: false });
 
+    inject('https://www.googletagmanager.com/gtag/js?id=' + ADS_ID);
+
+    /* Google Tag Manager, behind the same gate. The consent state above is
+       already in the dataLayer, so every tag inside the container starts
+       from "denied" and only measurement is allowed. The standard GTM
+       snippet belongs in <head> and loads for everyone; that would send a
+       request to Google before the visitor has agreed, which is exactly what
+       this file exists to prevent, so it is loaded here instead. */
+    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    inject('https://www.googletagmanager.com/gtm.js?id=' + GTM_ID);
+  }
+
+  function inject(src) {
     var tag = document.createElement('script');
     tag.async = true;
-    tag.src = 'https://www.googletagmanager.com/gtag/js?id=' + ADS_ID;
+    tag.src = src;
     document.head.appendChild(tag);
   }
 
@@ -80,7 +94,7 @@
     for (var i = 0; i < parts.length - 1; i++) domains.push('; domain=.' + parts.slice(i).join('.'));
     document.cookie.split(';').forEach(function (pair) {
       var name = pair.split('=')[0].trim();
-      if (!/^(_gcl_|_gac_)/.test(name)) return;
+      if (!/^(_gcl_|_gac_|_ga|_gid|_gat)/.test(name)) return;
       domains.forEach(function (domain) {
         document.cookie = name + '=; Max-Age=0; path=/' + domain;
       });
@@ -90,7 +104,7 @@
       try {
         var store = window[name];
         Object.keys(store).forEach(function (key) {
-          if (/^(_gcl|_gac)/.test(key)) store.removeItem(key);
+          if (/^(_gcl|_gac|_ga)/.test(key)) store.removeItem(key);
         });
         store.removeItem('cornel_call_lead');
         store.removeItem('cornel_wa_lead');
