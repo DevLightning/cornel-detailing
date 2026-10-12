@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head><meta charset="UTF-8" /><title>perf probe</title>
+  <style>html,body{margin:0;font:12px/1.5 monospace}iframe{border:0;display:block}</style></head>
+  <body>
+    <!-- Build only page: loads a page in an iframe and reports the main thread
+         cost that decides how quickly a tap feels answered. -->
+    <pre id="report">running</pre>
+    <script>
+      var qp = new URLSearchParams(location.search);
+      var W = parseInt(qp.get("w") || "390", 10), H = parseInt(qp.get("h") || "800", 10);
+      document.write('<iframe id="f" src="' + (qp.get("page") || "/index.html") +
+                     '" width="' + W + '" height="' + H + '"></iframe>');
+    </script>
+    <script>
+      function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("f");
+        var w = f.contentWindow, d = f.contentDocument;
+        var longest = 0, tasks = 0, lcp = 0;
+        try {
+          new w.PerformanceObserver(function (l) {
+            l.getEntries().forEach(function (e) { tasks++; if (e.duration > longest) longest = e.duration; });
+          }).observe({ type: "longtask", buffered: true });
+          new w.PerformanceObserver(function (l) {
+            var es = l.getEntries();
+            lcp = es[es.length - 1].startTime;
+          }).observe({ type: "largest-contentful-paint", buffered: true });
+        } catch (e) {}
+        await sleep(2500);
+
+        var nav = w.performance.getEntriesByType("navigation")[0] || {};
+        var scripts = w.performance.getEntriesByType("resource")
+          .filter(function (r) { return /\.js(\?|$)/.test(r.name); });
+        var jsBytes = scripts.reduce(function (a, r) { return a + (r.encodedBodySize || 0); }, 0);
+        var paint = w.performance.getEntriesByType("paint");
+        var fcp = (paint.filter(function (p) { return p.name === "first-contentful-paint"; })[0] || {}).startTime || 0;
+
+        // how much layout a tap has to fight through
+        var t0 = w.performance.now();
+        var h = d.documentElement.scrollHeight;
+        var layout = w.performance.now() - t0;
+
+        var out = [];
+        out.push("# " + (qp.get("page") || "/index.html") + "  at " + W + "px");
+        out.push("  DOMContentLoaded handlers   " + ((nav.domContentLoadedEventEnd - nav.domContentLoadedEventStart) || 0).toFixed(1) + " ms   (our scripts' setup work)");
+        out.push("  first contentful paint      " + fcp.toFixed(0) + " ms");
+        out.push("  largest contentful paint    " + lcp.toFixed(0) + " ms");
+        out.push("  longest single task         " + longest.toFixed(1) + " ms   (" + tasks + " tasks over 50ms)");
+        out.push("  forced layout of whole page " + layout.toFixed(1) + " ms   (page is " + h + "px tall)");
+        out.push("  javascript downloaded       " + (jsBytes / 1024).toFixed(1) + " kB over " + scripts.length + " files");
+        document.getElementById("report").textContent = out.join("\n");
+      });
+    </script>
+  </body>
+</html>

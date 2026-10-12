@@ -30,7 +30,7 @@ JOBS = [
     # the four service cards, shared by both town pages
     ("aussen",           "mercedes-vito-exterieur.jpg", 4 / 3.0, CARD, 80),
     ("innen",            "porsche-cockpit.jpg",         4 / 3.0, CARD, 80),
-    ("politur",          "lack-reflexion-nahaufnahme.jpg", 4 / 3.0, CARD, 80),
+    ("politur",          "citroen-reflexion.jpg",       4 / 3.0, CARD, 80),
     ("versiegelung",     "aston-martin-rot-exterieur.jpg", 4 / 3.0, CARD, 80),
 ]
 

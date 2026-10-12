@@ -136,3 +136,14 @@ Before the work is called done:
 42. `build/verify_seo.py` fails the build if a link in it points at a page
     that does not exist, at a missing section anchor, or at a domain other
     than corneldetailing.com.
+
+## 11. Snippets and speed
+
+43. A meta description must fit a mobile snippet: at most ~670px at 14px
+    Arial, roughly 100 characters. Measure, do not count characters.
+44. Titles stay under ~580px at 20px Arial with the target keyword first.
+45. Page scripts start in two waves: everything a visitor can touch
+    immediately in the DOMContentLoaded handler, everything below the fold
+    inside requestIdleCallback. No single task may exceed 50ms.
+46. Long pages set `content-visibility: auto` on below-fold sections
+    (`.tp-page .section`) so the first paint does not lay out the whole page.

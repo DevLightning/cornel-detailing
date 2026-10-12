@@ -1907,31 +1907,42 @@ function setupLightbox() {
   }
 }
 
+/* Startup in two waves. Wave one is everything a visitor can touch in the
+   first moment: the call and WhatsApp buttons, the header, the floating bar
+   and the reveal. Wave two is everything below the fold, moved off the
+   critical path with requestIdleCallback so a tap right after load is not
+   waiting behind gallery, reviews and lightbox work. */
 document.addEventListener("DOMContentLoaded", () => {
   showDevBanner();
-  renderFeaturedProjects();
-  renderShowcaseStrip();
-  renderGallery();
-  renderPackages();
-  renderReviews();
-  renderGalleryFilters();
-  setupGalleryStats();
   setupStaticText();
-  setupActionLinks();
+  setupActionLinks();      // makes the call and WhatsApp buttons work
   setupMobileCta();
-  setupMapFacade();
-  setupCtaBarAutoHide();
-  setupPackageDetails();
-  setupReveal();
-  setupShowcaseSwipe();
-  setupReviewsCarousel();
   setupMobileMenu();
   setupScrollHeader();
-  setupHeaderSheen();
-  setupActiveNav();
-  setupNavPill();
-  setupGalleryFilter();
-  setupLightbox();
-  setupVideoShowcase();
-  setupReviewCount();
+  setupCtaBarAutoHide();
+  setupReveal();
+  renderPackages();        // only hydrates: the markup is already in the HTML
+
+  const later = () => {
+    renderFeaturedProjects();
+    renderShowcaseStrip();
+    renderGallery();
+    renderReviews();
+    renderGalleryFilters();
+    setupGalleryStats();
+    setupMapFacade();
+    setupPackageDetails();
+    setupShowcaseSwipe();
+    setupReviewsCarousel();
+    setupHeaderSheen();
+    setupActiveNav();
+    setupNavPill();
+    setupGalleryFilter();
+    setupLightbox();
+    setupVideoShowcase();
+    setupReviewCount();
+  };
+  if (window.requestIdleCallback) requestIdleCallback(later, { timeout: 1200 });
+  else setTimeout(later, 1);
 });
+
