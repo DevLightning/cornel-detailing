@@ -202,3 +202,26 @@ Before the work is called done:
     scrolls, and without this the shot shows blanks a real visitor never sees.
     Never diagnose a missing image from a screenshot alone: confirm in the
     browser with `naturalWidth > 0`.
+
+## 14. Polish checks
+
+58. `python build/run_polish_check.py` audits every page at phone and desktop
+    width for text size, contrast against the resolved background, tap target
+    size, duplicate ids, missing accessible names, heading order, stray
+    hyphens and horizontal overflow. Run it after any visual change.
+59. It reports contrast only where the backdrop is a solid colour. Text over a
+    photo or a gradient is reported as ONPHOTO, because a computed ratio there
+    would be fiction. Measure those by sampling the real pixels with a canvas,
+    as was done for the service card prices (6.4:1 to 9.8:1).
+60. Known and accepted: the Google star glyphs are 1.71:1 on white. They are
+    `aria-hidden`, decorative, and the rating is printed beside them as "5,0"
+    in dark text, so no information depends on the colour.
+61. Text floor is 11.5px. Below that a label stops being readable on a phone.
+62. Every control a finger hits is at least 44px tall. Where the visual must
+    stay small, grow the hit area with a transparent `::after` carrying
+    negative insets, never the box. Grow vertically first so an expanded area
+    does not swallow the control next to it.
+63. The header is identical on every page except the two legal pages: nav,
+    then the phone number, then WhatsApp. The phone button was missing from
+    twelve of fourteen pages, which on a local trade site is a conversion bug,
+    not a style detail. It lives in `chrome_parts.py` for the town pages.

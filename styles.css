@@ -45,7 +45,7 @@
   --off-white: #f5f7fa;
   --grey-50: #eef0f4;
   --grey-100: #d8dce6;
-  --grey-400: #7a8194;
+  --grey-400: #6b7285;        /* text on white: 4.8:1, was 3.89:1 */
   --grey-500: #636a7a;
   --grey-600: #4a5166;
   --grey-700: #363d52;
@@ -536,9 +536,9 @@ body::after {
   border-radius: 999px;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.12);
-  color: rgba(255,255,255,0.6);
+  color: rgba(255,255,255,0.72);
   font-family: var(--font-heading);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -803,7 +803,7 @@ body::after {
   display: inline-flex; align-items: center;
   height: 28px; padding: 0 12px; border-radius: 999px;
   font-family: var(--font-heading);
-  font-size: 0.68rem; font-weight: 700;
+  font-size: 0.72rem; font-weight: 700;
   letter-spacing: 0.06em; text-transform: uppercase;
 }
 
@@ -815,7 +815,7 @@ body::after {
 .media-kicker {
   align-self: flex-start;
   background: rgba(255,255,255,0.12); color: #fff;
-  border: 1px solid rgba(255,255,255,0.08); font-size: 0.62rem;
+  border: 1px solid rgba(255,255,255,0.08); font-size: 0.72rem;
 }
 
 /* ===================== TYPOGRAPHY ===================== */
@@ -1206,7 +1206,7 @@ body::after {
   backdrop-filter: blur(8px);
   border-color: rgba(255,255,255,0.20);
   color: rgba(255,255,255,0.90);
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   letter-spacing: 0.12em;
 }
 
@@ -1392,7 +1392,7 @@ body::after {
   border-radius: 999px;
   background: var(--grey-50);
   color: var(--grey-600);
-  font-size: 0.65rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
@@ -1806,7 +1806,7 @@ body::after {
 
 .gallery-hero-heading { max-width: 580px; margin: 0 auto; }
 .gallery-hero-heading h1 { color: #fff; }
-.gallery-hero-heading p  { color: rgba(255,255,255,0.44); }
+.gallery-hero-heading p  { color: rgba(255,255,255,0.62); }   /* 4.37:1 -> 6.6:1 on the dark hero */
 
 /* Stat chips */
 .gallery-hero-stats {
@@ -1843,8 +1843,8 @@ body::after {
 }
 
 .gallery-stat span {
-  font-size: 0.66rem;
-  color: rgba(255,255,255,0.38);
+  font-size: 0.72rem;
+  color: rgba(255,255,255,0.6);   /* 3.57:1 -> 5.9:1 on the dark hero */
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
@@ -2002,8 +2002,8 @@ body::after {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.1);
-  color: rgba(255,255,255,0.75);
-  font-size: 0.62rem;
+  color: rgba(255,255,255,0.88);
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-transform: uppercase;
@@ -3658,7 +3658,7 @@ body::after {
   .ceramic-actions { justify-self: stretch; align-items: stretch; }
   .ceramic-actions .button { width: 100%; min-width: 0; justify-content: center; }
   .ceramic-video-toggle { bottom: 10px; right: 10px; }
-  .ceramic-video-badge { top: 10px; left: 10px; padding: 5px 9px; font-size: 0.65rem; }
+  .ceramic-video-badge { top: 10px; left: 10px; padding: 5px 10px; font-size: 0.72rem; }
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -3810,9 +3810,9 @@ body::after {
   border: 1px solid rgba(255,255,255,0.28);
   backdrop-filter: blur(10px) saturate(1.4);
   -webkit-backdrop-filter: blur(10px) saturate(1.4);
-  color: rgba(255,255,255,0.92);
+  color: rgba(255,255,255,0.96);
   font-family: var(--font-heading);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -3928,7 +3928,7 @@ body::after {
   }
   .ss-card-info { padding: 16px 18px 18px; gap: 6px; }
   .ss-card-title { font-size: 1.1rem; }
-  .ss-card-label { font-size: 0.64rem; padding: 4px 9px; }
+  .ss-card-label { font-size: 0.72rem; padding: 4px 10px; }
   /* Hide edge-fades on mobile so cards aren't dimmed at edges */
   .showcase-strip-wrap::before,
   .showcase-strip-wrap::after { display: none; }
@@ -5562,7 +5562,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   background: var(--brand-soft);
   color: var(--brand-deep);
   font-family: var(--font-heading);
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -5955,7 +5955,7 @@ a, button { -webkit-tap-highlight-color: transparent; }
   background: var(--brand);
   color: var(--on-brand);
   font-family: var(--font-heading);
-  font-size: 0.64rem;
+  font-size: 0.72rem;
   font-weight: 800;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -5994,6 +5994,67 @@ a, button { -webkit-tap-highlight-color: transparent; }
   }
 }
 
+
+/* ════════════════════════════════════════════════════════════════════════════
+   TAP TARGETS
+   Every control a finger has to hit is at least 44px tall. These controls are
+   deliberately small on screen, so the hit area is grown with a transparent
+   ::after instead of the box, exactly as .cb-btn already does: nothing moves,
+   the target just gets easier to hit. Growth is vertical first, so an expanded
+   area never swallows the control next to it.
+   ════════════════════════════════════════════════════════════════════════════ */
+.brand,
+.footer-phone,
+.reviews-links a,
+.location-links a,
+.topnav a[href],
+.cb-link,
+.footer-links a,
+.footer-links .footer-cookie,
+.hero-link,
+.gallery-filter-btn,
+.video-toggle-btn { position: relative; }
+
+.brand::after,
+.footer-phone::after,
+.reviews-links a::after,
+.location-links a::after,
+.topnav a[href]::after,
+.cb-link::after,
+.footer-links a::after,
+.footer-links .footer-cookie::after,
+.hero-link::after,
+.topnav-cta::after,
+.topnav-call::after,
+.gallery-filter-btn::after,
+.lightbox-close::after,
+.lightbox-nav::after,
+.video-toggle-btn::after {
+  content: "";
+  position: absolute;
+  pointer-events: auto;
+}
+
+/* 21px tall in the cookie banner */
+.cb-link::after { inset: -12px -5px; }
+/* 22px tall under the hero headline */
+.hero-link::after { inset: -12px -8px; }
+/* 38px tall rows and pills */
+.footer-links a::after,
+.footer-links .footer-cookie::after,
+.topnav-cta::after,
+.topnav-call::after,
+.brand::after,
+.topnav a[href]::after,
+.gallery-filter-btn::after { inset: -4px 0; }
+.footer-phone::after { inset: -11px -6px; }
+/* inline links that are really navigation */
+.reviews-links a::after { inset: -3px -4px; }
+.location-links a::after { inset: -14px -4px; }
+/* 34px to 40px square controls */
+.lightbox-close::after,
+.lightbox-nav::after { inset: -3px; }
+.video-toggle-btn::after { inset: -5px; }
 
 /* ════════════════════════════════════════════════════════════════════════════
    TOWN PAGES · Gloggnitz and Neunkirchen

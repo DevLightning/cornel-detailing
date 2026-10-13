@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>polish check</title>
+    <style>
+      html, body { margin: 0; font: 13px/1.5 monospace; }
+      #frame { border: 0; display: block; }
+    </style>
+  </head>
+  <body>
+    <!-- Build-only page: audits a real page in an iframe for the things the
+         other checks do not cover · text size, contrast, touch targets,
+         duplicate ids, accessible names, heading order and stray hyphens.
+         Never deployed (see .vercelignore). -->
+    <pre id="report">running</pre>
+    <script>
+      var params = new URLSearchParams(location.search);
+      var W = parseInt(params.get("w") || "390", 10);
+      var H = parseInt(params.get("h") || "800", 10);
+      var page = params.get("page") || "../index.html";
+      document.write('<iframe id="frame" src="' + page + '" width="' + W + '" height="' + H + '"></iframe>');
+    </script>
+    <script>
+      var log = [];
+      function note(kind, msg) { log.push(kind + "  " + msg); }
+
+      function lum(c) {
+        var f = function (v) { v /= 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); };
+        return 0.2126 * f(c[0]) + 0.7152 * f(c[1]) + 0.0722 * f(c[2]);
+      }
+      function parseColor(s) {
+        var m = /rgba?\(([^)]+)\)/.exec(s || "");
+        if (!m) return null;
+        var p = m[1].split(",").map(parseFloat);
+        return [p[0], p[1], p[2], p.length > 3 ? p[3] : 1];
+      }
+      // Walk up for the first background that is not see through. If anything
+      // on the way paints an image or a gradient, the real backdrop is pixels,
+      // not a colour, and a computed ratio would be fiction: say so instead.
+      function bgOf(el, w) {
+        var n = el, painted = false;
+        while (n && n.nodeType === 1) {
+          var cs = w.getComputedStyle(n);
+          if (cs.backgroundImage && cs.backgroundImage !== "none") painted = true;
+          var c = parseColor(cs.backgroundColor);
+          if (c && c[3] > 0.92) return { color: c, painted: painted };
+          n = n.parentElement;
+        }
+        return { color: [255, 255, 255, 1], painted: painted };
+      }
+      function ratio(a, b) {
+        var la = lum(a), lb = lum(b);
+        return (Math.max(la, lb) + 0.05) / (Math.min(la, lb) + 0.05);
+      }
+
+      window.addEventListener("load", async function () {
+        var f = document.getElementById("frame");
+        var w = f.contentWindow, d = f.contentDocument;
+        await new Promise(function (r) { setTimeout(r, 2600); });
+
+        // the fade in starts at opacity 0; reveal everything so text is measurable
+        var st = d.createElement("style");
+        st.textContent = ".reveal,.reveal *{opacity:1!important;transform:none!important}";
+        d.head.appendChild(st);
+        await new Promise(function (r) { setTimeout(r, 400); });
+
+        log.push("# " + page + "  at " + W + "px");
+
+        // ── duplicate ids ────────────────────────────────────────────────
+        var ids = {}, dup = [];
+        [].forEach.call(d.querySelectorAll("[id]"), function (el) {
+          if (ids[el.id]) { if (dup.indexOf(el.id) < 0) dup.push(el.id); }
+          ids[el.id] = 1;
+        });
+        if (dup.length) note("DUPID", dup.join(", "));
+
+        // ── text: size and contrast ──────────────────────────────────────
+        var small = {}, lowC = {}, painted = {}, seen = 0;
+        var walker = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT);
+        var node;
+        while ((node = walker.nextNode())) {
+          var t = node.nodeValue.replace(/\s+/g, " ").trim();
+          if (t.length < 3) continue;
+          var el = node.parentElement;
+          if (!el || el.closest("script,style,noscript,svg")) continue;
+          var r = el.getBoundingClientRect();
+          if (r.width < 2 || r.height < 2) continue;
+          var cs = w.getComputedStyle(el);
+          if (cs.visibility === "hidden" || cs.display === "none") continue;
+          if (parseFloat(cs.opacity) < 0.1) continue;
+          seen++;
+          var size = parseFloat(cs.fontSize);
+          var key = el.tagName.toLowerCase() + "." + (el.className && el.className.baseVal === undefined
+            ? String(el.className).trim().split(/\s+/).slice(0, 2).join(".") : "");
+          if (size < 11.5) {   // the action floor: micro labels below this are hard to read
+            small[key] = Math.min(small[key] === undefined ? 99 : small[key], Math.round(size * 10) / 10);
+          }
+          var fg = parseColor(cs.color);
+          if (fg) {
+            var res = bgOf(el, w), bg = res.color;
+            // blend a translucent colour over its backdrop before comparing
+            if (fg[3] < 1) {
+              fg = [fg[0] * fg[3] + bg[0] * (1 - fg[3]),
+                    fg[1] * fg[3] + bg[1] * (1 - fg[3]),
+                    fg[2] * fg[3] + bg[2] * (1 - fg[3])];
+            }
+            var cr = ratio(fg, bg);
+            var big = size >= 24 || (size >= 18.66 && parseInt(cs.fontWeight, 10) >= 700);
+            var floor = big ? 3 : 4.5;
+            if (cr < floor) {
+              var k = key + " " + Math.round(size) + "px";
+              if (res.painted) {
+                painted[k] = 1;            // sits on a photo or a gradient
+              } else if (!lowC[k] || lowC[k] > cr) {
+                lowC[k] = Math.round(cr * 100) / 100;
+              }
+            }
+          }
+        }
+        Object.keys(small).sort().forEach(function (k) { note("SMALL", k + " = " + small[k] + "px"); });
+        Object.keys(lowC).sort().forEach(function (k) { note("CONTRAST", k + " = " + lowC[k] + ":1"); });
+        Object.keys(painted).sort().forEach(function (k) { note("ONPHOTO", k + " · over an image or gradient, measure the pixels"); });
+
+        // ── touch targets and accessible names ───────────────────────────
+        // A control may be small on screen but carry a bigger hit area through
+        // a transparent ::after with negative insets. Measure what a finger
+        // actually hits, not the painted box.
+        function grown(el, r) {
+          var cs = w.getComputedStyle(el, "::after");
+          if (!cs || !cs.content || cs.content === "none" || cs.position !== "absolute") return r;
+          function neg(v) { var n = parseFloat(v); return (!isNaN(n) && n < 0) ? -n : 0; }
+          return {
+            width: r.width + neg(cs.left) + neg(cs.right),
+            height: r.height + neg(cs.top) + neg(cs.bottom)
+          };
+        }
+
+        var tiny = {}, noName = {};
+        [].forEach.call(d.querySelectorAll("a[href], button, summary, input, select"), function (el) {
+          var box = el.getBoundingClientRect();
+          var r = grown(el, box);
+          if (box.width < 2 || box.height < 2) return;
+          var cs = w.getComputedStyle(el);
+          if (cs.display === "none" || cs.visibility === "hidden") return;
+          var k = el.tagName.toLowerCase() + "." +
+            (el.className && el.className.baseVal === undefined
+              ? String(el.className).trim().split(/\s+/).slice(0, 2).join(".") : "");
+          // inline links inside a paragraph are text, not targets
+          var inline = el.tagName === "A" && cs.display === "inline" && el.closest("p,li,address");
+          if (!inline && (r.height < 44 || r.width < 24)) {
+            var v = Math.round(r.width) + "x" + Math.round(r.height);
+            if (!tiny[k]) tiny[k] = v;
+          }
+          var name = (el.getAttribute("aria-label") || el.textContent || "").replace(/\s+/g, " ").trim();
+          if (!name) noName[k] = (el.getAttribute("href") || "").slice(0, 40);
+        });
+        Object.keys(tiny).sort().forEach(function (k) { note("TOUCH", k + " = " + tiny[k]); });
+        Object.keys(noName).sort().forEach(function (k) { note("NONAME", k + " " + noName[k]); });
+
+        // ── heading order ────────────────────────────────────────────────
+        var last = 0, jumps = [];
+        [].forEach.call(d.querySelectorAll("h1,h2,h3,h4,h5,h6"), function (h) {
+          var lv = parseInt(h.tagName.slice(1), 10);
+          if (last && lv > last + 1) {
+            jumps.push("h" + last + " -> h" + lv + " at '" + h.textContent.trim().slice(0, 30) + "'");
+          }
+          last = lv;
+        });
+        jumps.forEach(function (j) { note("HEADING", j); });
+        var h1s = d.querySelectorAll("h1").length;
+        if (h1s !== 1) note("HEADING", h1s + " h1 elements");
+
+        // ── stray hyphen used as punctuation in visible copy ─────────────
+        var hyph = [];
+        var w2 = d.createTreeWalker(d.body, NodeFilter.SHOW_TEXT);
+        while ((node = w2.nextNode())) {
+          var s = node.nodeValue;
+          if (!/\s-\s/.test(s)) continue;
+          var el2 = node.parentElement;
+          if (!el2 || el2.closest("script,style,noscript")) continue;
+          var frag = s.replace(/\s+/g, " ").trim().slice(0, 50);
+          if (hyph.indexOf(frag) < 0) hyph.push(frag);
+        }
+        hyph.slice(0, 5).forEach(function (x) { note("HYPHEN", x); });
+
+        // ── horizontal overflow ──────────────────────────────────────────
+        var sw = d.documentElement.scrollWidth, cw = d.documentElement.clientWidth;
+        if (sw > cw + 1) {
+          var off = [];
+          [].forEach.call(d.body.querySelectorAll("*"), function (el) {
+            var r = el.getBoundingClientRect();
+            if (r.width === 0 || r.right <= cw + 1) return;
+            off.push(el.tagName.toLowerCase() + "." +
+              (el.className && el.className.baseVal === undefined
+                ? String(el.className).trim().split(/\s+/).slice(0, 2).join(".") : "") +
+              " right=" + Math.round(r.right));
+          });
+          note("OVERFLOW", sw + " vs " + cw + " | " + off.slice(0, 5).join(" ; "));
+        }
+
+        log.push("checked " + seen + " text runs");
+        log.push("END");
+        document.getElementById("report").textContent = log.join("\n");
+      });
+    </script>
+  </body>
+</html>
