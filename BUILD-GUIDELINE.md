@@ -173,3 +173,32 @@ Before the work is called done:
     sweep. Note that IntersectionObserver callbacks and requestAnimationFrame
     do not fire reliably under Chrome's `--virtual-time-budget`: assert
     reveal wiring statically, not by scrolling in the harness.
+
+## 13. Town page layout
+
+52. Regenerating the town pages writes an EMPTY `<!-- BUILD:pricetable -->`
+    placeholder. `python build/gen_price_table.py` must run straight after
+    `make_town_pages.py`, or three pages silently lose their price table.
+    `verify_seo.py` catches it ("both town pages carry the generated price
+    table with 9 rows"), so never skip the verifier after a regeneration.
+53. A town page IS the homepage: same sections, same order, same components
+    (hero, showcase strip, value grid, reviews, glass row, location card,
+    FAQ, CTA), with only the headline, the lead and the location copy fitted
+    to the town, plus the price table. Anything bespoke here made the pages
+    drift away from the site they belong to. A bespoke town layout was tried
+    twice and rejected both times.
+54. Nothing in styles.css may style only a town page. The town layer holds
+    exactly two things: .tp-more and the .tp-page content-visibility rule.
+    If a town page needs a look, give it to the shared component so the
+    homepage gets it too.
+55. The town hero preloads the same background the homepage preloads
+    (background_rs3.webp). Never preload an image the page does not show.
+56. Decorative lead-ins stay short. The FAQ answers carry the substance and
+    the word count; `verify_seo.py` enforces 600+ visible words per town page,
+    so trim the lead-ins, never the answers. Current counts: Gloggnitz 657,
+    Neunkirchen 660.
+57. `scratchpad/shot.py` forces `loading="lazy"` images to eager before
+    capturing. The screenshot iframe is the full page height so nothing ever
+    scrolls, and without this the shot shows blanks a real visitor never sees.
+    Never diagnose a missing image from a screenshot alone: confirm in the
+    browser with `naturalWidth > 0`.

@@ -21,22 +21,17 @@ PREFIX = "p-"
 
 HERO = (640, 1200)
 CARD = (560, 1120)
+# The two feature cards in the service mosaic are wide, so they get their own
+# 16:9 crop instead of a CSS crop of the 4:3 file: no wasted pixels. Every
+# original is portrait, so a 16:9 crop is limited by the source width; 1120
+# still covers the widest slot (about 800 CSS px) at 1.4x.
+WIDE = (720, 1120)
 
 # name, source, aspect (w/h), widths, quality
-JOBS = [
-    # one hero per town page
-    ("hero-gloggnitz",   "porsche-cabrio-finish.jpg",  3 / 2.0, HERO, 82),
-    ("hero-neunkirchen", "ford-transit-cockpit.jpg",   3 / 2.0, HERO, 82),
-    # the four service cards, shared by both town pages
-    ("aussen",           "mercedes-vito-exterieur.jpg", 4 / 3.0, CARD, 80),
-    ("innen",            "porsche-cockpit.jpg",         4 / 3.0, CARD, 80),
-    ("politur",          "citroen-reflexion.jpg",       4 / 3.0, CARD, 80),
-    ("versiegelung",     "aston-martin-rot-exterieur.jpg", 4 / 3.0, CARD, 80),
-]
+# The town pages use the homepage hero background, so none of the old town
+# specific crops are needed any more. Only the shared subpage hero is built.
+JOBS = []
 
-# backdrop behind the dark town hero: softened on purpose, it sits under a
-# near solid wash and only adds depth
-SOFT = ("hero-bg-soft", "porsche-cabrio-finish.jpg", 16 / 9.0, (720,), 38)
 # the shared subpage hero background (galerie and the service pages)
 SHARED = ("hero-bg", "porsche-cabrio-finish.jpg", 16 / 9.0, (1200,), 48)
 
@@ -93,7 +88,6 @@ def main():
     total = 0
     for job in JOBS:
         total += run(job)
-    total += run(SOFT, soften=True)
     total += run(SHARED)
     n = len([f for f in os.listdir(GALLERY) if f.startswith(PREFIX)])
     print("\n%d files, %.0f kB, all in assets/gallery/ next to the existing photos"
