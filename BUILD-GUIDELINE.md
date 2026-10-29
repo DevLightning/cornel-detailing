@@ -225,3 +225,26 @@ Before the work is called done:
     then the phone number, then WhatsApp. The phone button was missing from
     twelve of fourteen pages, which on a local trade site is a conversion bug,
     not a style detail. It lives in `chrome_parts.py` for the town pages.
+
+## 15. Search titles
+
+64. One pattern for every page that targets a search: `Keyword Ort · Cornel
+    Detailing`. The keyword comes first because that is what people type and
+    what Google bolds. Guides keep their question or statement form, which is
+    what wins those searches.
+65. One town per title. A service page that named two towns matched neither
+    search exactly; the second town lives in the body text and headings
+    instead, where it still counts.
+66. Never use `&` in a title, a meta value or structured data. Google rendered
+    `&amp;` literally in the live snippet for corneldetailing.com, and inside a
+    JSON-LD script block nothing decodes it at all. Write `und`. Enforced by
+    `verify_seo.py` ("no ampersand in any title, meta value or structured
+    data"), proven to fail when the entity is reintroduced.
+67. The separator is a real `·` character, not `&middot;`, for the same reason.
+68. og:title and twitter:title follow the title, with the brand appended when
+    the title does not already carry it, so a shared link always names the
+    business.
+69. Measure snippets, never count characters: `Keramikversiegelung` costs far
+    more width than nineteen average characters. `verify_seo.py` measures every
+    title against 580px and every description against 680px in Arial, the
+    mobile budgets. Two town descriptions had drifted to 1045px and 985px.

@@ -7,6 +7,7 @@ Exit code 0 = every check passed. Failures are printed with the file and why.
 from __future__ import print_function
 
 import io, json, os, re, sys
+from html import unescape
 from html.parser import HTMLParser
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -524,6 +525,88 @@ def check_reveal_wiring():
     ok("every fade-in element built by script.js is scanned in after rendering "
        "(%d generated)" % len(generated))
 
+def check_no_ampersand(pages):
+    """No ampersand in anything a search engine reads.
+
+    Google rendered "&amp;" literally in the live snippet for the homepage:
+    the owner saw "Gloggnitz &amp; Neunkirchen" in the search result. Inside
+    a JSON-LD script block it is worse, because nothing decodes it there at
+    all. The word "und" is better German anyway, so the character is simply
+    not used in a title, a meta value or structured data.
+    """
+    # &auml; &euro; &middot; and friends are decoded correctly by Google; it is
+    # the ampersand itself, raw or as &amp;, that comes out wrong.
+    def amp(v):
+        return "&amp;" in v or re.search(r"&(?!\w+;)", v) is not None
+
+    bad = []
+    for f in pages:
+        s = read(f)
+        t = re.search(r"<title>(.*?)</title>", s, re.S)
+        if t and amp(t.group(1)):
+            bad.append("%s: title" % f)
+        for m in re.finditer(r'<meta ([^>]*?)content="([^"]*)"', s):
+            if not amp(m.group(2)):
+                continue
+            key = re.search(r'(?:name|property)="([^"]+)"', m.group(1))
+            key = key.group(1) if key else "?"
+            if key in ("description", "og:title", "og:description",
+                       "twitter:title", "twitter:description", "keywords"):
+                bad.append("%s: meta %s" % (f, key))
+        for blk in re.findall(r'<script type="application/ld\+json">(.*?)</script>', s, re.S):
+            for m in re.finditer(r'"([A-Za-z@]+)":\s*"([^"]*&[^"]*)"', blk):
+                if amp(m.group(2)):
+                    bad.append("%s: JSON-LD %s" % (f, m.group(1)))
+    if bad:
+        for b in sorted(set(bad)):
+            fail("ampersand", b + " \u00b7 write 'und', Google shows the entity")
+    else:
+        ok("no ampersand in any title, meta value or structured data")
+
+def check_snippet_widths(pages):
+    """Titles and descriptions must fit the snippet Google actually draws.
+
+    Measured in pixels with Arial, not counted in characters: 'Keramik-
+    versiegelung' costs far more width than twelve average characters. The
+    budgets are the mobile ones, because that is where the traffic is.
+    """
+    try:
+        from PIL import ImageFont
+    except ImportError:
+        warn("snippet widths", "Pillow not installed, widths not measured")
+        return
+    font_path = None
+    for c in (r"C:\Windows\Fonts\arial.ttf", "/usr/share/fonts/truetype/msttcorefonts/Arial.ttf"):
+        if os.path.exists(c):
+            font_path = c
+            break
+    if not font_path:
+        warn("snippet widths", "Arial not found, widths not measured")
+        return
+    t20 = ImageFont.truetype(font_path, 20)
+    d14 = ImageFont.truetype(font_path, 14)
+
+    bad = []
+    for f in pages:
+        s = read(f)
+        t = re.search(r"<title>(.*?)</title>", s, re.S)
+        if t:
+            v = unescape(t.group(1)).strip()
+            w = t20.getlength(v)
+            if w > 580:
+                bad.append("%s: title %.0fpx over the 580px budget" % (f, w))
+        d = re.search(r'<meta name="description" content="(.*?)"', s, re.S)
+        if d:
+            v = unescape(d.group(1)).strip()
+            w = d14.getlength(v)
+            if w > 680:
+                bad.append("%s: description %.0fpx over the 680px budget" % (f, w))
+    if bad:
+        for b in bad:
+            fail("snippet too wide", b)
+    else:
+        ok("every title fits 580px and every description 680px (measured in Arial)")
+
 def main():
     pages = html_files()
     check_legacy_slug()
@@ -534,6 +617,8 @@ def main():
     check_generated_blocks()
     check_sitemap(pages)
     check_dashes(pages)
+    check_no_ampersand(pages)
+    check_snippet_widths(pages)
     check_images(pages)
     check_assets(pages)
     check_images_sized(pages)

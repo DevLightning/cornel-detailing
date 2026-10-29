@@ -184,6 +184,36 @@
         }
         hyph.slice(0, 5).forEach(function (x) { note("HYPHEN", x); });
 
+        // A section with overflow:hidden silently CLIPS anything too wide for
+        // it. The page then reports no horizontal overflow while content is
+        // cut off on screen, which is how a broken grid passed every check.
+        var clipped = {};
+        [].forEach.call(d.querySelectorAll("*"), function (box) {
+          var bcs = w.getComputedStyle(box);
+          if (bcs.overflowX !== "hidden" && bcs.overflowX !== "clip") return;
+          var br = box.getBoundingClientRect();
+          if (br.width < 40) return;
+          [].forEach.call(box.querySelectorAll("*"), function (el) {
+            var r = el.getBoundingClientRect();
+            if (r.width < 2) return;
+            if (r.right <= br.right + 1 && r.left >= br.left - 1) return;
+            var cs2 = w.getComputedStyle(el);
+            if (cs2.position === "absolute" || cs2.position === "fixed") return;
+            // a horizontal carousel is meant to run wider than its frame
+            var scroller = false;
+            for (var a = el.parentElement; a && a !== box; a = a.parentElement) {
+              var ox = w.getComputedStyle(a).overflowX;
+              if (ox === "auto" || ox === "scroll") { scroller = true; break; }
+            }
+            if (scroller) return;
+            var k = (box.id ? "#" + box.id : box.tagName.toLowerCase()) + " clips " +
+              el.tagName.toLowerCase() + "." +
+              (el.className && el.className.baseVal === undefined
+                ? String(el.className).trim().split(/\s+/)[0] : "");
+            clipped[k] = Math.round(r.width) + "px wide in " + Math.round(br.width) + "px";
+          });
+        });
+        Object.keys(clipped).sort().slice(0, 6).forEach(function (k) { note("CLIPPED", k + " · " + clipped[k]); });
         // ── horizontal overflow ──────────────────────────────────────────
         var sw = d.documentElement.scrollWidth, cw = d.documentElement.clientWidth;
         if (sw > cw + 1) {

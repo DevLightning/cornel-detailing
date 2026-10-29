@@ -46,7 +46,7 @@ def main():
     for page in pages:
         for label, w, h in WIDTHS:
             lines = run(page, w, h)
-            issues = [l for l in lines if re.match(r"^(DUPID|SMALL|CONTRAST|TOUCH|NONAME|HEADING|HYPHEN|OVERFLOW|BROKEN|ONPHOTO)", l)]
+            issues = [l for l in lines if re.match(r"^(DUPID|SMALL|CONTRAST|TOUCH|NONAME|HEADING|HYPHEN|OVERFLOW|BROKEN|ONPHOTO|CLIPPED)", l)]
             if not issues:
                 continue
             print("== %s  (%s %dpx)" % (page, label, w))

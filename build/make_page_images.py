@@ -29,8 +29,12 @@ WIDE = (720, 1120)
 
 # name, source, aspect (w/h), widths, quality
 # The town pages use the homepage hero background, so none of the old town
-# specific crops are needed any more. Only the shared subpage hero is built.
-JOBS = []
+# specific crops are needed any more. What is left is the owner portrait on
+# the homepage, cropped 4:5 so the head sits high in the frame.
+PORTRAIT = (560, 1120)
+JOBS = [
+    ("inhaber", "cornel-istrate-portrait.webp", 4 / 5.0, PORTRAIT, 86),
+]
 
 # the shared subpage hero background (galerie and the service pages)
 SHARED = ("hero-bg", "porsche-cabrio-finish.jpg", 16 / 9.0, (1200,), 48)
