@@ -121,6 +121,10 @@ const packages = [
     prices: { pkw: "ab € 1.499,-", suv: "nach Besichtigung", van: "nach Besichtigung" },
     items: [
       "Individuelle Leistungszusammenstellung nach Kundengespräch",
+      "Lackschonende ganzheitliche Handwäsche",
+      "Entfernung von Teerflecken und Flugrost",
+      "3-stufige Politur zur Entfernung eines Großteils der polierbaren Kratzer",
+      "Auftragen von 2 Schichten Keramikversiegelung mit einer Standzeit von bis zu 60 Monaten",
       "Reinigung und Pflege vom Armaturenbrett, Lenkrad, Schalthebel, Radio, Mittelkonsole, Türinnenverkleidungen, Türfalzen, Kofferraum",
       "Reinigung des Dachhimmels",
       "Reinigung der Sitzpolsterung oder Intensiv-Lederreinigung",
