@@ -525,6 +525,35 @@ def check_reveal_wiring():
     ok("every fade-in element built by script.js is scanned in after rendering "
        "(%d generated)" % len(generated))
 
+def check_price_marks():
+    """Prices shown outside the package list must come from the packages array.
+
+    The service cards say "ab EUR ..." in a tag marked
+    data-price. build/gen_price_marks.py writes those numbers; this fails if a
+    page shows a number the array no longer has, and if the four homepage
+    service cards lose their marker (a number typed by hand).
+    """
+    import gen_price_marks as gpm
+    pkgs = gpm.load_packages()
+    total, stale = 0, []
+    for name in sorted(os.listdir(ROOT)):
+        if not name.endswith(".html"):
+            continue
+        n, bad = gpm.process(os.path.join(ROOT, name), pkgs, write=False)
+        total += n
+        stale += ["%s: %s shows %s, packages say %s" % (name, k, have, want) for k, have, want in bad]
+    home = read("index.html")
+    marks = re.findall(r'data-price="([^"]+)"', home)
+    need = ["min:aussen", "min:innen", "min:politur", "min:versiegelung"]
+    missing = [k for k in need if k not in marks]
+    if stale:
+        fail("price marks", "; ".join(stale) + " (run build/gen_price_marks.py)")
+    elif missing:
+        fail("price marks", "index.html lost the marker(s) %s: a price there is typed by hand" % ", ".join(missing))
+    else:
+        ok("all %d prices shown outside the package list match the packages array" % total)
+
+
 def check_no_ampersand(pages):
     """No ampersand in anything a search engine reads.
 
@@ -628,6 +657,7 @@ def main():
     check_town_pages()
     check_h1_towns()
     check_reveal_wiring()
+    check_price_marks()
 
     print("VERIFY  %d pages\n" % len(pages))
     for o in OKS:

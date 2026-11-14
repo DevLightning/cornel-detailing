@@ -112,9 +112,9 @@
     <!-- the same hero background the homepage preloads -->
     <link rel="preload" as="image" href="assets/gallery/background_rs3.webp" fetchpriority="high" />
 
-    <link rel="stylesheet" href="styles.css?v=54" />
+    <link rel="stylesheet" href="styles.css?v=56" />
     <script src="site-config.js?v=6" defer></script>
-    <script src="script.js?v=33" defer></script>
+    <script src="script.js?v=35" defer></script>
     <script src="consent.js?v=9" defer></script>
   </head>
   <body>
@@ -154,52 +154,35 @@
       <main class="tp-page">
 
         <!-- 1 HERO · the homepage hero, with the town in the headline -->
-        <section class="hero reveal" aria-label="Autoaufbereitung Neunkirchen">
+        <section class="hero" aria-label="Autoaufbereitung Neunkirchen">
           <div class="hero-bg"></div>
           <div class="hero-content">
-            <span class="hero-location">
-              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
-              Bezirk Neunkirchen · Werkstatt in Enzenreith
-            </span>
-            <h1>Professionelle <span class="hero-accent">Autoaufbereitung</span><span class="hero-h1-city">in Neunkirchen.</span></h1>
-            <p class="hero-sub">Innenreinigung · Lackpolitur<br />Keramikversiegelung.</p>
+            <h1><span class="hero-accent">Autoaufbereitung</span> <span class="hero-h1-city">in Neunkirchen.</span></h1>
+            <p class="hero-sub">Von der Handwäsche bis zur Keramikversiegelung.</p>
 
             <div class="hero-actions">
               <a class="button button-whatsapp hero-cta-primary" data-whatsapp-link href="/#kontakt">
                 <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
                 <span>Termin anfragen</span>
               </a>
-              <a class="hero-link hero-link--pulse" href="#preise-neunkirchen">
+              <a class="hero-link" href="#preise-neunkirchen">
                 <span>Alle Preise ansehen</span>
-                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M6 9l6 6 6-6"/></svg>
               </a>
             </div>
 
-            <div class="hero-trust-row" aria-label="Vertrauenssignale">
-              <span class="htb"><span class="htb-stars" aria-hidden="true">★★★★★</span>&nbsp;5,0 · <span id="heroReviewCount">50+</span>&nbsp;Bewertungen</span>
-              <span class="htb-sep" aria-hidden="true"></span>
-              <span class="htb">60 Mon. Schutz</span>
-              <span class="htb-sep" aria-hidden="true"></span>
-              <span class="htb">Abholung inkl.</span>
-            </div>
-            <div class="hero-availability hero-availability--promise">
-              <p class="hap-title">
-                <span class="hap-icon" aria-hidden="true">
-                  <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 2L3 14h7l-1 8 10-12h-7l1-8z"/></svg>
-                </span>
-                Antwort meist in 1 Stunde
-              </p>
-              <p class="hap-sub">Termin vorab per WhatsApp oder Anruf</p>
-            </div>
+            <ul class="hero-trust-row" aria-label="Gut zu wissen">
+              <li class="htb htb--rating"><svg class="stars" viewBox="0 0 108 20" aria-hidden="true"><path d="M10 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M32 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L32 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M54 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L54 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M76 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L76 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M98 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L98 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/></svg><span>5,0 · <span id="heroReviewCount">50+</span> Bewertungen auf Google</span></li>
+              <li class="htb">Abholung inklusive · Antwort meist in 1 Stunde</li>
+            </ul>
           </div>
         </section>
 
         <!-- 2 REFERENZEN · filled by script.js, same strip as the homepage -->
         <section class="showcase-strip reveal" id="referenzen" aria-label="Aktuelle Aufbereitungen aus dem Bezirk Neunkirchen">
-          <div class="showcase-strip-header">
+          <div class="showcase-strip-header section-heading">
             <span class="section-tag">Referenzen</span>
             <h2>Aufbereitungen aus unserer Werkstatt.</h2>
-            <p>Echte Fahrzeuge, echte Ergebnisse · von Porsche bis BMW M3.</p>
           </div>
 
           <div class="showcase-strip-wrap">
@@ -210,6 +193,9 @@
             </div>
           </div>
           <div class="ss-dots" id="showcaseStripDots" aria-hidden="true"></div>
+          <p class="reviews-links">
+            <a href="galerie.html">Alle Arbeiten in der Galerie</a>
+          </p>
         </section>
 
         <!-- 3 LEISTUNGEN -->
@@ -371,7 +357,7 @@
             <span class="section-tag">Bewertungen</span>
             <h2>Das sagen unsere Kunden.</h2>
             <div class="reviews-rating-summary" role="img" aria-label="5,0 von 5 Sternen, über 50 Bewertungen auf Google">
-              <span class="reviews-stars-big" aria-hidden="true">★★★★★</span>
+              <svg class="stars" viewBox="0 0 108 20" aria-hidden="true"><path d="M10 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L10 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M32 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L32 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M54 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L54 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M76 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L76 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/><path d="M98 1.7l2.5 5.2 5.7.8-4.1 4 1 5.7L98 14.7l-5.1 2.7 1-5.7-4.1-4 5.7-.8z"/></svg>
               <strong>5,0</strong>
               <span class="rv-count">· <span id="reviewStatCount">50+</span> Bewertungen</span>
               <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
@@ -389,30 +375,22 @@
           <p class="reviews-note">Auszug aus unseren Google-Bewertungen · von uns nicht auf Echtheit geprüft</p>
         </section>
 
-        <!-- 6 GALERIE UND KONTAKT -->
-        <section class="glass-row reveal">
-          <div class="glass-card glass-card-half">
-            <span class="section-tag">Galerie</span>
-            <h2>Referenzarbeiten und Ergebnisse.</h2>
-            <p>Lackpolitur, Innenreinigung, Versiegelung · in Bildern.</p>
-            <a class="button button-secondary" href="galerie.html">Galerie öffnen</a>
-          </div>
-
-          <div class="glass-card glass-card-half" id="kontakt" aria-label="Termin anfragen Autoaufbereitung Neunkirchen">
+        <!-- 6 KONTAKT -->
+        <section class="glass-card contact-panel reveal" id="kontakt" aria-label="Termin anfragen Autoaufbereitung Neunkirchen">
+          <div class="section-heading">
             <span class="section-tag">Kontakt</span>
-            <h2>Termin anfragen.</h2>
-            <p>Antwort meist in 1 Stunde mit Termin und Preis.</p>
-            <div class="glass-actions">
-              <a class="button button-primary glass-call" data-call-link href="tel:+436764391253">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
-                <span>Jetzt anrufen</span>
-              </a>
-              <a class="button button-secondary glass-wa" data-whatsapp-link href="#kontakt">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
-                <span>Per WhatsApp</span>
-              </a>
-            </div>
-            <p class="glass-micro">Antwort meist in 1 Stunde · Werktags · Keine Verpflichtung</p>
+            <h2>Wann passt es Ihnen?</h2>
+            <p>Antwort meist in 1 Stunde · mit Termin und Preis.</p>
+          </div>
+          <div class="glass-actions">
+            <a class="button button-whatsapp glass-wa" data-whatsapp-link href="#kontakt">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+              <span>Termin anfragen</span>
+            </a>
+            <a class="button button-secondary glass-call" data-call-link href="tel:+436764391253">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+              <span>Anrufen</span>
+            </a>
           </div>
         </section>
 
@@ -438,7 +416,6 @@
                   <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/></svg>
                 </span>
                 <span class="map-facade-title">Karte anzeigen</span>
-                <span class="map-facade-sub">Fördergasse 290, 2640 Enzenreith</span>
                 <span class="map-facade-note">Beim Laden der Karte werden Daten an Google übertragen</span>
               </button>
             </div>

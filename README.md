@@ -29,6 +29,7 @@ erzeugt und duerfen nicht von Hand bearbeitet werden. Nach jeder Preisaenderung:
 ```
 python build/prerender_packages.py     # schreibt die Pakete in index.html
 python build/gen_price_table.py        # schreibt die Preistabellen
+python build/gen_price_marks.py        # schreibt die "ab"-Preise der Leistungskarten
 python build/verify_seo.py             # prueft alles (0 failures erwartet)
 python build/prerender_packages.py --check   # HTML == JavaScript?
 python build/run_behaviour_check.py    # klickt die Seite in Chrome durch

@@ -27,6 +27,12 @@ passes with 0 failures.
 6. Static package HTML in `index.html` and the price tables on the town pages are
    **generated** by `build/prerender_packages.py` between `BUILD:` markers. After any
    price change, re-run the script (see README) and re-verify.
+6b. A price shown anywhere else (the "ab" price on the four homepage service
+    cards) is never typed either. The tag carries a marker, `data-price="min:innen"`
+    or `data-price="pkg:9"`, and `python build/gen_price_marks.py` writes the
+    number from the packages array. `verify_seo.py` fails when a marked price
+    is stale or a service card loses its marker. In `script.js` the same rule
+    is `lowestPkwPrice()`.
 7. The generated static markup must be byte-identical to what `buildPackagesHtml()`
    produces in the browser. This is checked in a real browser, not by eye.
 8. Contact data (phone, WhatsApp, address, service area) stays in `site-config.js`.
@@ -48,7 +54,7 @@ passes with 0 failures.
 12. Mobile first: 360px baseline, verified at 360 / 375 / 412 / 768 / 1280 / 1920.
     No horizontal overflow at any of them. Touch targets >= 44x44px.
 13. Pricing section internals (nesting, card levels, recommended-card treatment)
-    follow memory `pricing-section-design`. The hero keeps its existing composition.
+    follow memory `pricing-section-design`. The hero follows section 16.
 
 ## 4. Copy rules
 
@@ -181,9 +187,9 @@ Before the work is called done:
     `make_town_pages.py`, or three pages silently lose their price table.
     `verify_seo.py` catches it ("both town pages carry the generated price
     table with 9 rows"), so never skip the verifier after a regeneration.
-53. A town page IS the homepage: same sections, same order, same components
-    (hero, showcase strip, value grid, reviews, glass row, location card,
-    FAQ, CTA), with only the headline, the lead and the location copy fitted
+53. A town page IS the homepage: same sections, same components (hero,
+    showcase strip, value grid, reviews, contact card, location card, FAQ,
+    CTA), with only the headline, the lead and the location copy fitted
     to the town, plus the price table. Anything bespoke here made the pages
     drift away from the site they belong to. A bespoke town layout was tried
     twice and rejected both times.
@@ -248,3 +254,61 @@ Before the work is called done:
     more width than nineteen average characters. `verify_seo.py` measures every
     title against 580px and every description against 680px in Arial, the
     mobile budgets. Two town descriptions had drifted to 1045px and 985px.
+
+## 16. One system (November 2026)
+
+The owner's brief: he likes the colours and the style, he dislikes the
+proportions and the lack of symmetry. Two attempts that changed the look were
+rejected on sight (a split hero on a flat panel; a flat skin without glow and
+shadows: "too unprofessional, keep the feeling of the original"). So:
+
+70. Polish means order, never a new look. The original surface stays: the dark
+    workshop photo under the deep vignette, the gold keyword with its glow,
+    the glowing gold button, white blocks with soft shadows, glass cards with
+    the gold top line. Change sizes, spacing, alignment, order and the number
+    of elements. Do not remove a shadow, gradient or glow he did not name.
+71. Every size decision lives in one layer at the end of `styles.css`, between
+    the markers `<<< SYSTEM 2 >>>` and `<<< /SYSTEM 2 >>>`. A new block reads
+    its tokens (`--gap-head`, `--gap-grid`, `--gap-split`, `--pad-card`,
+    `--pad-x`, `--pad-y`, `--btn-h`, `--ico-tile`, `--ico-glyph`, `--fs-h1`,
+    `--fs-h2`, `--fs-h3`, `--fs-lead`, `--fs-body`, `--fs-meta`) and brings no
+    size of its own. Spacing uses the steps 4 8 12 16 24 32 48 64.
+72. Symmetry rule. A block that spans the page has its head (tag, title, at
+    most one sentence) centred over a grid of equal columns, at every width.
+    Only a block that pairs text with a photo, video or map is split in two
+    (Inhaber, Keramik, Standort); there the text is left aligned from 1041px
+    and centred below it. There is no third layout.
+73. One of each. One button height (`--btn-h`: 52px, 60px from 1921px) and the
+    pill shape at every width; one title size per level; three text sizes;
+    one icon tile (`.icon-badge`, `.op-ico`, `.ceramic-benefit-icon`,
+    `.map-facade-pin`); outline icons drawn with one line weight set in CSS
+    (`svg[fill="none"]`, `--ico-stroke`), so a `stroke-width` attribute in the
+    markup no longer matters. Solid marks are only the ones inside buttons,
+    the rating stars and play and pause.
+74. The hero is one centred column on the photo: the keyword in gold, the
+    town line, one sentence, the single WhatsApp button "Termin anfragen", the
+    link "Alle Pakete ansehen", two proof lines. No second button, no pill, no
+    boxed promise. No price in the hero: the owner upsells, so the cheapest
+    package must not be the first number a visitor reads.
+75. The WhatsApp request is labelled "Termin anfragen" wherever it appears on
+    the homepage and the call is "Anrufen". A label that fits a desktop and is
+    cut off on a 390px phone ("Termin per WhatsApp anfr...") is a bug.
+76. Homepage order follows the customer's questions: hero, Referenzen (is the
+    work good), Leistungen (what do I need), Bewertungen, Inhaber, Pakete, the
+    one line call under the packages, Keramik, FAQ, Standort, Kontakt. The
+    page ends on the booking block.
+77. Wide screens are filled, not framed. From 1600px the shell follows the
+    screen (70px margin at 2560px) and from 1921px the text tokens, the button
+    and the icon tile step up together. Check 2560px after any layout change.
+78. When a component's rules are scattered over many layers of the file, lift
+    them out whole and rewrite them in one place rather than adding another
+    override on top. The classes this was done for: the hero, `.value-card`,
+    `.icon-badge`, `.faq-item`, `.mid-cta`, `.location-*`, `.map-facade`.
+    A class shared with other pages (`.hero-location` is also the pill of the
+    subpage heroes) must be given back its rule: after lifting anything out,
+    run the polish check against a copy of the old site and compare.
+79. Stars and other small drawings repeated in a row are written with absolute
+    coordinates, not with `transform` on each path: the screenshot tool and
+    the fade in rules reset transforms inside `.reveal`.
+80. The two town pages are patched in place. The generator that once wrote
+    them lives outside the project and is stale; do not re-run it.

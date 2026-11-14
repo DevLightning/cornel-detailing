@@ -506,15 +506,15 @@ function renderShowcaseStrip() {
   // Terminal card keeps users in the conversion funnel: straight to prices
   // instead of detouring to the gallery page.
   const allCardHtml = `
-    <a class="ss-card ss-card--all reveal" href="#autoaufbereitung-pakete" style="--i:${selected.length}" aria-label="Pakete und Preise ansehen">
+    <a class="ss-card ss-card--all reveal" href="${document.getElementById("autoaufbereitung-pakete") ? "" : "/"}#autoaufbereitung-pakete" style="--i:${selected.length}" aria-label="Pakete und Preise ansehen">
       <div class="ss-card-all-inner">
         <span class="ss-card-all-arrow" aria-hidden="true">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M5 12h14M13 5l7 7-7 7"/>
           </svg>
         </span>
-        <span class="ss-card-all-label">Pakete &amp; Preise</span>
-        <span class="ss-card-all-count">${packages.length} Pakete ab € 49,-</span>
+        <span class="ss-card-all-label">Pakete und Preise</span>
+        <span class="ss-card-all-count">${packages.length} Pakete ab ${lowestPkwPrice()}</span>
       </div>
     </a>
   `;
@@ -614,6 +614,14 @@ function renderGallery() {
    €200 more than the 12-month sealing, the best long-term value for the
    client and the service the ceramic section and the FAQ already recommend. */
 const RECOMMENDED_PACKAGE = 9;
+
+/* Lowest PKW price in the packages array, e.g. "€ 49,-". Anything on the page
+   that says "ab € ..." reads it from here, so a price change in the array
+   can never leave a stale number behind. */
+function lowestPkwPrice() {
+  const amount = (p) => parseInt(p.prices.pkw.replace(/[^\d]/g, ""), 10);
+  return packages.reduce((min, p) => (amount(p) < amount(min) ? p : min)).prices.pkw;
+}
 
 /* buildPackagesHtml() is the single source of the package markup.
    build/prerender_packages.py runs this very function in a real browser and
@@ -1589,6 +1597,18 @@ function setupActiveNav() {
   );
 
   sections.forEach((s) => observer.observe(s));
+
+  // The last menu section sits at the page end and cannot reach the
+  // observer band on a tall window: mark it once the page is fully scrolled.
+  const lastLink = linkMap[sections[sections.length - 1].id];
+  const atEnd = () => {
+    if (window.innerHeight + window.scrollY < document.documentElement.scrollHeight - 4) return;
+    if (!lastLink || lastLink.classList.contains("is-active")) return;
+    navLinks.forEach((l) => l.classList.remove("is-active"));
+    lastLink.classList.add("is-active");
+    if (window._moveNavPill) window._moveNavPill(lastLink);
+  };
+  window.addEventListener("scroll", atEnd, { passive: true });
 }
 
 function setupNavPill() {
