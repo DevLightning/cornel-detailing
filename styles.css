@@ -5349,6 +5349,8 @@ a, button { -webkit-tap-highlight-color: transparent; }
   text-wrap: pretty;
 }
 @media (min-width: 1041px) { .gallery-hero-heading { max-width: none; } }
+/* the sentence under a subpage title never ends on a single word */
+.gallery-hero-heading > p { text-wrap: pretty; }
 .section-note {
   max-width: 70ch;
   margin: 24px auto 0;
@@ -5464,6 +5466,11 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 
 /* Text links under a block (gallery, reviews) */
 .reviews-links { margin: 16px 0 0; }
+/* Three links stack until the row fits on one line, so no separator is left hanging at a line end */
+@media (max-width: 1040px) {
+  .reviews-links--stack { flex-direction: column; gap: 0; }
+  .reviews-links--stack span { display: none; }
+}
 /* ── HERO · the original dark stage, tidied ─────────────────────────────────
    Same picture and the same feeling as before: the workshop photo under the
    deep dark vignette, the gold keyword with its glow. What changed is the
@@ -5903,7 +5910,7 @@ li.faq-item p { padding: 0; }
   line-height: 1.55;
   color: var(--grey-600);
 }
-.location-info > .location-area { font-size: var(--fs-body); }
+.location-info > .location-area { font-size: var(--fs-body); text-wrap: balance; }
 .location-area strong { color: var(--grey-700); font-weight: 600; }
 .location-info > .location-links { margin-top: 12px; max-width: none; font-size: var(--fs-meta); line-height: 1.9; color: var(--grey-500); }
 .location-links a {

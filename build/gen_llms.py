@@ -119,7 +119,7 @@ def main():
     out.append("## Kontakt und Rechtliches")
     out.append("")
     out.append("- Telefon: +43 676 4391253")
-    out.append("- E-Mail: kontakt@corneldetailing.at")
+    out.append("- E-Mail: kontakt@corneldetailing.com")
     out.append("- Adresse: Fördergasse 290, 2640 Enzenreith, Österreich")
     for p, l, d in LEGAL:
         out.append(link(p, l, d))

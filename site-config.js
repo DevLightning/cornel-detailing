@@ -12,7 +12,7 @@ window.SITE_CONFIG = {
     },
     phoneDisplay: "+43 676 4391253",
     phoneHref: "tel:+436764391253",
-    email: "kontakt@corneldetailing.at",
+    email: "kontakt@corneldetailing.com",
     whatsappNumber: "436764391253",
     whatsappPrefill:
       "Hallo, ich möchte einen Termin bei Cornel Detailing anfragen.",
@@ -21,6 +21,6 @@ window.SITE_CONFIG = {
     priceNote:
       "Alle Preise in EUR. Aufgrund der Kleinunternehmerregelung gemäß § 6 Abs. 1 Z 27 UStG wird keine Umsatzsteuer berechnet.",
     footerText:
-      "Professionelle Autoaufbereitung in Enzenreith, Gloggnitz, Neunkirchen und Umgebung.",
+      "Autoaufbereitung, Autoreinigung und Autopflege für Gloggnitz, Neunkirchen und Umgebung · Fördergasse\u00a0290, 2640\u00a0Enzenreith.",
   },
 };

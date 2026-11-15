@@ -1,15 +1,30 @@
 {
+  "trailingSlash": false,
   "redirects": [
-    { "source": "/index.html", "destination": "/", "permanent": true },
-    { "source": "/index.php", "destination": "/", "permanent": true },
-
-    { "source": "/innenreinigung-wuerflach.html", "destination": "/innenreinigung-gloggnitz.html", "permanent": true },
-    { "source": "/innenreinigung-wuerflach", "destination": "/innenreinigung-gloggnitz.html", "permanent": true },
-
-    { "source": "/autopflege-tipps-winter-wuerflach.html", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true },
-    { "source": "/autopflege-tipps-winter-wuerflach", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true },
-
-    { "source": "/fahrzeugaufbereitung-wuerflach-wichtig.html", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true },
-    { "source": "/fahrzeugaufbereitung-wuerflach-wichtig", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true }
+    {"source": "/index.html", "destination": "/", "permanent": true},
+    {"source": "/index.php", "destination": "/", "permanent": true},
+    {"source": "/innenreinigung-wuerflach.html", "destination": "/innenreinigung-gloggnitz.html", "permanent": true},
+    {"source": "/innenreinigung-wuerflach", "destination": "/innenreinigung-gloggnitz.html", "permanent": true},
+    {"source": "/autopflege-tipps-winter-wuerflach.html", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true},
+    {"source": "/autopflege-tipps-winter-wuerflach", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true},
+    {"source": "/fahrzeugaufbereitung-wuerflach-wichtig.html", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true},
+    {"source": "/fahrzeugaufbereitung-wuerflach-wichtig", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true},
+    {"source": "/autoaufbereitung-gloggnitz", "destination": "/autoaufbereitung-gloggnitz.html", "permanent": true},
+    {"source": "/autoaufbereitung-neunkirchen", "destination": "/autoaufbereitung-neunkirchen.html", "permanent": true},
+    {"source": "/keramikversiegelung-neunkirchen", "destination": "/keramikversiegelung-neunkirchen.html", "permanent": true},
+    {"source": "/lackpolitur-neunkirchen", "destination": "/lackpolitur-neunkirchen.html", "permanent": true},
+    {"source": "/innenreinigung-gloggnitz", "destination": "/innenreinigung-gloggnitz.html", "permanent": true},
+    {"source": "/galerie", "destination": "/galerie.html", "permanent": true},
+    {"source": "/autoaufbereitung-kosten-neunkirchen", "destination": "/autoaufbereitung-kosten-neunkirchen.html", "permanent": true},
+    {"source": "/keramikversiegelung-vs-politur-neunkirchen", "destination": "/keramikversiegelung-vs-politur-neunkirchen.html", "permanent": true},
+    {"source": "/auto-fruehjahrspflege-neunkirchen", "destination": "/auto-fruehjahrspflege-neunkirchen.html", "permanent": true},
+    {"source": "/autopflege-tipps-winter-gloggnitz", "destination": "/autopflege-tipps-winter-gloggnitz.html", "permanent": true},
+    {"source": "/fahrzeugaufbereitung-gloggnitz-wichtig", "destination": "/fahrzeugaufbereitung-gloggnitz-wichtig.html", "permanent": true},
+    {"source": "/impressum", "destination": "/impressum.html", "permanent": true},
+    {"source": "/datenschutz", "destination": "/datenschutz.html", "permanent": true}
+  ],
+  "headers": [
+    {"source": "/build/(.*)", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}]},
+    {"source": "/(.*)\\.md", "headers": [{"key": "X-Robots-Tag", "value": "noindex, nofollow"}]}
   ]
 }
