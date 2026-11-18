@@ -5562,6 +5562,12 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 }
 .hero-accent {
   display: block;
+  /* The gold is painted only inside this box, and the box is a line of
+     1.04: without room below, the tails of g, j, p, q and y were cut flat
+     (and the dots of Ä, Ö, Ü above). The padding gives the paint room,
+     the same negative margin keeps every line where it was. */
+  padding: 0.12em 0 0.22em;
+  margin: -0.12em 0 -0.22em;
   white-space: nowrap;
   background: linear-gradient(120deg, var(--brand-hi) 0%, var(--brand) 50%, #ffdf6e 100%);
   -webkit-background-clip: text;
@@ -6053,22 +6059,142 @@ li.faq-item p { padding: 0; }
    the block empty at 2560px. The media column follows the screen and the
    three owner traits stand side by side. */
 @media (min-width: 1921px) {
-  .op-grid { grid-template-columns: minmax(0, clamp(420px, 19vw, 560px)) minmax(0, 1fr); }
-  .op-traits {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    column-gap: var(--gap-grid);
-    border-top: 0;
-  }
-  .op-traits li {
-    grid-template-columns: minmax(0, 1fr);
-    row-gap: 16px;
-    align-items: start;
-    align-content: start;
-    padding: 32px 0;
-    border-top: 1px solid var(--border);
-  }
-  .ceramic-layout { grid-template-columns: clamp(420px, 19vw, 560px) minmax(0, 1fr); }
   .ceramic-video-frame { aspect-ratio: 1 / 1; }
 }
 /* <<< /SYSTEM 2 >>> */
+
+/* <<< PLACEMENT >>>  desktop, from 1041px
+   One rule for where things stand, so no block has to be read differently
+   from the one before it (the owner, 2026-11-18: "some in the middle, some
+   up, some down, some right, some left, I want all buttons and placements to
+   make sense"). Every sub page and most blocks of the homepage already
+   followed it; the owner block, the ceramic block, the location block and the
+   vehicle picker did not.
+
+   1. THE CENTRE LINE. Label, heading and the one line under it stand on the
+      centre line of the block, at the top. The block's own action (one
+      button, or WhatsApp then call) stands on the same line, at the bottom.
+      Text links follow under it, centred.
+   2. INSIDE A CARD OR A COLUMN text starts at the left edge and the card's
+      action is on that same edge in every card of the row.
+   3. A SPLIT BLOCK (picture and text side by side) is built one way only:
+      heading across both, the picture LEFT in a column of --split-media,
+      three points stacked RIGHT and as tall as the picture together, the
+      button centred under both.
+   4. A block with ONE wide thing (photo strip, reviews, map) puts it at the
+      full width under the heading.
+   Phones and tablets are not touched by this layer. */
+@media (min-width: 1041px) {
+  :root { --split-media: clamp(330px, 26vw, 400px); }
+
+  /* ── INHABER · heading across, portrait left, three points right ── */
+  .op-grid {
+    grid-template-columns: var(--split-media) minmax(0, 1fr);
+    grid-template-areas:
+      "tag    tag"
+      "title  title"
+      "role   role"
+      "photo  traits"
+      "cta    cta";
+    column-gap: var(--gap-split);
+    row-gap: 0;
+    align-items: stretch;
+  }
+  .op-side { display: contents; }   /* its children take their places in the grid */
+  .op-side > .section-tag { grid-area: tag; justify-self: center; margin: 0; }
+  .op-side > h2 { grid-area: title; margin: 12px 0 0; text-align: center; }
+  .op-side > .op-role { grid-area: role; margin: 8px 0 var(--gap-head); text-align: center; }
+  .op-photo { grid-area: photo; align-self: start; }
+  /* both pictures of the split blocks are square on a desktop screen, so each
+     block fits one screen of a laptop and of a wide, short monitor */
+  .op-photo img { aspect-ratio: 1 / 1; object-position: center 18%; }
+  .op-traits {
+    grid-area: traits;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: repeat(3, minmax(0, 1fr));
+    gap: 14px;
+    margin: 0;
+    border-top: 0;
+  }
+  .op-traits li {
+    grid-template-columns: auto minmax(0, 1fr);
+    column-gap: 16px;
+    row-gap: 0;
+    align-items: center;
+    align-content: center;
+    padding: 20px 24px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-card);
+    background: var(--white);
+  }
+  .op-cta { grid-area: cta; justify-self: center; margin-top: var(--gap-head); }
+
+  /* ── KERAMIK · the same build on the dark block ── */
+  .ceramic-layout {
+    grid-template-columns: var(--split-media) minmax(0, 1fr);
+    grid-template-areas:
+      "title  title"
+      "lead   lead"
+      "media  facts"
+      "cta    cta";
+    column-gap: var(--gap-split);
+    row-gap: 0;
+  }
+  .ceramic-head { align-items: center; align-self: auto; text-align: center; }
+  .ceramic-lead {
+    align-self: auto;
+    max-width: 86ch;
+    margin: 12px auto 0;
+    text-align: center;
+  }
+  .ceramic-video-frame { aspect-ratio: 1 / 1; }
+  .ceramic-media, .ceramic-benefits { margin-top: var(--gap-head); }
+  .ceramic-actions { margin-top: var(--gap-head); }
+
+  /* ── STANDORT · heading, the map at the full width, the button under it ── */
+  .location-card {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "tag" "title" "addr" "area" "map" "btn" "links";
+    gap: 0;
+    justify-items: center;
+    text-align: center;
+  }
+  .location-info { display: contents; text-align: center; }   /* its children still inherit from it */
+  .location-info > .section-tag { grid-area: tag; }
+  .location-info > h2 { grid-area: title; }
+  .location-info > p { grid-area: addr; }
+  .location-info > .location-area { grid-area: area; max-width: 78ch; }
+  .location-info > .location-links { grid-area: links; margin-top: 16px; }
+  .location-info > .button { grid-area: btn; margin-top: var(--gap-head); }
+  .location-map { grid-area: map; justify-self: stretch; margin-top: var(--gap-head); }
+  /* a wide map does not need the height it had as half of a split block */
+  .location-map, .map-facade, .location-map iframe { min-height: 260px; }
+
+  /* ── FAHRZEUGWAHL · question and answers stand together in the middle ── */
+  .vehicle-select { justify-content: center; gap: 24px; padding-left: 24px; padding-right: 24px; }
+  .vehicle-select-btns { flex: 0 1 500px; width: auto; margin-left: 0; }
+}
+@media (min-width: 1921px) {
+  :root { --split-media: clamp(420px, 19vw, 560px); }
+  .op-traits { gap: var(--gap-grid); }
+  .op-traits li { padding: 28px 32px; column-gap: 24px; }
+  .vehicle-select-btns { flex-basis: 620px; }
+  .location-map, .map-facade, .location-map iframe { min-height: 320px; }
+}
+/* <<< /PLACEMENT >>> */
+
+/* <<< WIDE SCALE >>>
+   Screens wider than 1920px show the whole page at nine tenths (the owner,
+   2026-11-18: "too big on ultrawides, make it like 90% of what it is now").
+   One factor for everything, text, buttons, photos and gaps alike, so the
+   proportions of the desktop page stay exactly as they are. Width queries
+   still see the real screen, so the column counts do not change; the page
+   simply has a ninth more room. The cap of the page is divided by the same
+   factor, so it still ends where it ended. Change the factor in ONE place. */
+@media (min-width: 1921px) {
+  :root { --wide-scale: 0.9; }
+  body { zoom: var(--wide-scale); }
+  .site-shell { max-width: calc(2760px / var(--wide-scale)); }
+}
+/* <<< /WIDE SCALE >>> */

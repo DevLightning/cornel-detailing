@@ -16,8 +16,9 @@ Statische, mobil optimierte Website fuer ein Auto-Detailing-Unternehmen im Bezir
 - `legal.js`: Header und Anruf-Conversion auf Impressum und Datenschutz
 - `site-config.js`: Kontaktdaten und kurze Texte fuer die Hauptseiten
 - `assets/fonts/`: selbst gehostete Schriften (Inter, Poppins), keine Verbindung zu Google Fonts
-- `assets/logo-cornel-detailing.svg`: neu gezeichnetes SVG-Logo im Stil der Vorlage
-- `assets/favicon.svg`: Favicon
+- `assets/logo-*.webp`, `assets/logo-cornel.png`: Logo (Kopfzeile, Fusszeile, strukturierte Daten)
+- `favicon.ico`, `favicon-192.png`, `favicon.png` (Hauptordner): Favicons
+- In `assets/` liegen nur Dateien, die die Website wirklich laedt. Originale und Quellen: `build/sources/` oder ausserhalb des Projekts.
 - `assets/gallery/README.txt`: erwartete Dateinamen fuer echte Galerie-Bilder
 
 ## Preise aendern (wichtig)

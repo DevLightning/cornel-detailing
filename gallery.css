@@ -74,6 +74,12 @@
 }
 .gal-hero-accent {
   display: block;
+  /* The gold is painted only inside this box, and the box is a line of
+     1.04: without room below, the tails of g, j, p, q and y were cut flat
+     (and the dots of Ä, Ö, Ü above). The padding gives the paint room,
+     the same negative margin keeps every line where it was. */
+  padding: 0.12em 0 0.22em;
+  margin: -0.12em 0 -0.22em;
   background: linear-gradient(120deg, var(--brand-hi) 0%, var(--brand) 50%, #ffdf6e 100%);
   -webkit-background-clip: text;
   background-clip: text;

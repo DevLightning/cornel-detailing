@@ -1987,8 +1987,12 @@ function setupNavPill() {
     }
     var navRect  = nav.getBoundingClientRect();
     var linkRect = link.getBoundingClientRect();
-    pill.style.left  = (linkRect.left - navRect.left) + 'px';
-    pill.style.width = linkRect.width + 'px';
+    // measured positions are screen pixels, style values are page pixels: on a
+    // wide screen the page is shown at nine tenths (styles.css, WIDE SCALE), so
+    // the two differ and the measured values are converted
+    var k = navRect.width ? nav.offsetWidth / navRect.width : 1;
+    pill.style.left  = ((linkRect.left - navRect.left) * k) + 'px';
+    pill.style.width = (linkRect.width * k) + 'px';
     pill.classList.add('is-visible');
   }
 

@@ -427,3 +427,51 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
       screen sizes: gold headline at least 4.6:1, small lines at least 6.2:1.
       Measure again for every new edit, the flash between scenes is the risk.
     - A new edit gets NEW file names (videos carry no `?v=` either).
+
+## 18. Desktop placement and the wide scale (2026-11-18)
+
+91. PLACEMENT. One rule for where things stand on a desktop screen (from
+    1041px), in the layer `<<< PLACEMENT >>>` of `styles.css`. The owner:
+    "some in the middle, some up, some down, some right, some left, I want
+    all buttons and placements to make sense."
+    - The centre line: label, heading and the one line under it stand on the
+      centre line of the block, at the top. The block's own action (one
+      button, or WhatsApp then call) stands on the same line at the bottom;
+      text links follow under it, centred.
+    - Inside a card or a column, text starts at the left edge and the card's
+      action is on that same edge in every card of the row.
+    - A split block (picture and text side by side) is built ONE way: heading
+      across both, picture LEFT in a column of `--split-media`, three points
+      stacked RIGHT and together as tall as the picture, button centred under
+      both. Both pictures are square on desktop. Inhaber and Keramik are the
+      two split blocks; do not invent a third variant.
+    - A block with one wide thing (photo strip, reviews, map) puts it at the
+      full width under the heading. Standort is built like this.
+    - Phones and tablets are not touched by the layer.
+    - Acceptance is measured, not judged: `audit.mjs` style table, every block
+      heading reads "centre" and every block action is centred as a group, on
+      the homepage and both town pages at 1440, 1920 and 2752 wide.
+    `.op-side` and `.location-info` are `display: contents` on desktop so
+    their children can take grid places; they must never get a background,
+    padding or the class `reveal`. Children still inherit `text-align` from
+    them.
+92. THE WIDE SCALE. Screens wider than 1920px show the whole page at nine
+    tenths: `body { zoom: var(--wide-scale) }` in the layer
+    `<<< WIDE SCALE >>>` (the owner: "too big on ultrawides, make it like 90%
+    of what it is now"). One factor for text, buttons, photos and gaps, so
+    proportions stay. Change the factor in that one place only.
+    - Width queries still see the real screen: column counts do not change.
+    - Lengths inside the page are scaled, `svh` and `vw` included (the hero
+      is 54% of the screen height instead of 60%).
+    - The page cap is divided by the factor so the page still ends where it
+      ended (`max-width: calc(2760px / var(--wide-scale))`).
+    - The owner's screen is 3440x1440 at 125% Windows scaling: the browser is
+      2752 CSS pixels wide at a pixel ratio of 1.25. TEST AT 2752x1040, not
+      only at 2560 and 3440; the 3000px tier never reaches that screen.
+    - Scripts must not mix zoomed and unzoomed numbers: positions from
+      `getBoundingClientRect` and `scrollY` are screen pixels, `offsetLeft`
+      and `scrollLeft` are page pixels; stay in one family per calculation.
+    - Measured after the change: no page wider than the screen at 1920, 2560,
+      2752 and 3440; smallest rendered text 12.6px (floor 11.5px); buttons
+      47px high (floor 44px); gallery viewer covers the screen; service card
+      presses land. Chrome only; Firefox and Safari untested.

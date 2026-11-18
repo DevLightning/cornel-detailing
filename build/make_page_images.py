@@ -56,6 +56,10 @@ def run(job, soften=False):
     name, src, ratio, widths, q = job
     path = os.path.join(GALLERY, src)
     if not os.path.exists(path):
+        # an original that no page shows lives beside this script, not in the
+        # deployed assets folder (assets/ holds only files the site loads)
+        path = os.path.join(ROOT, "build", "sources", src)
+    if not os.path.exists(path):
         sys.exit("missing source image: " + path)
     base = crop_to(Image.open(path).convert("RGB"), ratio)
     made = []
