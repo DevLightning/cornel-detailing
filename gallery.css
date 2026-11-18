@@ -248,7 +248,9 @@
 @media (min-width: 1360px) { .gal-grid { --gal-cols: 6; } }    /* 188 to 241px: a laptop shows its first row whole */
 @media (min-width: 1680px) { .gal-grid { --gal-cols: 7; } }    /* 200 to 264px */
 @media (min-width: 2200px) { .gal-grid { --gal-cols: 8; } }    /* 226 to 260px */
-@media (min-width: 2500px) { .gal-grid { --gal-cols: 10; } }   /* 207 to 217px */
+/* above 1920px the page keeps side margins (styles.css, WIDE SCALE), so the
+   grid is narrower than the screen: ten columns only once there is room */
+@media (min-width: 3200px) { .gal-grid { --gal-cols: 10; } }
 
 .gal-item {
   flex: 0 0 var(--gal-w);

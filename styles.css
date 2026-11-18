@@ -6199,5 +6199,15 @@ li.faq-item p { padding: 0; }
   :root { --wide-scale: 0.9; }
   body { zoom: var(--wide-scale); }
   .site-shell { max-width: calc(2760px / var(--wide-scale)); }
+  /* SIDE MARGINS (the owner, 2026-11-18: "add more space for the ultra wides
+     on the margins, it looks too stretched"). Above 1920px the page stops
+     filling the screen: each side gets an empty band that grows with the
+     width, from nothing at 1921px to about a tenth of the screen on a
+     2752px wide screen, never more than 600px. The header and every block
+     follow, because they all live in the shell. */
+  .site-shell {
+    max-width: min(calc(2760px / var(--wide-scale)),
+                   calc(100% - 2 * clamp(0px, (100% - 2134px) * 0.3, 600px)));
+  }
 }
 /* <<< /WIDE SCALE >>> */

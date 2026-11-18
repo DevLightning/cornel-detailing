@@ -492,3 +492,12 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
       This is why a changed picture or film MUST get a new file name.
     - Measured on simulated fast 3G with a slowed phone CPU: hero photo ready
       at 1.8 s instead of 4.3 s. Real phones were not tested.
+
+94. Side margins on wide screens (2026-11-18, the owner: "add more space for
+    the ultra wides on the margins, it looks too stretched"). This REPLACES
+    the older idea that a wide screen is filled edge to edge (rule 77 and the
+    memory note on side margins). Above 1920px the shell leaves an empty band
+    on each side that grows with the width: none at 1921px, 255px at 2560,
+    320px at 2752 (the owner's screen), 549px at 3440. One line in the WIDE
+    SCALE layer of styles.css. The gallery keeps 8 columns until 3200px,
+    because its grid is now narrower than the screen.
