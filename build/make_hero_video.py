@@ -3,7 +3,7 @@
 
     python build/make_hero_video.py "D:\\Videos\\edits\\Comp 1_130.mp4"
 
-    assets/gallery/hero-film-phone.mp4   648x720   screens up to 600px wide (portrait hero)
+    assets/gallery/hero-film-phone.mp4   540x600   screens up to 600px wide (portrait hero)
     assets/gallery/hero-film.mp4         1280x720  laptops and tablets
     assets/gallery/hero-film-wide.mp4    1920x738  from 1600px (the hero is a wide band there)
 
@@ -66,6 +66,6 @@ if __name__ == "__main__":
     if len(sys.argv) < 2:
         raise SystemExit(__doc__)
     SRC = sys.argv[1]
-    encode("hero-film-phone.mp4", 972, 1080, 648, 720, 30)
+    encode("hero-film-phone.mp4", 972, 1080, 540, 600, 31)
     encode("hero-film.mp4", 1920, 1080, 1280, 720, 30)
     encode("hero-film-wide.mp4", 1920, 738, 1920, 738, 30)

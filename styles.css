@@ -5654,7 +5654,10 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 
 @media (max-width: 720px) {
   .hero { min-height: 500px; padding: 48px var(--pad-x) 40px; }
-  .hero-bg { background-position: 50% 50%; }
+  /* a phone gets a portrait copy of the middle of the photo: 45 KB instead of
+     171 KB, the first picture on a slow connection. The preload in the page
+     head uses the same 720px breakpoint, so a phone never fetches both. */
+  .hero-bg { background-image: url("assets/gallery/hero-urus-phone.webp"); background-position: 50% 50%; }
   .hero-h1-city { font-size: 0.54em; }
 }
 @media (min-width: 721px) {

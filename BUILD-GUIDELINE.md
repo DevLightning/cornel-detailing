@@ -475,3 +475,20 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
       2752 and 3440; smallest rendered text 12.6px (floor 11.5px); buttons
       47px high (floor 44px); gallery viewer covers the screen; service card
       presses land. Chrome only; Firefox and Safari untested.
+
+93. The phone hero (2026-11-18, the owner: "sometimes it doesn't load well").
+    - Phones up to 720px get `assets/gallery/hero-urus-phone.webp`, a portrait
+      cut of the middle of the hero photo (828x1012, quality 60, 45 KB instead
+      of 171 KB). Two preloads with `media` in the head of the three hero
+      pages; the CSS uses the same 720px breakpoint, so a screen never fetches
+      both. A new hero photo needs a new phone cut as well.
+    - The ceramic video far down the homepage has `preload="none"`: it no
+      longer downloads while the hero is still loading.
+    - The film is skipped where the browser rates the connection slower than
+      4g, and while it waits for data it fades back to the photo instead of
+      standing still. The phone film is 540x600, about 350 KB.
+    - `vercel.json` caches images and films for a week and fonts for a year,
+      so a returning visitor does not ask the server again for every file.
+      This is why a changed picture or film MUST get a new file name.
+    - Measured on simulated fast 3G with a slowed phone CPU: hero photo ready
+      at 1.8 s instead of 4.3 s. Real phones were not tested.

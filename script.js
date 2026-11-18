@@ -2167,7 +2167,9 @@ function setupHeroFilm() {
 
   const conn = navigator.connection || {};
   if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-  if (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "")) return;
+  // the film is a bonus: on a connection the browser rates slower than 4g
+  // (where it can tell) the photo stays, so the page itself gets the bandwidth
+  if (conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || "")) return;
 
   let inSight = true;
   let started = false;
@@ -2184,6 +2186,9 @@ function setupHeroFilm() {
   };
 
   film.addEventListener("playing", () => film.classList.add("is-playing"));
+  // a film that runs out of data stands still: until it moves again the
+  // photo is shown instead of a frozen frame
+  film.addEventListener("waiting", () => film.classList.remove("is-playing"));
   film.addEventListener("error", () => film.classList.remove("is-playing"));
   if ("IntersectionObserver" in window) {
     new IntersectionObserver((entries) => {

@@ -544,7 +544,10 @@ def check_price_marks():
         stale += ["%s: %s shows %s, packages say %s" % (name, k, have, want) for k, have, want in bad]
     home = read("index.html")
     marks = re.findall(r'data-price="([^"]+)"', home)
-    need = ["min:aussen", "min:innen", "min:politur", "min:versiegelung"]
+    # the Versiegelung card shows a fixed "ab € 899,-" set by the owner on
+    # 2026-11-18 (a sealing always needs the polish first), not the lowest
+    # package price, so it has no marker on purpose
+    need = ["min:aussen", "min:innen", "min:politur"]
     missing = [k for k in need if k not in marks]
     if stale:
         fail("price marks", "; ".join(stale) + " (run build/gen_price_marks.py)")

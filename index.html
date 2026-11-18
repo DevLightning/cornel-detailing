@@ -280,7 +280,8 @@
 
     <!-- ═══ PERFORMANCE HINTS ════════════════════════════════════════════ -->
     <!-- LCP: hero background image -->
-    <link rel="preload" as="image" href="assets/gallery/hero-urus.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/gallery/hero-urus-phone.webp" media="(max-width: 720px)" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/gallery/hero-urus.webp" media="(min-width: 721px)" fetchpriority="high" />
     <!-- Fonts are self-hosted (assets/fonts): no connection to Google -->
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-latin.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="assets/fonts/poppins-900-latin.woff2" crossorigin />
@@ -289,9 +290,9 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico?v=2" />
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
-    <link rel="stylesheet" href="styles.css?v=60" />
+    <link rel="stylesheet" href="styles.css?v=61" />
     <script src="site-config.js?v=8" defer></script>
-    <script src="script.js?v=37" defer></script>
+    <script src="script.js?v=38" defer></script>
     <script src="consent.js?v=10" defer></script>
   </head>
   <body>
@@ -432,7 +433,7 @@
                 <h3>Versiegelung</h3>
                 <span class="vc-text">Lackschutz bis zu 12 oder 60 Monate · nach der Politur.</span>
               </span>
-              <span class="vc-price">ab <strong data-price="min:versiegelung">€ 299,-</strong> <span class="vc-for">für PKW</span></span>
+              <span class="vc-price">ab <strong>€ 899,-</strong> <span class="vc-for">für PKW</span></span>
               <svg class="vc-arrow" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
             </a>
           </div>
@@ -1037,7 +1038,7 @@
                 <video class="ceramic-video" id="keramicVideo" src="assets/gallery/keramic.mp4"
                   muted
                   loop
-                  playsinline preload="metadata" aria-hidden="true"
+                  playsinline preload="none" aria-hidden="true"
                 ></video>
                 <div class="ceramic-video-overlay" aria-hidden="true"></div>
                 <button class="ceramic-video-toggle" id="keramicVideoToggle" aria-label="Video pausieren" type="button">
