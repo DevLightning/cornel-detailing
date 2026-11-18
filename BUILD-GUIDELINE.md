@@ -198,7 +198,7 @@ Before the work is called done:
     If a town page needs a look, give it to the shared component so the
     homepage gets it too.
 55. The town hero preloads the same background the homepage preloads
-    (background_rs3.webp). Never preload an image the page does not show.
+    (hero-urus.webp). Never preload an image the page does not show.
 56. Decorative lead-ins stay short. The FAQ answers carry the substance and
     the word count; `verify_seo.py` enforces 600+ visible words per town page,
     so trim the lead-ins, never the answers. Current counts: Gloggnitz 657,
@@ -293,13 +293,33 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
 75. The WhatsApp request is labelled "Termin anfragen" wherever it appears on
     the homepage and the call is "Anrufen". A label that fits a desktop and is
     cut off on a 390px phone ("Termin per WhatsApp anfr...") is a bug.
-76. Homepage order follows the customer's questions: hero, Referenzen (is the
-    work good), Leistungen (what do I need), Bewertungen, Inhaber, Pakete, the
-    one line call under the packages, Keramik, FAQ, Standort, Kontakt. The
-    page ends on the booking block.
-77. Wide screens are filled, not framed. From 1600px the shell follows the
-    screen (70px margin at 2560px) and from 1921px the text tokens, the button
-    and the icon tile step up together. Check 2560px after any layout change.
+76. Homepage order (changed 2026-11-17, the owner: "pricing and contact are
+    too far down, conversion over everything"): hero, Referenzen (is the work
+    good), Leistungen (what do I need), Pakete (what does it cost), the call
+    line under the packages with BOTH buttons (WhatsApp and phone), then
+    Bewertungen, Inhaber, Keramik, FAQ, Standort, Kontakt. Nothing may stand
+    between the four service cards and the price list: the links to the
+    service pages sit under the FAQ for that reason. The page ends on the
+    booking block. Measured: the prices start 2.6 screens down on a phone
+    (was 4.9) and 2.0 on a 2560x1080 monitor (was 4.0).
+77. Wide screens are filled, not framed, and get MORE COLUMNS AND MORE AIR,
+    NOT BIGGER THINGS (changed 2026-11-17, the owner: "too packed, everything
+    is too big"). From 1600px the shell follows the screen (70px margin at
+    2560px). Text, buttons and icons keep their desktop size up to 2999px;
+    only from 3000px is there one small step. The width goes into columns:
+    photo strip 4.4 / 5.4 / 6.4 photos (1921 / 2400 / 3000px), reviews 4 / 5 / 6
+    (1500 / 2200 / 3000px), packages four across from 2400px. Anything with a
+    height follows the height of the screen, never its width: the hero is
+    `min(760px, 60svh)`. An ultrawide monitor is wide and SHORT (2560x1080,
+    3440x1440): judge every layout change by a real viewport screenshot at
+    those two sizes, looking at what is above the fold. A full page screenshot
+    hides exactly this mistake.
+77b. A service card answers with one press: `setupServiceCards()` moves the
+    page to that category and opens the service list of its package through
+    the same path as a press on "Leistungen". It runs in the first startup
+    wave. Hover effects on cards sit inside `@media (hover: hover)`; a touch
+    screen gets a pressed state instead, because a hover state sticks after
+    the tap.
 78. When a component's rules are scattered over many layers of the file, lift
     them out whole and rewrite them in one place rather than adding another
     override on top. The classes this was done for: the hero, `.value-card`,
@@ -312,3 +332,98 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
     the fade in rules reset transforms inside `.reveal`.
 80. The two town pages are patched in place. The generator that once wrote
     them lives outside the project and is stale; do not re-run it.
+
+## 17. Gallery (rebuilt 2026-11-18)
+
+81. The gallery page has its own stylesheet, `gallery.css` (root folder, loaded
+    after `styles.css`, own `?v=`). New gallery rules go there, not into
+    `styles.css`. It uses the SYSTEM 2 tokens and `--pad-x` like every page.
+82. The photos are written into `galerie.html` as static tiles, so they are on
+    screen before any script runs and Google reads the captions. The source is
+    still the `projects` array in `script.js`. After adding, removing or
+    changing a photo there:
+    `python build/make_gallery_thumbs.py` (needs Pillow; writes
+    `assets/gallery/p-gal-<slug>-400.webp` and `-640.webp`), then
+    `python build/prerender_gallery.py`, then `--check`. The tile markup in
+    that script must stay the same as `galleryTileMarkup()` in `script.js`.
+    Do not hand edit the gallery block or the viewer in `galerie.html`: the
+    next prerender overwrites it. Change the template in the script instead.
+83. Upload as one set: `galerie.html`, `gallery.css`, `script.js` and the
+    `p-gal-*.webp` thumbnails, thumbnails first, then the other files in one
+    upload. Measured 2026-11-18: the new `script.js` with the gallery page from
+    before the rebuild (ids `galleryGrid`, `galleryFilters`) shows NO photos.
+    Between versions of the new page the script repairs the list itself when
+    the array and the HTML differ, and a missing thumbnail falls back to the
+    full photo.
+84. Photos first. The hero is the homepage hero as a short band (same photo
+    `hero-urus.webp`, as the cut down copy `assets/gallery/gal-hero-band.webp`:
+    the top 2.4:1 of it, 1920px wide, quality 48; same dark veil, gold line and smaller white line)
+    and carries one place line and the headline, nothing else: no sentence, no
+    numbers, no button (the owner, 2026-11-18: "more professional to match
+    the site theme, less text"). The counts live on the chips. Its rules are
+    under `.gal-hero` in `gallery.css`; the eight other subpage heroes are not
+    touched. Measured: 139px high on a 390px phone, 176px at 1920x1080, text
+    at least 4.8:1 on the brightest pixel behind it. Nothing may be put
+    between the hero and the grid except the category chips. Wide screens get
+    more columns (2 on phones up to 10), never bigger tiles. The grid ends
+    with the booking card (WhatsApp first, call second); the viewer carries
+    the same two buttons under every photo.
+85. All gallery startup runs through `startGallery()` in the first startup wave.
+    No gallery markup uses class `reveal`. The viewer is `#galLightbox`
+    (class `glb`); a link `galerie.html#<slug>` opens that photo.
+86. Old gallery rules are still in `styles.css` and match nothing any more
+    (`.gallery-filter*`, `.gallery-grid`, `.gallery-tile*`, every `.lightbox*`).
+    They are harmless. Remove them only in a change of their own, with before
+    and after screenshots of every page. `.gallery-hero*` and `.gallery-stat`
+    are NOT dead: eight other pages use them.
+87. The hero photo (changed 2026-11-18, the owner: replace the Audi with the
+    Lamborghini Urus SE) is `assets/gallery/hero-urus.webp`, used by the
+    homepage and both town pages. A new hero photo gets a NEW file name:
+    images carry no `?v=`, so an overwritten file stays the old picture for
+    returning visitors. Change together: the url in `.hero-bg`, the three
+    preload links, both `primaryImageOfPage` entries, and the gallery band
+    (`gal-hero-band.webp`, the top 2.4:1 of the hero file, 1920px, quality 48).
+    The site feeling is put into the FILE, never into the veil: walls and
+    reflections lifted (gamma 0.72), a little less colour, cool shadows, pale
+    floor taken back, clutter in the corner darkened. A dealer plate with
+    another company's name is painted plain in the hero file. The photo is
+    16:9, so `.hero-bg` has a position per screen shape (phone 50% 50%,
+    laptop 30%, from 1441px 52%, from 1921px 62%). Measured on real pixels:
+    gold headline at least 4.0:1, small lines at least 5.2:1.
+88. No sentence under the gallery photos (the owner, 2026-11-18: "less text
+    under the images"). A tile shows vehicle and work; the sentence of the
+    `description` field is shown in the viewer only. Removed from the markup,
+    not hidden.
+89. A landscape photo in the gallery: `make_gallery_thumbs.py` writes its
+    small copies as tall as a portrait one (500px and 800px high), because a
+    4:5 tile is filled by the height. Photos of one vehicle share the first
+    two words of their title, which keeps them side by side and counts them
+    as one vehicle. Labels say what the photo shows; name a service only if
+    the owner said it was done.
+90. The hero film (added 2026-11-18, the owner: "this video instead of the
+    image on the header, the right size for all displays, compressed"). The
+    PHOTO stays the first picture, the preload and the fallback; the film
+    lies on it, under the veil, on the homepage and both town pages.
+    - Three files, written by `python build/make_hero_video.py <source>`:
+      `hero-film-phone.mp4` (up to 600px), `hero-film.mp4`,
+      `hero-film-wide.mp4` (from 1600px). Each is cut to the shape of its
+      hero, scene by scene; the scene list in the script belongs to one edit.
+      About 0.5, 0.9 and 1.2 MB for 10 seconds. The 19 MB source stays outside
+      the project.
+    - The `<video>` has NO address in the HTML. `setupHeroFilm()` gives it one
+      400ms after the load event, so the film never competes with the photo
+      (measured: the largest picture of the page is still `hero-urus.webp`).
+      It shows itself only on the `playing` event: a phone that will not start
+      it (low power mode) shows the photo and nothing else.
+    - No film for `prefers-reduced-motion`, for data saver, or on 2g.
+    - It plays by itself, always, with NO button: a first version had a small
+      pause button in the corner of the hero and the owner had it removed
+      (2026-11-18: "remove the play button and just have it auto play all the
+      time"). Do not add one back. It rests only while the hero is out of
+      sight and goes on when it is back. Visitors who asked their device for
+      less motion get the photo, which is the way to stop it now.
+    - The look goes into the file (rule 87): less colour, cooler, middle tones
+      lifted, highlights capped. Measured on the brightest frames at seven
+      screen sizes: gold headline at least 4.6:1, small lines at least 6.2:1.
+      Measure again for every new edit, the flash between scenes is the risk.
+    - A new edit gets NEW file names (videos carry no `?v=` either).

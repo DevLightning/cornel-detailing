@@ -79,9 +79,10 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
     
-    <link rel="stylesheet" href="styles.css?v=58" />
+    <link rel="stylesheet" href="styles.css?v=59" />
+    <link rel="stylesheet" href="gallery.css?v=1" />
     <script src="site-config.js?v=8" defer></script>
-    <script src="script.js?v=35" defer></script>
+    <script src="script.js?v=36" defer></script>
     <script src="consent.js?v=10" defer></script>
   </head>
   <body>
@@ -120,47 +121,237 @@
 
       <main>
 
-        <!-- ── HERO ───────────────────────────────────────────── -->
-        <section class="gallery-hero reveal">
+        <!-- ── HERO · the homepage look in a short band: photo, gold line, white
+             line. No sentence and no numbers here: the chips right below
+             carry the counts, and the photos start on the first screen ── -->
+        <section class="gallery-hero gal-hero">
           <div class="gallery-hero-bg" aria-hidden="true"></div>
           <div class="gallery-hero-inner">
-            <span class="hero-location">
-              <svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor" aria-hidden="true">
+            <p class="gal-hero-place">
+              <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
                 <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5a2.5 2.5 0 0 1 0-5 2.5 2.5 0 0 1 0 5z"/>
               </svg>
-              Enzenreith · Gloggnitz
-            </span>
-
-            <div class="section-heading gallery-hero-heading">
-              <span class="section-tag">Galerie</span>
-              <h1>Ausgewählte Arbeiten<br>und Referenzen.</h1>
-              <p>Einblicke in abgeschlossene Projekte · Innenreinigung, Lackpolitur, Versiegelung und Komplettaufbereitungen aus unserer Werkstatt.</p>
-            </div>
-
-            <div class="gallery-hero-stats" id="galleryHeroStats">
-              <div class="gallery-stat">
-                <strong id="statAufnahmen">19</strong>
-                <span>Aufnahmen</span>
-              </div>
-              <div class="gallery-stat">
-                <strong id="statFahrzeuge">9</strong>
-                <span>Fahrzeuge</span>
-              </div>
-              <div class="gallery-stat">
-                <strong id="statKategorien">4</strong>
-                <span>Kategorien</span>
-              </div>
-            </div>
+              Galerie · Enzenreith bei Gloggnitz
+            </p>
+            <h1><span class="gal-hero-accent">Ausgewählte Arbeiten</span> <span class="gal-hero-rest">und Referenzen.</span></h1>
           </div>
         </section>
 
-        <!-- ── FILTER ROW (rendered by JS) ──────────────────── -->
-        <div class="gallery-filter-section reveal">
-          <div id="galleryFilters" class="gallery-filters" role="group" aria-label="Kategorie-Filter"></div>
-        </div>
+        <!-- ── GALLERY · chips, photos, booking card ───────────────────────
+             The photos below are a copy of the projects array in script.js,
+             written into the page so they are there before any script runs.
+             script.js compares them with the array on every visit and
+             rebuilds the list by itself when a photo was added or changed. -->
+        <section class="section gal-section" id="autoaufbereitung-galerie-gloggnitz" aria-label="Fotos abgeschlossener Arbeiten">
+          <div class="gal-bar">
+            <div class="gal-chips" id="galFilters" role="group" aria-label="Fotos nach Kategorie filtern">
+              <button type="button" class="gal-chip is-active" data-filter="all" aria-pressed="true">Alle <span class="gal-chip-n">25</span></button>
+              <button type="button" class="gal-chip" data-filter="Exterieur" aria-pressed="false">Exterieur <span class="gal-chip-n">13</span></button>
+              <button type="button" class="gal-chip" data-filter="Innenraum" aria-pressed="false">Innenraum <span class="gal-chip-n">5</span></button>
+              <button type="button" class="gal-chip" data-filter="Detail" aria-pressed="false">Detail <span class="gal-chip-n">7</span></button>
+            </div>
+          </div>
 
-        <!-- ── GRID ──────────────────────────────────────────── -->
-        <!-- ── VIDEO SHOWCASE ──────────────────────────────── -->
+          <ul class="gal-grid" id="galGrid" aria-label="Projektreferenzen">
+            <li class="gal-item" id="lamborghini-urus-front" data-slug="lamborghini-urus-front" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/urus-front.webp" aria-label="Lamborghini Urus SE · Exterieur Finish · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-front-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-front-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-front-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Exterieur Finish" loading="eager" decoding="async" fetchpriority="high" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Exterieur Finish</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lamborghini-urus-werkstatt" data-slug="lamborghini-urus-werkstatt" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/urus-werkstatt.webp" aria-label="Lamborghini Urus SE · Frontansicht · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-werkstatt-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-werkstatt-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-werkstatt-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Frontansicht" loading="eager" decoding="async" fetchpriority="high" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Frontansicht</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lamborghini-urus-cockpit" data-slug="lamborghini-urus-cockpit" data-category="Innenraum">
+              <a class="gal-tile" href="assets/gallery/urus-cockpit.webp" aria-label="Lamborghini Urus SE · Interieur Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-cockpit-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-cockpit-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-cockpit-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Interieur Detail" loading="eager" decoding="async" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Interieur Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lamborghini-urus-fussraum" data-slug="lamborghini-urus-fussraum" data-category="Innenraum">
+              <a class="gal-tile" href="assets/gallery/urus-fussraum.webp" aria-label="Lamborghini Urus SE · Fußraum · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-fussraum-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-fussraum-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-fussraum-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Fußraum" loading="eager" decoding="async" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Fußraum</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lamborghini-urus-felge" data-slug="lamborghini-urus-felge" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/urus-felge.webp" aria-label="Lamborghini Urus SE · Felge und Emblem · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-felge-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-felge-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-felge-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Felge und Emblem" loading="eager" decoding="async" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Felge und Emblem</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lamborghini-urus-heck" data-slug="lamborghini-urus-heck" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/urus-heck.webp" aria-label="Lamborghini Urus SE · Heck Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lamborghini-urus-heck-400.webp" srcset="assets/gallery/p-gal-lamborghini-urus-heck-400.webp 400w, assets/gallery/p-gal-lamborghini-urus-heck-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lamborghini Urus SE · Heck Detail" loading="eager" decoding="async" /></span>
+                <span class="gal-cap"><strong>Lamborghini Urus SE</strong><span class="gal-label">Heck Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="porsche-cabrio-finish" data-slug="porsche-cabrio-finish" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/porsche-cabrio-finish.webp" aria-label="Porsche 911 Cabrio · Showcase Finish · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-porsche-cabrio-finish-400.webp" srcset="assets/gallery/p-gal-porsche-cabrio-finish-400.webp 400w, assets/gallery/p-gal-porsche-cabrio-finish-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Porsche 911 Cabrio · Showcase Finish" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Porsche 911 Cabrio</strong><span class="gal-label">Showcase Finish</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="porsche-cockpit" data-slug="porsche-cockpit" data-category="Innenraum">
+              <a class="gal-tile" href="assets/gallery/porsche-cockpit.webp" aria-label="Porsche 911 Cockpit · Innenraum Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-porsche-cockpit-400.webp" srcset="assets/gallery/p-gal-porsche-cockpit-400.webp 400w, assets/gallery/p-gal-porsche-cockpit-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Porsche 911 Cockpit · Innenraum Detail" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Porsche 911 Cockpit</strong><span class="gal-label">Innenraum Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="porsche-heck" data-slug="porsche-heck" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/porsche-heck.webp" aria-label="Porsche 911 Heck · Exterieur Abschluss · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-porsche-heck-400.webp" srcset="assets/gallery/p-gal-porsche-heck-400.webp 400w, assets/gallery/p-gal-porsche-heck-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Porsche 911 Heck · Exterieur Abschluss" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Porsche 911 Heck</strong><span class="gal-label">Exterieur Abschluss</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="ford-transit-exterieur" data-slug="ford-transit-exterieur" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/ford-transit-exterieur.webp" aria-label="Ford Transit Custom · Flächenfinish · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-ford-transit-exterieur-400.webp" srcset="assets/gallery/p-gal-ford-transit-exterieur-400.webp 400w, assets/gallery/p-gal-ford-transit-exterieur-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Ford Transit Custom · Flächenfinish" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Ford Transit Custom</strong><span class="gal-label">Flächenfinish</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="ford-transit-cockpit" data-slug="ford-transit-cockpit" data-category="Innenraum">
+              <a class="gal-tile" href="assets/gallery/ford-transit-cockpit.webp" aria-label="Ford Transit Cockpit · Cockpit Aufbereitung · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-ford-transit-cockpit-400.webp" srcset="assets/gallery/p-gal-ford-transit-cockpit-400.webp 400w, assets/gallery/p-gal-ford-transit-cockpit-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Ford Transit Cockpit · Cockpit Aufbereitung" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Ford Transit Cockpit</strong><span class="gal-label">Cockpit Aufbereitung</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="ford-transit-dashboard" data-slug="ford-transit-dashboard" data-category="Innenraum">
+              <a class="gal-tile" href="assets/gallery/ford-transit-dashboard.webp" aria-label="Ford Transit Dashboard · Detail Reinigung · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-ford-transit-dashboard-400.webp" srcset="assets/gallery/p-gal-ford-transit-dashboard-400.webp 400w, assets/gallery/p-gal-ford-transit-dashboard-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Ford Transit Dashboard · Detail Reinigung" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Ford Transit Dashboard</strong><span class="gal-label">Detail Reinigung</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="ford-transit-reflexion-front" data-slug="ford-transit-reflexion-front" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/ford-transit-reflexion-front.webp" aria-label="Ford Transit Custom · Reflexionskontrolle · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-ford-transit-reflexion-front-400.webp" srcset="assets/gallery/p-gal-ford-transit-reflexion-front-400.webp 400w, assets/gallery/p-gal-ford-transit-reflexion-front-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Ford Transit Custom · Reflexionskontrolle" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Ford Transit Custom</strong><span class="gal-label">Reflexionskontrolle</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="citroen-reflexion" data-slug="citroen-reflexion" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/citroen-reflexion.webp" aria-label="Citroën C4 Picasso · Reflexionskontrolle · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-citroen-reflexion-400.webp" srcset="assets/gallery/p-gal-citroen-reflexion-400.webp 400w, assets/gallery/p-gal-citroen-reflexion-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Citroën C4 Picasso · Reflexionskontrolle" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Citroën C4 Picasso</strong><span class="gal-label">Reflexionskontrolle</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="aston-martin-motorraum" data-slug="aston-martin-motorraum" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/aston-martin-motorraum.webp" aria-label="Aston Martin Vantage · Motorraum Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-aston-martin-motorraum-400.webp" srcset="assets/gallery/p-gal-aston-martin-motorraum-400.webp 400w, assets/gallery/p-gal-aston-martin-motorraum-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Aston Martin Vantage · Motorraum Detail" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Aston Martin Vantage</strong><span class="gal-label">Motorraum Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="aston-martin-rot-exterieur" data-slug="aston-martin-rot-exterieur" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/aston-martin-rot-exterieur.webp" aria-label="Aston Martin Vantage · Exterieur Rot · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-aston-martin-rot-exterieur-400.webp" srcset="assets/gallery/p-gal-aston-martin-rot-exterieur-400.webp 400w, assets/gallery/p-gal-aston-martin-rot-exterieur-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Aston Martin Vantage · Exterieur Rot" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Aston Martin Vantage</strong><span class="gal-label">Exterieur Rot</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="aston-martin-motorraum-detail" data-slug="aston-martin-motorraum-detail" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/aston-martin-motorraum-detail.webp" aria-label="Aston Martin Vantage · Motor Aufbereitung · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-aston-martin-motorraum-detail-400.webp" srcset="assets/gallery/p-gal-aston-martin-motorraum-detail-400.webp 400w, assets/gallery/p-gal-aston-martin-motorraum-detail-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Aston Martin Vantage · Motor Aufbereitung" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Aston Martin Vantage</strong><span class="gal-label">Motor Aufbereitung</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="mercedes-vito-exterieur" data-slug="mercedes-vito-exterieur" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/mercedes-vito-exterieur.webp" aria-label="Mercedes-Benz V-Klasse · Exterieur Finish · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-mercedes-vito-exterieur-400.webp" srcset="assets/gallery/p-gal-mercedes-vito-exterieur-400.webp 400w, assets/gallery/p-gal-mercedes-vito-exterieur-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Mercedes-Benz V-Klasse · Exterieur Finish" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong><span class="gal-nb">Mercedes-Benz</span> <span class="gal-nb">V-Klasse</span></strong><span class="gal-label">Exterieur Finish</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="lack-reflexion-nahaufnahme" data-slug="lack-reflexion-nahaufnahme" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/lack-reflexion-nahaufnahme.webp" aria-label="Lackanalyse · Reflexion Nahaufnahme · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-lack-reflexion-nahaufnahme-400.webp" srcset="assets/gallery/p-gal-lack-reflexion-nahaufnahme-400.webp 400w, assets/gallery/p-gal-lack-reflexion-nahaufnahme-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Lackanalyse · Reflexion Nahaufnahme" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Lackanalyse</strong><span class="gal-label">Reflexion Nahaufnahme</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="audi-rs3-exterieur-heck" data-slug="audi-rs3-exterieur-heck" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/Screenshot_1.webp" aria-label="Audi RS3 Sportback · Exterieur Finish · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-audi-rs3-exterieur-heck-400.webp" srcset="assets/gallery/p-gal-audi-rs3-exterieur-heck-400.webp 400w, assets/gallery/p-gal-audi-rs3-exterieur-heck-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="Audi RS3 Sportback · Exterieur Finish" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>Audi RS3 Sportback</strong><span class="gal-label">Exterieur Finish</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="bmw-m3-yellow-side" data-slug="bmw-m3-yellow-side" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/bmw1.webp" aria-label="BMW M3 Competition · Keramikversiegelung · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-bmw-m3-yellow-side-400.webp" srcset="assets/gallery/p-gal-bmw-m3-yellow-side-400.webp 400w, assets/gallery/p-gal-bmw-m3-yellow-side-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="BMW M3 Competition · Keramikversiegelung" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>BMW M3 Competition</strong><span class="gal-label">Keramikversiegelung</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="bmw-m3-yellow-front" data-slug="bmw-m3-yellow-front" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/bmw2.webp" aria-label="BMW M3 Competition · Front Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-bmw-m3-yellow-front-400.webp" srcset="assets/gallery/p-gal-bmw-m3-yellow-front-400.webp 400w, assets/gallery/p-gal-bmw-m3-yellow-front-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="BMW M3 Competition · Front Detail" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>BMW M3 Competition</strong><span class="gal-label">Front Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="bmw-m3-carbon-roof" data-slug="bmw-m3-carbon-roof" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/bmw3.webp" aria-label="BMW M3 Competition · Carbondach Detail · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-bmw-m3-carbon-roof-400.webp" srcset="assets/gallery/p-gal-bmw-m3-carbon-roof-400.webp 400w, assets/gallery/p-gal-bmw-m3-carbon-roof-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="BMW M3 Competition · Carbondach Detail" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>BMW M3 Competition</strong><span class="gal-label">Carbondach Detail</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item" id="bmw-m3-carbon-mirror" data-slug="bmw-m3-carbon-mirror" data-category="Detail">
+              <a class="gal-tile" href="assets/gallery/bmw4.webp" aria-label="BMW M3 Competition · Carbon Spiegel · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-bmw-m3-carbon-mirror-400.webp" srcset="assets/gallery/p-gal-bmw-m3-carbon-mirror-400.webp 400w, assets/gallery/p-gal-bmw-m3-carbon-mirror-640.webp 640w" sizes="(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="BMW M3 Competition · Carbon Spiegel" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>BMW M3 Competition</strong><span class="gal-label">Carbon Spiegel</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-item gal-item--wide" id="bmw-m3-yellow-wheel" data-slug="bmw-m3-yellow-wheel" data-category="Exterieur">
+              <a class="gal-tile" href="assets/gallery/bmw5.webp" aria-label="BMW M3 Competition · Felgen &amp; Bremse · Foto vergrößern">
+                <span class="gal-photo"><img src="assets/gallery/p-gal-bmw-m3-yellow-wheel-400.webp" srcset="assets/gallery/p-gal-bmw-m3-yellow-wheel-400.webp 400w, assets/gallery/p-gal-bmw-m3-yellow-wheel-640.webp 640w" sizes="(max-width: 679px) 92vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, (max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, (max-width: 2499px) 11vw, 9vw" width="400" height="500" alt="BMW M3 Competition · Felgen &amp; Bremse" loading="lazy" decoding="async" /></span>
+                <span class="gal-cap"><strong>BMW M3 Competition</strong><span class="gal-label">Felgen &amp; Bremse</span></span>
+                <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+              </a>
+            </li>
+            <li class="gal-book" id="galBook">
+              <div class="gal-book-in">
+                <h2>So soll Ihr Auto auch aussehen?</h2>
+                <div class="glass-actions">
+                  <a class="button button-whatsapp" data-whatsapp-link href="/#kontakt">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+                    <span>Termin anfragen</span>
+                  </a>
+                  <a class="button button-secondary" data-call-link href="tel:+436764391253">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+                    <span>Anrufen</span>
+                  </a>
+                </div>
+              </div>
+            </li>
+          </ul>
+
+          <p class="gal-status">
+            <span id="galStatus" aria-live="polite">25 Aufnahmen · alle Kategorien</span>
+            <button type="button" class="gal-reset" id="galReset" hidden>Alle 25 anzeigen</button>
+          </p>
+        </section>
+
+        <!-- ── VIDEO · the work in motion, after the photos ───── -->
         <section class="video-showcase reveal" id="video-showcase" aria-label="Cornel Detailing · Fahrzeugaufbereitung im Einsatz">
           <div class="video-showcase-layout">
 
@@ -235,11 +426,6 @@
 
           </div>
         </section>
-
-        <section class="section gallery-section" id="autoaufbereitung-galerie-gloggnitz">
-          <div class="gallery-grid" id="galleryGrid" aria-live="polite" aria-label="Projektreferenzen"></div>
-        </section>
-
         <!-- ── CTA ───────────────────────────────────────────── -->
         <section class="section section-cta reveal">
           <div class="cta-card cta-card--dark">
@@ -265,7 +451,6 @@
             </div>
           </div>
         </section>
-
       </main>
 
       <footer class="footer">
@@ -292,54 +477,53 @@
 
     </div>
 
-    <!-- ── LIGHTBOX (gallery image viewer) ──────────────────── -->
-    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Bildvorschau">
-      <div class="lightbox-backdrop" data-lb-close></div>
-      <div class="lightbox-shell">
-        <button class="lightbox-close" id="lbClose" type="button" aria-label="Schließen" data-lb-close>
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 6L6 18M6 6l12 12"/>
-          </svg>
-        </button>
-
-        <button class="lightbox-nav lightbox-prev" id="lbPrev" type="button" aria-label="Vorheriges Bild">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 18l-6-6 6-6"/>
-          </svg>
-        </button>
-        <button class="lightbox-nav lightbox-next" id="lbNext" type="button" aria-label="Nächstes Bild">
-          <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M9 6l6 6-6 6"/>
-          </svg>
-        </button>
-
-        <figure class="lightbox-frame">
-          <div class="lightbox-img-wrap" id="lbImgWrap">
-            <img class="lightbox-img" id="lbImg" alt="" />
-            <div class="lightbox-loader" id="lbLoader" aria-hidden="true"></div>
+    <!-- ── PHOTO VIEWER (opened by a tap on a photo) ────────── -->
+    <div class="glb" id="galLightbox" role="dialog" aria-modal="true" aria-labelledby="glbTitle" aria-hidden="true">
+      <div class="glb-view">
+        <div class="glb-stage" id="glbStage">
+          <div class="glb-track" id="glbTrack">
+            <div class="glb-slide"><img alt="" width="1100" height="1466" decoding="async" draggable="false" /></div>
+            <div class="glb-slide"><img alt="" width="1100" height="1466" decoding="async" draggable="false" /></div>
+            <div class="glb-slide"><img alt="" width="1100" height="1466" decoding="async" draggable="false" /></div>
           </div>
-          <figcaption class="lightbox-caption">
-            <span class="lightbox-label" id="lbLabel"></span>
-            <h2 class="lightbox-title" id="lbTitle"></h2>
-            <p class="lightbox-desc" id="lbDesc"></p>
-            <div class="lightbox-actions">
-              <a class="button button-whatsapp lightbox-cta" data-whatsapp-link href="/#kontakt">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/>
-                </svg>
-                <span>So ein Ergebnis · Termin</span>
-              </a>
-              <a class="button button-secondary lightbox-cta-call" data-call-link href="tel:+436764391253">
-                <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                  <path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/>
-                </svg>
-                <span>Anrufen</span>
-              </a>
-            </div>
-          </figcaption>
-        </figure>
+        </div>
+        <div class="glb-ui">
+          <button class="glb-btn glb-prev" id="glbPrev" type="button" aria-label="Vorheriges Foto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <p class="glb-count" id="glbCount" aria-live="polite" aria-atomic="true">1 / 25</p>
+          <button class="glb-btn glb-next" id="glbNext" type="button" aria-label="Nächstes Foto">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>
+          </button>
+          <button class="glb-btn glb-close" id="glbClose" type="button" aria-label="Großansicht schließen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+      </div>
 
-        <div class="lightbox-counter" id="lbCounter" aria-hidden="true">1 / 1</div>
+      <div class="glb-panel">
+        <div class="glb-info">
+          <span class="glb-label" id="glbLabel"></span>
+          <h2 class="glb-title" id="glbTitle"></h2>
+          <p class="glb-desc" id="glbDesc"></p>
+        </div>
+        <div class="glb-more">
+          <p class="glb-more-title" id="glbMoreTitle">Weitere Fotos</p>
+          <div class="glb-thumbs" id="glbThumbs"></div>
+        </div>
+        <div class="glb-book">
+          <p class="glb-book-q">So soll Ihr Auto auch aussehen?</p>
+          <div class="glb-actions">
+            <a class="button button-whatsapp" data-whatsapp-link href="/#kontakt">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.1 3a8.9 8.9 0 0 0-7.7 13.3L3 21l4.9-1.3A9 9 0 1 0 12.1 3zm0 16.3c-1.3 0-2.5-.3-3.6-.9l-.3-.1-2.9.8.8-2.8-.2-.3a7.3 7.3 0 1 1 6.2 3.3zm4-5.5c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1l-.4.5c-.1.2-.3.2-.5.1-.2-.1-.9-.3-1.7-1.1-.7-.6-1.1-1.3-1.2-1.5-.1-.2 0-.3.1-.4l.3-.4.2-.3c.1-.1.1-.3 0-.4 0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.1.9 2.2c.1.2 1.6 2.5 4 3.4 2.3.9 2.3.6 2.7.6.4-.1 1.4-.6 1.6-1.2.2-.6.2-1 .1-1.1-.1-.1-.3-.2-.5-.3z"/></svg>
+              <span>Termin anfragen</span>
+            </a>
+            <a class="button button-secondary" data-call-link href="tel:+436764391253">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.6 10.8a15.6 15.6 0 0 0 6.6 6.6l2.2-2.2c.3-.3.8-.4 1.2-.3 1 .3 2 .5 3.1.5.6 0 1 .4 1 1V20a1 1 0 0 1-1 1C10.7 21 3 13.3 3 4a1 1 0 0 1 1-1h3.6c.6 0 1 .4 1 1 0 1.1.2 2.1.5 3.1.1.4 0 .9-.3 1.2l-2.2 2.5z"/></svg>
+              <span>Anrufen</span>
+            </a>
+          </div>
+        </div>
       </div>
     </div>
   </body>

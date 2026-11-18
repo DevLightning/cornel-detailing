@@ -136,6 +136,61 @@ const packages = [
 
 const projects = [
   {
+    slug: "lamborghini-urus-front",
+    title: "Lamborghini Urus SE",
+    label: "Exterieur Finish",
+    description: "Schwarzer Lack unter Hexagon-Licht · klare Spiegelungen auf Haube und Scheibe.",
+    asset: "assets/gallery/urus-front.webp",
+    layout: "wide",
+    featured: true,
+    category: "Exterieur",
+  },
+  {
+    slug: "lamborghini-urus-werkstatt",
+    title: "Lamborghini Urus SE",
+    label: "Frontansicht",
+    description: "Der Urus SE bei uns in der Werkstatt · tiefschwarzer Lack unter Hexagon-Licht.",
+    asset: "assets/gallery/urus-werkstatt.webp",
+    layout: "wide",
+    category: "Exterieur",
+  },
+  {
+    slug: "lamborghini-urus-cockpit",
+    title: "Lamborghini Urus SE",
+    label: "Interieur Detail",
+    description: "Carbon, Leder und der Schriftzug am Armaturenbrett im Detail.",
+    asset: "assets/gallery/urus-cockpit.webp",
+    layout: "tall",
+    category: "Innenraum",
+  },
+  {
+    slug: "lamborghini-urus-fussraum",
+    title: "Lamborghini Urus SE",
+    label: "Fußraum",
+    description: "Gesaugter Teppich mit sauberen Bahnen im Fußraum.",
+    asset: "assets/gallery/urus-fussraum.webp",
+    layout: "tall",
+    category: "Innenraum",
+  },
+  {
+    slug: "lamborghini-urus-felge",
+    title: "Lamborghini Urus SE",
+    label: "Felge und Emblem",
+    description: "Feine Speichen und das goldene Emblem im Detail.",
+    asset: "assets/gallery/urus-felge.webp",
+    layout: "tall",
+    category: "Detail",
+  },
+  {
+    slug: "lamborghini-urus-heck",
+    title: "Lamborghini Urus SE",
+    label: "Heck Detail",
+    description: "Der Schriftzug am Heck auf schwarzem Lack.",
+    asset: "assets/gallery/urus-heck.webp",
+    layout: "tall",
+    category: "Detail",
+  },
+  {
     slug: "porsche-cabrio-finish",
     title: "Porsche 911 Cabrio",
     label: "Showcase Finish",
@@ -473,6 +528,7 @@ function renderShowcaseStrip() {
 
   // Hand-picked, conversion-strong sequence: variety of brands + body styles
   const wantedSlugs = [
+    "lamborghini-urus-front",
     "bmw-m3-yellow-side",
     "porsche-cabrio-finish",
     "audi-rs3-exterieur-heck",
@@ -591,23 +647,252 @@ function setupShowcaseSwipe() {
   whenVisible();
 }
 
-function renderGallery() {
-  const target = document.getElementById("galleryGrid");
-  if (!target) return;
+/* ════════════════════════════════════════════════════════════════════════════
+   GALLERY PAGE (galerie.html)
+   The photos are written into galerie.html as plain HTML, so they are on
+   screen before this file has loaded. The projects array above stays the one
+   source: renderGallery() compares the page with the array on every visit and
+   rebuilds the list when they differ, so adding a photo to the array is all
+   it takes. Nothing here uses class "reveal": a photo is never invisible.
+   ════════════════════════════════════════════════════════════════════════════ */
 
-  target.innerHTML = projects
-    .map(
-      (project, i) => `
-        <article
-          class="gallery-tile gallery-tile--${project.layout} reveal"
-          style="--i:${i}"
-          data-category="${project.category || ""}"
-        >
-          ${projectMarkup(project)}
-        </article>
-      `
-    )
-    .join("");
+/* Photos fetched straight away; the rest load when they come near the screen.
+   Six is three rows on a phone (nine visitors in ten). A wide monitor has up
+   to ten in its first row: there the others are on screen, so the browser
+   fetches them at once anyway, and a phone is spared four more downloads. */
+const GALLERY_EAGER = 6;
+const GALLERY_SIZES =
+  "(max-width: 679px) 46vw, (max-width: 959px) 30vw, (max-width: 1279px) 23vw, " +
+  "(max-width: 1359px) 18vw, (max-width: 1679px) 15vw, (max-width: 2199px) 13vw, " +
+  "(max-width: 2499px) 11vw, 9vw";
+const GALLERY_SIZES_WIDE = GALLERY_SIZES.replace("46vw", "92vw");
+let galleryFilter = "all";
+
+function galleryEscape(text) {
+  return String(text == null ? "" : text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+/* Small copies of every photo for the grid (assets/gallery/p-gal-<slug>-400.webp
+   and -640.webp). The full photo is only fetched when it is opened. */
+function galleryThumb(project, width) {
+  return `assets/gallery/p-gal-${project.slug}-${width}.webp`;
+}
+
+/* Photos whose titles start with the same make and model ("Porsche 911
+   Cabrio", "Porsche 911 Cockpit") show the same vehicle. A title of one word
+   ("Lackanalyse") names no vehicle. */
+function galleryVehicle(project) {
+  const words = String(project.title || "").trim().split(/\s+/);
+  return words.length > 1 ? words.slice(0, 2).join(" ") : "";
+}
+
+/* The order on the gallery page: the order of the array, with every photo
+   moved up next to the first photo of the same vehicle. The array itself is
+   left alone, the homepage reads it too. */
+function galleryList() {
+  const firstSeen = {};
+  const keyOf = (p) => galleryVehicle(p) || p.slug;
+  projects.forEach((p, i) => {
+    if (firstSeen[keyOf(p)] === undefined) firstSeen[keyOf(p)] = i;
+  });
+  return projects
+    .map((p, i) => ({ p, i, group: firstSeen[keyOf(p)] }))
+    .sort((a, b) => a.group - b.group || a.i - b.i)
+    .map((entry) => entry.p);
+}
+
+// What the grid shows right now (the chosen category)
+function galleryShown() {
+  const list = galleryList();
+  return galleryFilter === "all" ? list : list.filter((p) => p.category === galleryFilter);
+}
+
+function galleryTileMarkup(project, i) {
+  const title = galleryEscape(project.title);
+  const label = galleryEscape(project.label);
+  // a name like "Mercedes-Benz" is never split over two lines at its hyphen
+  const titleHtml = title.replace(/[^\s]+-[^\s]+/g, '<span class="gal-nb">$&</span>');
+  return `
+    <li class="gal-item" id="${project.slug}" data-slug="${project.slug}" data-category="${galleryEscape(project.category || "")}">
+      <a class="gal-tile" href="${project.asset}" aria-label="${title} · ${label} · Foto vergrößern">
+        <span class="gal-photo"><img src="${galleryThumb(project, 400)}" srcset="${galleryThumb(project, 400)} 400w, ${galleryThumb(project, 640)} 640w" sizes="${GALLERY_SIZES}" width="400" height="500" alt="${title} · ${label}" loading="${i < GALLERY_EAGER ? "eager" : "lazy"}" decoding="async" /></span>
+        <span class="gal-cap"><strong>${titleHtml}</strong><span class="gal-label">${label}</span></span>
+        <span class="gal-zoom" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg></span>
+      </a>
+    </li>
+  `;
+}
+
+/* A small copy that is missing on the server (forgotten in an upload) must
+   not leave a hole: the tile falls back to the full photo. */
+function galleryImageFallback(holder) {
+  const swap = (img) => {
+    const link = img.closest("a[href]");
+    const full = img.dataset.full || (link && link.getAttribute("href"));
+    if (!full || img.dataset.fellBack) return;
+    img.dataset.fellBack = "1";
+    img.removeAttribute("srcset");
+    img.removeAttribute("sizes");
+    img.src = full;
+  };
+  holder.addEventListener("error", (e) => {
+    if (e.target && e.target.tagName === "IMG") swap(e.target);
+  }, true);
+  // an image can fail before this script has started
+  holder.querySelectorAll("img").forEach((img) => {
+    if (img.getAttribute("src") && img.complete && img.naturalWidth === 0) swap(img);
+  });
+}
+
+function renderGallery() {
+  const grid = document.getElementById("galGrid");
+  if (!grid) return;
+
+  const list = galleryList();
+  const onPage = Array.from(grid.querySelectorAll(".gal-item"));
+  const text = (el, sel) => {
+    const node = el.querySelector(sel);
+    return node ? node.textContent : "";
+  };
+  const upToDate =
+    onPage.length === list.length &&
+    list.every((p, i) => {
+      const el = onPage[i];
+      const link = el.querySelector(".gal-tile");
+      return (
+        el.dataset.slug === p.slug &&
+        el.dataset.category === (p.category || "") &&
+        text(el, ".gal-cap strong") === p.title &&
+        text(el, ".gal-label") === p.label &&
+        !el.querySelector(".gal-desc") &&   // an older page had a sentence under each photo
+        link && link.getAttribute("href") === p.asset
+      );
+    });
+
+  if (!upToDate) {
+    // the booking card at the end of the list is not touched
+    onPage.forEach((el) => el.remove());
+    grid.insertAdjacentHTML("afterbegin", list.map(galleryTileMarkup).join(""));
+  }
+  galleryImageFallback(grid);
+}
+
+/* The chip row scrolls sideways on a phone. An edge that still hides chips
+   fades out (gallery.css), so a row that happens to be cut between two chips
+   never looks complete. */
+function galleryChipFade() {
+  const row = document.getElementById("galFilters");
+  if (!row) return;
+  const max = row.scrollWidth - row.clientWidth;
+  row.classList.toggle("can-left", max > 1 && row.scrollLeft > 4);
+  row.classList.toggle("can-right", max > 1 && row.scrollLeft < max - 4);
+}
+
+/* The booking card ends the list. Beside the last photos it stands right
+   after them; when the last row is full it has a row of its own, and there
+   it is centred (gallery.css, .is-alone). */
+function galleryBookFit() {
+  const grid = document.getElementById("galGrid");
+  const book = document.getElementById("galBook");
+  if (!grid || !book) return;
+  const shown = grid.querySelectorAll(".gal-item:not([hidden])");
+  const last = shown[shown.length - 1];
+  book.classList.toggle("is-alone", !last || book.offsetTop !== last.offsetTop);
+}
+
+/* One place that applies a category: chips, photos, the line under the grid.
+   Photos are shown and hidden, never rebuilt, so nothing reloads or flickers. */
+function galleryApplyFilter(filter, byVisitor) {
+  const grid = document.getElementById("galGrid");
+  const bar = document.getElementById("galFilters");
+  if (!grid || !bar) return;
+
+  galleryFilter = filter !== "all" && projects.some((p) => p.category === filter) ? filter : "all";
+
+  bar.querySelectorAll(".gal-chip").forEach((chip) => {
+    const on = chip.dataset.filter === galleryFilter;
+    chip.classList.toggle("is-active", on);
+    chip.setAttribute("aria-pressed", on ? "true" : "false");
+    if (on) {
+      /* The chosen chip slides into the row (sideways only) far enough that
+         a piece of the chip before it and after it stays in view: the row
+         never looks as if it ended at the chosen chip. */
+      const peek = 32;
+      const row = bar.getBoundingClientRect();
+      const box = chip.getBoundingClientRect();
+      if (box.left - peek < row.left) bar.scrollLeft += box.left - peek - row.left;
+      else if (box.right + peek > row.right) bar.scrollLeft += box.right + peek - row.right;
+    }
+  });
+  galleryChipFade();
+
+  const items = Array.from(grid.querySelectorAll(".gal-item"));
+  const shown = items.filter((item) => {
+    const show = galleryFilter === "all" || item.dataset.category === galleryFilter;
+    item.hidden = !show;
+    return show;
+  });
+  /* Phones show two columns. With an odd number of photos the last one takes
+     the whole row (the CSS does that below 680px only), so no photo is left
+     alone beside an empty space. */
+  items.forEach((item) => {
+    const wide = shown.length % 2 === 1 && item === shown[shown.length - 1];
+    item.classList.toggle("gal-item--wide", wide);
+    const img = item.querySelector("img");
+    const sizes = wide ? GALLERY_SIZES_WIDE : GALLERY_SIZES;
+    if (img && img.hasAttribute("srcset") && img.getAttribute("sizes") !== sizes) img.setAttribute("sizes", sizes);
+  });
+
+  const status = document.getElementById("galStatus");
+  const reset = document.getElementById("galReset");
+  const line =
+    `${shown.length} ${shown.length === 1 ? "Aufnahme" : "Aufnahmen"} · ` +
+    (galleryFilter === "all" ? "alle Kategorien" : galleryFilter);
+  if (status && status.textContent !== line) status.textContent = line;   // read out by screen readers
+  if (reset) {
+    reset.textContent = `Alle ${items.length} anzeigen`;
+    reset.hidden = galleryFilter === "all";
+  }
+  galleryBookFit();
+
+  if (!byVisitor) return;
+
+  /* The chips stay where they are; if the visitor was further down, the grid
+     starts again at its first row right under them instead of the page
+     jumping to wherever the shorter list ends. */
+  const holder = bar.closest(".gal-bar") || bar;
+  const css = getComputedStyle(holder);
+  const pinned = css.position === "sticky" || css.position === "-webkit-sticky";
+  // where the chips rest once they are pinned: their distance from the top, their height, the gap below
+  const edge = (pinned ? parseFloat(css.top) || 0 : 84) + holder.offsetHeight + (parseFloat(css.marginBottom) || 12);
+  const target = window.scrollY + grid.getBoundingClientRect().top - edge;
+  if (window.scrollY > target + 1) window.scrollTo({ top: Math.max(0, target), behavior: "instant" });
+
+  if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    grid.classList.remove("is-swapping");
+    void grid.offsetWidth;                 // restart the fade
+    grid.classList.add("is-swapping");
+    clearTimeout(galleryApplyFilter.timer);
+    galleryApplyFilter.timer = setTimeout(() => grid.classList.remove("is-swapping"), 400);
+  }
+}
+
+/* Runs in the first startup wave: on this page the photos are the first
+   thing a visitor touches. Each step is isolated, so one failing step can
+   never stop the rest of the page from starting. */
+function startGallery() {
+  if (!document.getElementById("galGrid")) return;   // not the gallery page
+  [renderGallery, renderGalleryFilters, setupGalleryStats, setupGalleryFilter, setupLightbox].forEach((step) => {
+    try {
+      step();
+    } catch (err) {
+      console.error("[cornel] " + step.name + " failed:", err);
+    }
+  });
 }
 
 /* The one package marked "Empfohlen": 60 months of ceramic protection for
@@ -1278,6 +1563,79 @@ function setupPackageDetails() {
   }));
 }
 
+/* A service card ("Was braucht Ihr Auto?") answers with one press: the page
+   moves to that category of packages and the service list of its first
+   package opens (on a wide layout the pair opens together), so the price, what
+   is included and the request button are all on screen. Without this the card
+   was a plain anchor: it only scrolled, and the visitor had to press again to
+   see anything. If the packages are not on the page the link stays a normal
+   anchor. */
+function setupServiceCards() {
+  const cards = document.querySelectorAll('a.value-card--link[href^="#pkg-title-"]');
+  if (!cards.length) return;
+  const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let run = 0;
+
+  // where the top of an element has to sit to clear the header and the sticky vehicle picker
+  const clearance = () => {
+    let top = 12;
+    const bar = document.querySelector(".topbar");
+    if (bar) top = Math.max(top, bar.getBoundingClientRect().bottom + 12);
+    const picker = document.querySelector(".vehicle-select");
+    if (picker && getComputedStyle(picker).position === "sticky") {
+      top = Math.max(top, parseFloat(getComputedStyle(picker).top) + picker.offsetHeight + 12);
+    }
+    return top;
+  };
+
+  cards.forEach((card) => card.addEventListener("click", (e) => {
+    if (e.defaultPrevented || e.button > 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+    const title = document.getElementById(card.getAttribute("href").slice(1));
+    const pkgCard = title && title.closest(".pkg-card");
+    const group = pkgCard && (pkgCard.closest(".pkg-group") || pkgCard);
+    if (!group) return;
+    e.preventDefault();
+    const mine = ++run;
+    const anchor = group.querySelector(".pkg-group-header") || group;
+    const goal = () => Math.max(0, Math.round(anchor.getBoundingClientRect().top + window.scrollY - clearance()));
+
+    const arrive = () => {
+      if (mine !== run) return;                // another card was pressed meanwhile
+      // the page may have grown or shrunk while it moved: land exactly
+      if (Math.abs(window.scrollY - goal()) > 4) {
+        const root = document.documentElement;
+        const behavior = root.style.scrollBehavior;
+        root.style.scrollBehavior = "auto";
+        window.scrollTo(0, goal());
+        root.style.scrollBehavior = behavior;
+      }
+      const details = pkgCard.querySelector(".pkg-details");
+      const toggle = details && details.querySelector(".pkg-toggle");
+      if (toggle && !details.open) toggle.click();   // same path as a press on "Leistungen"
+      title.setAttribute("tabindex", "-1");
+      title.focus({ preventScroll: true });
+    };
+
+    const y = goal();
+    if (reducedMotion.matches || Math.abs(window.scrollY - y) < 4) {
+      window.scrollTo(0, y);
+      arrive();
+      return;
+    }
+    window.scrollTo({ top: y, behavior: "smooth" });
+    // "scrollend" where the browser has it, and a timer as the floor under it
+    let done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      window.removeEventListener("scrollend", finish);
+      arrive();
+    };
+    window.addEventListener("scrollend", finish, { once: true });
+    setTimeout(finish, 1100);
+  }));
+}
+
 /* Fade-in on scroll. The observer is kept at module scope because the
    showcase, gallery and review cards are built in the second startup wave,
    after this has already run: revealScan() picks those up. An element that
@@ -1415,69 +1773,75 @@ function setupReviewsCarousel() {
   layout();
 }
 
+/* Category chips with a count each. They are already in galerie.html; they
+   are only rebuilt when the array no longer matches them. */
 function renderGalleryFilters() {
-  const container = document.getElementById("galleryFilters");
+  const container = document.getElementById("galFilters");
   if (!container) return;
 
-  // Build ordered category counts (preserving first-seen order)
+  // Categories in the order they first appear in the array
   const cats = {};
   projects.forEach((p) => {
     if (p.category) cats[p.category] = (cats[p.category] || 0) + 1;
   });
+  const wanted = [["all", "Alle", projects.length]].concat(
+    Object.entries(cats).map(([cat, count]) => [cat, cat, count])
+  );
 
-  const allBtn = `<button class="gallery-filter-btn is-active" data-filter="all">Alle <span class="filter-count">${projects.length}</span></button>`;
-  const catBtns = Object.entries(cats)
-    .map(([cat, count]) => `<button class="gallery-filter-btn" data-filter="${cat}">${cat} <span class="filter-count">${count}</span></button>`)
+  const chips = Array.from(container.querySelectorAll(".gal-chip"));
+  const upToDate =
+    chips.length === wanted.length &&
+    wanted.every(([filter, , count], i) => {
+      const n = chips[i].querySelector(".gal-chip-n");
+      return chips[i].dataset.filter === filter && n && n.textContent === String(count);
+    });
+  if (upToDate) return;
+
+  container.innerHTML = wanted
+    .map(([filter, name, count]) => {
+      const on = filter === galleryFilter;
+      return `<button type="button" class="gal-chip${on ? " is-active" : ""}" data-filter="${galleryEscape(filter)}" aria-pressed="${on}">${galleryEscape(name)} <span class="gal-chip-n">${count}</span></button>`;
+    })
     .join("");
-
-  container.innerHTML = allBtn + catBtns;
 }
 
 function setupGalleryFilter() {
-  const container = document.getElementById("galleryFilters");
-  const grid = document.getElementById("galleryGrid");
+  const container = document.getElementById("galFilters");
+  const grid = document.getElementById("galGrid");
   if (!container || !grid) return;
 
   container.addEventListener("click", (e) => {
-    const btn = e.target.closest(".gallery-filter-btn");
-    if (!btn) return;
-
-    // Update active button
-    container.querySelectorAll(".gallery-filter-btn").forEach((b) => b.classList.remove("is-active"));
-    btn.classList.add("is-active");
-
-    const filter = btn.dataset.filter;
-
-    // Fade out
-    grid.style.opacity = "0";
-    grid.style.transform = "translateY(6px)";
-
-    setTimeout(() => {
-      const list = filter === "all" ? projects : projects.filter((p) => p.category === filter);
-
-      grid.innerHTML = list
-        .map(
-          (project, i) => `
-          <article
-            class="gallery-tile gallery-tile--${project.layout} reveal is-visible"
-            style="--i:${i}"
-            data-category="${project.category || ""}"
-          >
-            ${projectMarkup(project)}
-          </article>
-        `
-        )
-        .join("");
-
-      // Fade back in on next two frames to ensure DOM painted
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          grid.style.opacity = "1";
-          grid.style.transform = "translateY(0)";
-        });
-      });
-    }, 220);
+    const chip = e.target.closest(".gal-chip");
+    if (chip) galleryApplyFilter(chip.dataset.filter, true);
   });
+
+  // "Alle 19 anzeigen" under a filtered list
+  const reset = document.getElementById("galReset");
+  if (reset) {
+    reset.addEventListener("click", () => {
+      galleryApplyFilter("all", true);
+      const all = container.querySelector('.gal-chip[data-filter="all"]');
+      if (all) all.focus({ preventScroll: true });   // the button that was pressed is gone now
+    });
+  }
+
+  // The fade at the edges of the chip row and the place of the booking card
+  // follow the row being scrolled and the window being resized or turned
+  let queued = false;
+  const refit = () => {
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(() => {
+      queued = false;
+      galleryChipFade();
+      galleryBookFit();
+    });
+  };
+  container.addEventListener("scroll", refit, { passive: true });
+  window.addEventListener("resize", refit, { passive: true });
+  window.addEventListener("load", refit, { once: true });   // the fonts are in: widths are final
+
+  galleryApplyFilter(galleryFilter, false);   // brings a rebuilt list in line with the chips
 }
 
 function setupMobileMenu() {
@@ -1783,6 +2147,59 @@ function setupVideoShowcase() {
   });
 }
 
+/* The film in the hero. The photo is the first picture and stays the picture
+   whenever the film may not or cannot run. The film gets its address only
+   after the page has loaded, so it never competes with the photo, the fonts
+   or the script; it shows itself only once it really plays.
+
+   · no film for visitors who asked for less motion or for less data
+   · one of three files, by the shape of the hero (see build/make_hero_video.py)
+   · it plays by itself, always, with no button (the owner's decision); it
+     only rests while the hero is out of sight and goes on when it is back */
+function setupHeroFilm() {
+  const film = document.getElementById("heroFilm");
+  const hero = film && film.closest(".hero");
+  if (!film || !hero || !film.play) return;
+
+  const conn = navigator.connection || {};
+  if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+  if (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || "")) return;
+
+  let inSight = true;
+  let started = false;
+
+  const file = () => {
+    if (window.matchMedia("(max-width: 600px)").matches) return film.dataset.phone;
+    if (window.matchMedia("(min-width: 1600px)").matches) return film.dataset.wide;
+    return film.dataset.mid;
+  };
+  const play = () => {
+    if (!started || !inSight || document.hidden) return;
+    const p = film.play();
+    if (p && p.catch) p.catch(() => {});   // not allowed to start: the photo stays
+  };
+
+  film.addEventListener("playing", () => film.classList.add("is-playing"));
+  film.addEventListener("error", () => film.classList.remove("is-playing"));
+  if ("IntersectionObserver" in window) {
+    new IntersectionObserver((entries) => {
+      inSight = entries[entries.length - 1].isIntersecting;
+      if (inSight) play(); else film.pause();
+    }, { threshold: 0.1 }).observe(hero);
+  }
+  document.addEventListener("visibilitychange", () => { if (!document.hidden) play(); });
+
+  const start = () => {
+    if (started) return;
+    started = true;
+    film.src = file();
+    play();
+  };
+  const afterLoad = () => setTimeout(start, 400);
+  if (document.readyState === "complete") afterLoad();
+  else window.addEventListener("load", afterLoad, { once: true });
+}
+
 function setupReviewCount() {
   document.querySelectorAll("#heroReviewCount, #reviewStatCount").forEach((el) => {
     el.textContent = "50+";
@@ -1790,166 +2207,660 @@ function setupReviewCount() {
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
-   GALLERY LIGHTBOX — full-size image viewer
+   GALLERY · the three numbers in the hero and the full screen photo viewer
    ════════════════════════════════════════════════════════════════════════════ */
 
+/* Photos, vehicles and categories, counted from the array. A vehicle is a
+   make and model (see galleryVehicle): three photos of the same Porsche are
+   one vehicle, and "Lackanalyse" is a photo, not a vehicle. */
 function setupGalleryStats() {
-  const aufnahmen = document.getElementById("statAufnahmen");
-  const fahrzeuge = document.getElementById("statFahrzeuge");
-  const kategorien = document.getElementById("statKategorien");
-  if (!aufnahmen) return; // not on gallery page
+  const photos = document.getElementById("galStatPhotos");
+  const vehicles = document.getElementById("galStatVehicles");
+  const categories = document.getElementById("galStatCategories");
+  if (!photos || !vehicles || !categories) return;   // not on the gallery page
 
-  // Count distinct vehicles (by title) and categories
-  const vehicleSet = new Set(projects.map((p) => p.title));
-  const catSet = new Set(projects.map((p) => p.category).filter(Boolean));
-
-  aufnahmen.textContent = projects.length;
-  fahrzeuge.textContent = vehicleSet.size;
-  kategorien.textContent = catSet.size;
+  const set = (el, n) => {
+    if (el.textContent !== String(n)) el.textContent = n;
+  };
+  set(photos, projects.length);
+  set(vehicles, new Set(projects.map(galleryVehicle).filter(Boolean)).size);
+  set(categories, new Set(projects.map((p) => p.category).filter(Boolean)).size);
 }
 
+/* The photo viewer. Three slides sit side by side (previous, current, next):
+   a swipe drags the neighbour in with the finger, and the neighbours are
+   already loaded when they are needed.
+
+   · tap a photo: opens; the address gets #<slug>, so the photo can be linked
+   · swipe, the arrow buttons, the arrow keys: previous and next
+   · X, Escape, a tap beside the photo, pulling the photo down, the browser's
+     Back button: close. Back never leaves the gallery while a photo is open
+   · galerie.html#<slug> (the homepage strip links like this) opens that photo
+   · focus stays inside while it is open and returns to the photo afterwards */
 function setupLightbox() {
-  const lb = document.getElementById("lightbox");
-  if (!lb) return;
+  const lb = document.getElementById("galLightbox");
+  const grid = document.getElementById("galGrid");
+  if (!lb || !grid) return;
 
-  const lbImg     = document.getElementById("lbImg");
-  const lbLabel   = document.getElementById("lbLabel");
-  const lbTitle   = document.getElementById("lbTitle");
-  const lbDesc    = document.getElementById("lbDesc");
-  const lbCounter = document.getElementById("lbCounter");
-  const lbLoader  = document.getElementById("lbLoader");
-  const lbPrev    = document.getElementById("lbPrev");
-  const lbNext    = document.getElementById("lbNext");
-  const grid      = document.getElementById("galleryGrid");
-  if (!grid) return;
+  const byId = (id) => document.getElementById(id);
+  const stage = byId("glbStage");
+  const track = byId("glbTrack");
+  const slides = Array.from(track.querySelectorAll(".glb-slide"));
+  const countEl = byId("glbCount");
+  const labelEl = byId("glbLabel");
+  const titleEl = byId("glbTitle");
+  const descEl = byId("glbDesc");
+  const moreTitle = byId("glbMoreTitle");
+  const thumbsEl = byId("glbThumbs");
+  const btnPrev = byId("glbPrev");
+  const btnNext = byId("glbNext");
+  const btnClose = byId("glbClose");
+  const waLink = lb.querySelector("[data-whatsapp-link]");
+  const shell = document.querySelector(".site-shell");
+  const root = document.documentElement;
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const GAP = 16;                 // px between two photos while they slide
+  const STEP = `(100% + ${GAP}px)`;
 
-  // Filtered list — what's currently shown in the grid (matches active filter)
-  let currentList = projects.slice();
-  let currentIndex = 0;
-  let touchStartX = 0;
-  let touchStartY = 0;
+  let list = [];                  // the photos the viewer walks through
+  let index = 0;
+  let order = [0, 1, 2];          // which slide is previous, current, next
+  let isOpen = false;
+  let busy = false;               // a slide animation is running
+  let pushed = false;             // our own history entry is on top
+  let opener = null;
+  let drag = null;
+  let swallowClick = false;
+  let endSlide = null;            // finishes the slide animation that is running, at once
+  let openedSlug = "";            // the photo the viewer was opened on ...
+  let openedY = 0;                // ... and where the page stood at that moment
+  let quietUntil = 0;
+  let quietSpot = null;           // where the X was, kept quiet a little longer
 
-  function getActiveList() {
-    const filterBtn = document.querySelector(".gallery-filter-btn.is-active");
-    const filter = filterBtn ? filterBtn.dataset.filter : "all";
-    return filter === "all"
-      ? projects.slice()
-      : projects.filter((p) => p.category === filter);
+  /* A second tap of a double tap must not land on whatever has just appeared
+     or come free under the finger. Right after opening that is a small photo,
+     an arrow or a booking button; right after closing it is the header's call
+     button, which sits exactly where the X was. For a moment every click is
+     swallowed, before anything else on the page (the conversion counter
+     included) gets to see it; the spot of the X stays quiet for a second,
+     for the visitor who presses it twice to be sure. */
+  function quiet(ms, spot) {
+    const now = performance.now();
+    quietUntil = now + ms;
+    quietSpot = spot ? { x: spot.left - 8, y: spot.top - 8, r: spot.right + 8, b: spot.bottom + 8, until: now + 1000 } : null;
+  }
+  window.addEventListener("click", (e) => {
+    const now = performance.now();
+    const s = quietSpot;
+    const onSpot = s && now < s.until && e.clientX >= s.x && e.clientX <= s.r && e.clientY >= s.y && e.clientY <= s.b;
+    if (now >= quietUntil && !onSpot) return;
+    e.preventDefault();
+    e.stopImmediatePropagation();
+  }, true);
+
+  const find = (slug) => grid.querySelector('.gal-item[data-slug="' + String(slug).replace(/["\\]/g, "") + '"]');
+
+  // The grid photo is already in the cache: it stands in until the full one has arrived
+  function loadedThumb(p) {
+    const item = find(p.slug);
+    const img = item && item.querySelector("img");
+    return img && img.complete && img.naturalWidth ? img.currentSrc || img.src : "";
   }
 
-  function open(index) {
-    currentList = getActiveList();
-    if (index < 0 || index >= currentList.length) return;
-    currentIndex = index;
-    render();
-    lb.setAttribute("aria-hidden", "false");
-    lb.classList.add("is-open");
-    document.body.classList.add("lb-locked");
-    document.addEventListener("keydown", onKey);
-    // Update URL hash (deep link)
-    const slug = currentList[currentIndex].slug;
-    if (slug) history.replaceState(null, "", "#" + slug);
+  slides.forEach((slide) => {
+    const img = slide.firstElementChild;
+    img.addEventListener("load", () => {
+      const slug = slide.dataset.slug;
+      slide.classList.remove("is-loading");
+      setTimeout(() => {
+        if (slide.dataset.slug === slug) slide.style.backgroundImage = "";
+      }, 300);
+    });
+    img.addEventListener("error", () => {
+      slide.classList.remove("is-loading");
+      // the small photo keeps standing in; the browser's broken image mark stays off it
+      if (slide.style.backgroundImage) slide.classList.add("is-broken");
+    });
+  });
+
+  function fill(slide, p) {
+    const img = slide.firstElementChild;
+    const slug = p ? p.slug : "";
+    if (slide.dataset.slug === slug) return;
+    slide.dataset.slug = slug;
+    slide.classList.remove("is-broken");
+    if (!p) {
+      slide.classList.remove("is-loading");
+      slide.style.backgroundImage = "";
+      img.removeAttribute("src");
+      img.alt = "";
+      return;
+    }
+    const small = loadedThumb(p);
+    slide.style.backgroundImage = small ? 'url("' + small + '")' : "";
+    slide.classList.add("is-loading");
+    img.alt = `${p.title} · ${p.label}`;
+    img.src = p.asset;
+    if (img.complete && img.naturalWidth) slide.classList.remove("is-loading");   // from the cache
+  }
+
+  function place() {
+    order.forEach((slideIndex, pos) => {
+      const slide = slides[slideIndex];
+      slide.style.transform = pos === 1 ? "" : `translate3d(calc(${pos - 1} * ${STEP}), 0, 0)`;
+      slide.setAttribute("aria-hidden", pos === 1 ? "false" : "true");
+    });
+  }
+
+  function rest() {               // the track back in its place, without animating
+    track.style.transition = "none";
+    track.style.transform = "";
+  }
+
+  // The row of small photos: everything in the list, the same vehicle highlighted
+  function buildStrip() {
+    const keyOf = (p) => galleryVehicle(p) || p.slug;
+    thumbsEl.innerHTML = list
+      .map((p, i) => {
+        const first = i > 0 && keyOf(p) !== keyOf(list[i - 1]);
+        /* The file the grid already holds is used again, so opening a photo
+           downloads no second copy of every picture. A photo the grid has
+           not loaded yet gets its small picture only once it comes into
+           view in the row (loadStrip). */
+        const small = loadedThumb(p);
+        const src = small ? `src="${galleryEscape(small)}"` : "data-wait";
+        return `<button type="button" class="glb-thumb${first ? " is-first" : ""}" data-slug="${p.slug}" aria-label="${galleryEscape(p.title)} · ${galleryEscape(p.label)}"><img ${src} data-full="${p.asset}" width="400" height="500" alt="" decoding="async" draggable="false" /></button>`;
+      })
+      .join("");
+  }
+
+  function loadStrip() {
+    const waiting = thumbsEl.querySelectorAll("img[data-wait]");
+    if (!waiting.length) return;
+    const row = thumbsEl.getBoundingClientRect();
+    waiting.forEach((img) => {
+      const box = img.getBoundingClientRect();
+      if (!box.width || box.right < row.left - 120 || box.left > row.right + 120) return;
+      img.removeAttribute("data-wait");
+      const p = list.find((q) => q.slug === img.parentElement.dataset.slug);
+      if (!p) return;
+      const small = loadedThumb(p);
+      const tile = find(p.slug);
+      const from = tile && tile.querySelector("img");
+      if (small) {
+        img.src = small;
+      } else if (from && from.getAttribute("srcset")) {
+        // the same choice of file the grid will make for this photo
+        img.sizes = from.getAttribute("sizes") || "";
+        img.srcset = from.getAttribute("srcset");
+        img.src = from.getAttribute("src");
+      } else {
+        img.src = galleryThumb(p, 400);
+      }
+    });
+  }
+
+  function markStrip(p) {
+    const key = galleryVehicle(p);
+    const same = key ? list.filter((q) => galleryVehicle(q) === key).length : 0;
+    const title = same > 1 ? `Weitere Fotos · ${key}` : "Weitere Fotos";
+    if (moreTitle.textContent !== title) moreTitle.textContent = title;
+    Array.from(thumbsEl.children).forEach((thumb, i) => {
+      thumb.classList.toggle("is-same", same > 1 && galleryVehicle(list[i]) === key);
+      if (i !== index) {
+        thumb.removeAttribute("aria-current");
+        return;
+      }
+      thumb.setAttribute("aria-current", "true");
+      // keep it in view inside its own row or box (the page itself does not move)
+      const row = thumbsEl.getBoundingClientRect();
+      const box = thumb.getBoundingClientRect();
+      thumbsEl.scrollLeft += box.left + box.width / 2 - (row.left + row.width / 2);
+      const holder = thumbsEl.parentElement;
+      const frame = holder.getBoundingClientRect();
+      if (box.top < frame.top) holder.scrollTop += box.top - frame.top - 8;
+      else if (box.bottom > frame.bottom) holder.scrollTop += box.bottom - frame.bottom + 8;
+    });
+  }
+
+  function show() {
+    const n = list.length;
+    const p = list[index];
+    if (!p) return;
+    fill(slides[order[1]], p);
+    fill(slides[order[0]], n > 1 ? list[(index - 1 + n) % n] : null);
+    fill(slides[order[2]], n > 1 ? list[(index + 1) % n] : null);
+    place();
+    countEl.textContent = `${index + 1} / ${n}`;
+    labelEl.textContent = p.label || "";
+    titleEl.textContent = p.title || "";
+    descEl.textContent = p.description || "";
+    btnPrev.disabled = btnNext.disabled = n < 2;
+    markStrip(p);
+    loadStrip();
+
+    // The WhatsApp request says which photo it is about
+    const business = window.SITE_CONFIG.business;
+    const number = String(business.whatsappNumber || "").replace(/\D/g, "");
+    if (waLink && number) {
+      const text = `Hallo, ich habe in der Galerie das Foto „${p.title} · ${p.label}“ gesehen und möchte einen Termin bei ${business.name} anfragen.`;
+      waLink.href = `https://wa.me/${number}?text=${encodeURIComponent(text)}`;
+    }
+  }
+
+  function syncUrl() {
+    const p = list[index];
+    if (!p) return;
+    try {
+      history.replaceState(pushed ? { glb: p.slug } : history.state, "", "#" + p.slug);
+    } catch (e) { /* no history here (opened as a file): the viewer works without it */ }
+  }
+
+  function clearHash() {
+    try {
+      if (location.hash) history.replaceState(null, "", location.pathname + location.search);
+    } catch (e) { /* ok */ }
+  }
+
+  /* While a photo is open the browser must not put the page back where it
+     was when Back is pressed: the viewer itself scrolls to the photo that
+     was seen last. Switched back to the normal behaviour once it is closed. */
+  function scrollMemory(mode) {
+    try {
+      if ("scrollRestoration" in history) history.scrollRestoration = mode;
+    } catch (e) { /* ok */ }
+  }
+
+  /* The cookie question lies above the viewer, because it has to stay
+     answerable. Where it covers the panel, the panel makes room for it
+     (gallery.css, .has-cookie), so the caption and the booking buttons stay
+     in view until the question has been answered. */
+  const panel = lb.querySelector(".glb-panel");
+  function cookieRoom() {
+    const banner = document.getElementById("cookie-banner");
+    let room = 0;
+    if (isOpen && banner && panel && document.body.classList.contains("cookie-active")) {
+      // it is centred at the bottom of the screen; measured without its slide in movement
+      const left = (window.innerWidth - banner.offsetWidth) / 2;
+      const top = window.innerHeight - (parseFloat(getComputedStyle(banner).bottom) || 0) - banner.offsetHeight;
+      const box = panel.getBoundingClientRect();
+      const book = lb.querySelector(".glb-book");
+      const side = book ? book.getBoundingClientRect() : box;   // the width the panel's content really takes
+      if (left < side.right && left + banner.offsetWidth > side.left && top < box.bottom) {
+        room = Math.ceil(box.bottom - top);
+      }
+    }
+    const had = lb.classList.contains("has-cookie");
+    lb.classList.toggle("has-cookie", room > 0);
+    if (room > 0) lb.style.setProperty("--glb-cookie", room + "px");
+    else lb.style.removeProperty("--glb-cookie");
+    if (had && !room && isOpen && list[index]) {   // the row of small photos is back
+      markStrip(list[index]);
+      loadStrip();
+    }
+  }
+  if (window.MutationObserver) {
+    new MutationObserver(() => {
+      if (isOpen) cookieRoom();
+    }).observe(document.body, { attributes: true, attributeFilter: ["class"] });
+  }
+  window.addEventListener("resize", () => {
+    if (isOpen) cookieRoom();
+  }, { passive: true });
+
+  let slideRun = 0;               // counts slide animations, so one that was overtaken changes nothing
+
+  function go(dir, animated) {
+    if (!isOpen || list.length < 2) return;
+    if (busy && endSlide) endSlide();   // the step still sliding lands at once: no press is lost
+    if (busy) return;
+    const run = ++slideRun;
+    const finish = () => {
+      if (run !== slideRun) return;
+      busy = false;
+      if (!isOpen) return;
+      index = (index + dir + list.length) % list.length;
+      order = dir > 0 ? [order[1], order[2], order[0]] : [order[2], order[0], order[1]];
+      rest();
+      show();
+      syncUrl();
+    };
+    if (!animated || calm.matches) {
+      finish();
+      return;
+    }
+    busy = true;
+    let done = false;
+    const once = (e) => {
+      if (done || (e && e.target !== track)) return;   // a photo fading in inside the track is not the end of the slide
+      done = true;
+      if (endSlide === once) endSlide = null;
+      track.removeEventListener("transitionend", once);
+      finish();
+    };
+    endSlide = once;
+    track.addEventListener("transitionend", once);
+    setTimeout(once, 360);        // transitionend can be skipped (tab in the background)
+    void track.offsetWidth;       // start from rest, also right after a step that was cut short
+    track.style.transition = "transform 0.26s cubic-bezier(0.22, 1, 0.36, 1)";
+    track.style.transform = `translate3d(calc(${-dir} * ${STEP}), 0, 0)`;
+  }
+
+  function jump(to) {             // straight to a photo (the row of small photos)
+    if (busy && endSlide) endSlide();
+    if (!isOpen || busy || to === index || !list[to]) return;
+    index = to;
+    rest();
+    show();
+    syncUrl();
+  }
+
+  function open(slug, entry, from) {
+    let shown = galleryShown();
+    let i = shown.findIndex((p) => p.slug === slug);
+    if (i < 0) {                  // not in the chosen category: show everything
+      galleryApplyFilter("all", false);
+      shown = galleryShown();
+      i = shown.findIndex((p) => p.slug === slug);
+      if (i < 0) return false;
+    }
+    list = shown;
+    index = i;
+    slideRun++;                   // a slide still running belongs to the list before
+    endSlide = null;
+    if (!isOpen) {
+      isOpen = true;
+      openedSlug = slug;
+      openedY = window.scrollY;
+      quiet(600);                 // the second tap of a double tap opens nothing else
+      opener = from || (document.activeElement !== document.body ? document.activeElement : null);
+      // the page behind does not scroll, and does not shift when its scrollbar goes
+      root.style.setProperty("--glb-sbw", Math.max(0, window.innerWidth - root.clientWidth) + "px");
+      root.classList.add("glb-open");
+      if (shell) shell.inert = true;
+      lb.style.removeProperty("--glb-dim");
+      lb.classList.add("is-open");
+      lb.setAttribute("aria-hidden", "false");
+      document.addEventListener("keydown", onKey);
+    }
+    busy = false;
+    rest();
+    cookieRoom();
+    buildStrip();
+    show();
+    if (entry === "push") {
+      scrollMemory("manual");     // for the gallery entry and for the one added now
+      try {
+        history.pushState({ glb: slug }, "", "#" + slug);
+        pushed = true;
+      } catch (e) {
+        pushed = false;
+      }
+    }
+    btnClose.focus({ preventScroll: true });
+    return true;
+  }
+
+  function shut() {
+    if (!isOpen) return;
+    isOpen = false;
+    busy = false;
+    drag = null;
+    slideRun++;
+    endSlide = null;
+    quiet(500, btnClose.getBoundingClientRect());   // a second tap on the X must not reach the call button behind it
+    const last = list[index];
+    root.classList.remove("glb-open");
+    root.style.removeProperty("--glb-sbw");
+    if (shell) shell.inert = false;
+    document.removeEventListener("keydown", onKey);
+
+    // Back to the photo that was on screen last, so the visitor carries on from there
+    grid.querySelectorAll(".gal-item.is-current").forEach((el) => el.classList.remove("is-current"));
+    const item = last ? find(last.slug) : null;
+    const tile = item && !item.hidden ? item.querySelector(".gal-tile") : null;
+    if (tile) {
+      /* The page only moves when it has to: never when the photo that was
+         opened is closed again, and otherwise only when the photo seen last
+         is out of sight (under the header and the chips, or below the screen). */
+      const box = item.getBoundingClientRect();
+      const same = last.slug === openedSlug && Math.abs(window.scrollY - openedY) < 2;
+      if (!same && (box.bottom < 140 || box.top > window.innerHeight - 100)) {
+        item.scrollIntoView({ block: "center", behavior: "instant" });
+      }
+      item.classList.add("is-current");
+      setTimeout(() => item.classList.remove("is-current"), 2400);
+      tile.focus({ preventScroll: true });
+    } else if (opener && opener.focus) {
+      opener.focus({ preventScroll: true });
+    }
+    opener = null;
+
+    lb.classList.remove("is-open", "has-cookie");
+    lb.setAttribute("aria-hidden", "true");
+    lb.style.removeProperty("--glb-dim");
+    lb.style.removeProperty("--glb-cookie");
+    rest();
   }
 
   function close() {
-    lb.setAttribute("aria-hidden", "true");
-    lb.classList.remove("is-open");
-    document.body.classList.remove("lb-locked");
-    document.removeEventListener("keydown", onKey);
-    // Clear hash
-    if (location.hash) history.replaceState(null, "", location.pathname);
+    if (!isOpen) return;
+    let own = false;
+    try {
+      own = pushed && !!(history.state && history.state.glb);
+    } catch (e) { /* ok */ }
+    pushed = false;
+    shut();
+    if (own) {
+      try {
+        history.back();           // drops our entry; the address is the plain gallery again
+        return;
+      } catch (e) { /* fall through */ }
+    }
+    clearHash();
   }
 
-  function next() {
-    if (currentList.length < 2) return;
-    currentIndex = (currentIndex + 1) % currentList.length;
-    render();
-  }
-
-  function prev() {
-    if (currentList.length < 2) return;
-    currentIndex = (currentIndex - 1 + currentList.length) % currentList.length;
-    render();
-  }
-
-  function render() {
-    const p = currentList[currentIndex];
-    if (!p) return;
-    lbLoader.classList.add("is-loading");
-    lbImg.style.opacity = "0";
-    const img = new Image();
-    img.onload = () => {
-      lbImg.src = p.asset;
-      lbImg.alt = p.title + " · " + p.label;
-      lbImg.style.opacity = "1";
-      lbLoader.classList.remove("is-loading");
+  // A photo named in the address: galerie.html#<slug>
+  function fromHash() {
+    let slug = "";
+    try {
+      slug = decodeURIComponent(location.hash.slice(1));
+    } catch (e) { /* ok */ }
+    if (!slug || !projects.some((p) => p.slug === slug)) return;
+    let kept = false;
+    try {
+      kept = !!(history.state && history.state.glb);   // a reload with the photo open
+      if (!kept) {
+        // put the plain gallery underneath: Back then closes the photo and
+        // the visitor stays in the gallery
+        scrollMemory("manual");
+        history.replaceState(null, "", location.pathname + location.search);
+        history.pushState({ glb: slug }, "", "#" + slug);
+        kept = true;
+      }
+    } catch (e) { /* no history: open it anyway */ }
+    pushed = kept;
+    if (!open(slug, "keep")) return;
+    /* On a page that is still loading the browser takes the focus back to
+       the page when it handles the #photo in the address. The close button
+       gets it again, so the keyboard and a screen reader are in the viewer. */
+    const refocus = () => {
+      if (isOpen && !lb.contains(document.activeElement)) btnClose.focus({ preventScroll: true });
     };
-    img.onerror = () => {
-      lbLoader.classList.remove("is-loading");
-    };
-    img.src = p.asset;
-    lbLabel.textContent = p.label || "";
-    lbTitle.textContent = p.title || "";
-    lbDesc.textContent = p.description || "";
-    lbCounter.textContent = `${currentIndex + 1} / ${currentList.length}`;
-    // Update hash
-    if (p.slug) history.replaceState(null, "", "#" + p.slug);
+    requestAnimationFrame(refocus);
+    setTimeout(refocus, 250);
+    if (document.readyState !== "complete") {
+      window.addEventListener("load", () => setTimeout(refocus, 0), { once: true });
+    }
+  }
+
+  window.addEventListener("popstate", (e) => {
+    const slug = e.state && e.state.glb;
+    if (slug) {                   // Forward, onto a photo again
+      pushed = true;
+      open(slug, "keep");
+    } else if (isOpen) {          // Back: close and stay on the page
+      pushed = false;
+      shut();
+    } else {
+      fromHash();                 // a link to a photo was followed on the page itself
+    }
+    // Normal scroll memory again, but only after the browser has finished
+    // this step: it decides about scrolling right after this event
+    setTimeout(() => {
+      if (!isOpen) scrollMemory("auto");
+    }, 400);
+  });
+
+  function focusable() {
+    return Array.from(lb.querySelectorAll("a[href], button:not([disabled])")).filter(
+      (el) => el.getClientRects().length > 0
+    );
   }
 
   function onKey(e) {
-    if (e.key === "Escape") close();
-    else if (e.key === "ArrowRight") next();
-    else if (e.key === "ArrowLeft") prev();
+    if (e.key === "Escape") {
+      e.preventDefault();
+      close();
+    } else if (e.key === "ArrowRight" || e.key === "ArrowLeft") {
+      if (e.repeat && busy) return;   // a key held down moves at the pace of the slide
+      go(e.key === "ArrowRight" ? 1 : -1, true);
+    } else if (e.key === "Tab") {
+      // the cookie question may be open above the viewer: it keeps its own focus
+      const banner = document.getElementById("cookie-banner");
+      const active = document.activeElement;
+      if (banner && banner.contains(active)) return;
+      const items = focusable();
+      if (!items.length) return;
+      const first = items[0];
+      const last = items[items.length - 1];
+      if (!lb.contains(active)) {
+        e.preventDefault();
+        first.focus();
+      } else if (e.shiftKey && active === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    }
   }
 
-  // Click any gallery tile to open
+  // Open: a tap or click on a photo (a click with Ctrl or Shift still opens the file in a new tab)
   grid.addEventListener("click", (e) => {
-    const tile = e.target.closest(".gallery-tile");
-    if (!tile) return;
+    const tile = e.target.closest(".gal-tile");
+    if (!tile || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button > 0) return;
+    const item = tile.closest(".gal-item");
+    if (!item) return;
     e.preventDefault();
-    const list = getActiveList();
-    // Find by matching the image src to the project asset
-    const img = tile.querySelector("img");
-    if (!img) return;
-    const src = img.getAttribute("src");
-    const idx = list.findIndex((p) => p.asset === src);
-    if (idx >= 0) open(idx);
+    open(item.dataset.slug, "push", tile);
   });
 
-  // Close handlers
-  lb.querySelectorAll("[data-lb-close]").forEach((el) => {
-    el.addEventListener("click", close);
+  btnPrev.addEventListener("click", () => go(-1, true));
+  btnNext.addEventListener("click", () => go(1, true));
+  btnClose.addEventListener("click", close);
+
+  thumbsEl.addEventListener("click", (e) => {
+    const thumb = e.target.closest(".glb-thumb");
+    if (thumb) jump(list.findIndex((p) => p.slug === thumb.dataset.slug));
   });
-  lbNext.addEventListener("click", next);
-  lbPrev.addEventListener("click", prev);
-
-  // Swipe support
-  lb.addEventListener("touchstart", (e) => {
-    if (e.touches.length !== 1) return;
-    touchStartX = e.touches[0].clientX;
-    touchStartY = e.touches[0].clientY;
+  galleryImageFallback(thumbsEl);
+  // Where the small photos are one sideways row: pictures load as they come
+  // into view, and the mouse wheel moves the row
+  let stripQueued = false;
+  thumbsEl.addEventListener("scroll", () => {
+    if (stripQueued) return;
+    stripQueued = true;
+    requestAnimationFrame(() => {
+      stripQueued = false;
+      loadStrip();
+    });
   }, { passive: true });
+  thumbsEl.addEventListener("wheel", (e) => {
+    if (thumbsEl.scrollWidth <= thumbsEl.clientWidth + 1 || Math.abs(e.deltaY) <= Math.abs(e.deltaX)) return;
+    e.preventDefault();
+    thumbsEl.scrollLeft += e.deltaY;
+  }, { passive: false });
 
-  lb.addEventListener("touchend", (e) => {
-    if (e.changedTouches.length !== 1) return;
-    const dx = e.changedTouches[0].clientX - touchStartX;
-    const dy = e.changedTouches[0].clientY - touchStartY;
-    // Only trigger if horizontal swipe is dominant and >50px
-    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.4) {
-      if (dx < 0) next(); else prev();
-    }
-  }, { passive: true });
+  /* Swipe with the finger (or drag with the mouse). Sideways: previous and
+     next. Downwards: close. */
+  stage.addEventListener("pointerdown", (e) => {
+    swallowClick = false;
+    if (!isOpen || busy || (e.pointerType === "mouse" && e.button !== 0)) return;
+    drag = { id: e.pointerId, x: e.clientX, y: e.clientY, dx: 0, dy: 0, axis: "", at: e.timeStamp };
+  });
 
-  // Open from URL hash on load
-  if (location.hash) {
-    const slug = location.hash.replace("#", "");
-    const list = getActiveList();
-    const idx = list.findIndex((p) => p.slug === slug);
-    if (idx >= 0) {
-      // Wait one frame for grid to render
-      requestAnimationFrame(() => requestAnimationFrame(() => open(idx)));
+  stage.addEventListener("pointermove", (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    drag.dx = e.clientX - drag.x;
+    drag.dy = e.clientY - drag.y;
+    if (!drag.axis) {
+      if (Math.abs(drag.dx) < 8 && Math.abs(drag.dy) < 8) return;
+      drag.axis = Math.abs(drag.dx) >= Math.abs(drag.dy) ? "x" : "y";
+      try { stage.setPointerCapture(e.pointerId); } catch (err) { /* ok */ }
+      track.style.transition = "none";
     }
-  }
+    if (drag.axis === "x") {
+      const dx = list.length > 1 ? drag.dx : drag.dx * 0.25;   // nothing to swipe to: resist
+      track.style.transform = `translate3d(${dx}px, 0, 0)`;
+    } else {
+      const dy = Math.max(0, drag.dy);
+      track.style.transform = `translate3d(0, ${dy}px, 0) scale(${Math.max(0.88, 1 - dy / 1400)})`;
+      lb.style.setProperty("--glb-dim", String(Math.max(0.45, 1 - dy / 480)));
+    }
+  });
+
+  const endDrag = (e) => {
+    if (!drag || e.pointerId !== drag.id) return;
+    const d = drag;
+    drag = null;
+    if (!d.axis) return;          // a tap, not a swipe: the click handler decides
+    swallowClick = true;
+    const ms = Math.max(1, e.timeStamp - d.at);
+    const settle = () => {
+      track.style.transition = calm.matches ? "none" : "transform 0.22s cubic-bezier(0.22, 1, 0.36, 1)";
+      track.style.transform = "";
+      lb.style.removeProperty("--glb-dim");
+    };
+    if (e.type === "pointercancel") {
+      settle();
+    } else if (d.axis === "x") {
+      const far = Math.abs(d.dx) > Math.min(120, stage.clientWidth * 0.22);
+      const quick = Math.abs(d.dx) > 28 && Math.abs(d.dx) / ms > 0.45;
+      if ((far || quick) && list.length > 1) go(d.dx < 0 ? 1 : -1, true);
+      else settle();
+    } else if (d.dy > 110 || (d.dy > 40 && d.dy / ms > 0.6)) {
+      close();
+    } else {
+      settle();
+    }
+  };
+  stage.addEventListener("pointerup", endDrag);
+  stage.addEventListener("pointercancel", endDrag);
+
+  // A tap beside the photo closes; a tap on the photo does nothing
+  stage.addEventListener("click", (e) => {
+    if (swallowClick) {
+      swallowClick = false;
+      return;
+    }
+    const img = slides[order[1]].firstElementChild;
+    const box = img.getBoundingClientRect();
+    let w = box.width;
+    let h = box.height;
+    if (img.naturalWidth && img.naturalHeight) {   // the area the photo really covers inside its box
+      const scale = Math.min(box.width / img.naturalWidth, box.height / img.naturalHeight);
+      w = img.naturalWidth * scale;
+      h = img.naturalHeight * scale;
+    }
+    const left = box.left + (box.width - w) / 2;
+    const top = box.top + (box.height - h) / 2;
+    const onPhoto = e.clientX >= left && e.clientX <= left + w && e.clientY >= top && e.clientY <= top + h;
+    if (!onPhoto) close();
+  });
+
+  fromHash();
 }
 
 /* Startup in two waves. Wave one is everything a visitor can touch in the
@@ -1967,7 +2878,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCtaBarAutoHide();
   setupReveal();
   renderPackages();        // only hydrates: the markup is already in the HTML
+  setupServiceCards();     // one press on a service card opens its packages
   revealScan();            // in case the hydration added anything
+  startGallery();          // gallery page only: its photos are on the first screen
 
   const later = () => {
     // Everything below the fold is built here. One failing section must
@@ -1982,10 +2895,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     run(renderFeaturedProjects);
     run(renderShowcaseStrip);
-    run(renderGallery);
     run(renderReviews);
-    run(renderGalleryFilters);
-    run(setupGalleryStats);
     run(setupMapFacade);
     run(setupPackageDetails);
     run(setupShowcaseSwipe);
@@ -1993,9 +2903,8 @@ document.addEventListener("DOMContentLoaded", () => {
     run(setupHeaderSheen);
     run(setupActiveNav);
     run(setupNavPill);
-    run(setupGalleryFilter);
-    run(setupLightbox);
     run(setupVideoShowcase);
+    run(setupHeroFilm);
     run(setupReviewCount);
     // the cards above were built after setupReveal() observed the page
     run(revealScan);

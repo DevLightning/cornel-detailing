@@ -1,0 +1,863 @@
+/* ════════════════════════════════════════════════════════════════════════════
+   gallery.css · the gallery page only (galerie.html), loaded after styles.css
+
+   What lives here: the compact hero, the category chips that stay under the
+   header, the photo grid, the booking card that closes the grid, and the
+   full screen photo viewer.
+
+   House rules it follows: sizes come from the tokens of styles.css
+   (--pad-x, --pad-y, --gap-grid, --pad-card, --btn-h, --fs-*, --r-card) and
+   the spacing steps 4 8 12 16 24 32 48 64. Colours, fonts and shadows are the
+   existing ones. Wide screens get MORE columns, never bigger photos: a tile
+   stays between roughly 190px and 290px wide at every desktop width.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+
+/* ── HERO · the homepage hero as a short band ────────────────────────────────
+   Same photo, same dark veil, same two step headline (gold line, smaller
+   white line) as the hero of the start page, so the gallery opens in the look
+   of the site. It carries a place line and the headline and nothing else: the
+   counts are on the chips right below, and every line saved here is a line of
+   photos gained on the first screen. */
+.gallery-hero.gal-hero {
+  display: grid;
+  place-items: center;
+  min-height: 0;
+  padding: 28px var(--pad-x) 32px;
+  background: #05060a;
+  isolation: isolate;
+}
+.gal-hero .gallery-hero-bg {
+  z-index: -2;
+  opacity: 1;
+  /* gal-hero-band.webp is the band of the homepage photo that shows here
+     (hero-urus.webp cut to 2.4:1): less than half the bytes */
+  background: url("assets/gallery/gal-hero-band.webp") center 76% / cover no-repeat;
+}
+.gallery-hero.gal-hero::after {
+  z-index: -1;
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 120%, rgba(230,189,13,0.10) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 100% at 0% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 100% at 100% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(5,6,10,0.70) 0%, rgba(5,6,10,0.80) 55%, rgba(5,6,10,0.92) 100%);
+}
+.gal-hero .gallery-hero-inner {
+  z-index: auto;
+  display: grid;
+  justify-items: center;
+  max-width: none;
+  min-width: 0;
+}
+.gal-hero-place {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--on-dark-2);
+}
+.gal-hero-place svg { flex: none; color: var(--brand); }
+.gal-hero h1 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h2);
+  font-weight: 900;
+  line-height: 1.06;
+  letter-spacing: -0.035em;
+  color: #fff;
+}
+.gal-hero-accent {
+  display: block;
+  background: linear-gradient(120deg, var(--brand-hi) 0%, var(--brand) 50%, #ffdf6e 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  filter: drop-shadow(0 2px 18px rgba(230,189,13,0.30));
+}
+.gal-hero-rest {
+  display: block;
+  margin-top: 0.22em;
+  font-size: 0.56em;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+@media (max-width: 389px) {
+  .gal-hero-place { letter-spacing: 0.05em; }
+}
+@media (min-width: 721px) {
+  .gallery-hero.gal-hero { padding: 44px var(--pad-x) 48px; }
+  .gal-hero-place { margin-bottom: 16px; }
+}
+/* Laptops and ultrawide monitors are wide and short: the hero gives height back to the photos */
+@media (min-width: 721px) and (max-height: 1100px) {
+  .gallery-hero.gal-hero { padding: 32px var(--pad-x) 36px; }
+  .gal-hero-place { margin-bottom: 12px; }
+}
+
+
+/* ── BLOCK · chips, grid and the line under it share one white block ─────── */
+.section.gal-section { padding-top: 16px; }
+@media (max-width: 720px) {
+  /* phones: hero and photos read as one, 8px apart */
+  .section.gal-section { margin-top: 8px; padding-top: 8px; }
+}
+@media (min-width: 721px) and (max-height: 1100px) {
+  .section.gal-section { padding-top: 12px; }
+}
+
+
+/* ── CHIPS · one capsule that stays under the header while the grid scrolls ─ */
+.gal-bar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 84px;                       /* header bottom (72px) plus 12px */
+  z-index: 20;
+  width: -moz-fit-content;
+  width: fit-content;
+  max-width: 100%;
+  margin: 0 auto 16px;
+  padding: 4px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: rgba(255,255,255,0.92);
+  -webkit-backdrop-filter: blur(16px) saturate(1.6);
+  backdrop-filter: blur(16px) saturate(1.6);
+  box-shadow: var(--shadow-card);
+}
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))) {
+  .gal-bar { background: var(--white); }
+}
+.gal-chips {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  border-radius: 999px;
+}
+.gal-chips::-webkit-scrollbar { display: none; }
+/* An edge that still hides chips fades out (the classes are set by
+   galleryChipFade in script.js as the row is scrolled) */
+.gal-chips.can-right {
+  -webkit-mask-image: linear-gradient(to left, transparent 0, #000 40px);
+  mask-image: linear-gradient(to left, transparent 0, #000 40px);
+}
+.gal-chips.can-left {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px);
+  mask-image: linear-gradient(to right, transparent 0, #000 40px);
+}
+.gal-chips.can-left.can-right {
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 40px, #000 calc(100% - 40px), transparent 100%);
+}
+.gal-chip {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 8px 0 16px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--grey-600);
+  font-family: var(--font-heading);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.16s var(--ease-out), color 0.16s var(--ease-out);
+}
+.gal-chip-n {
+  display: inline-grid;
+  place-items: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background: var(--grey-50);
+  color: var(--grey-600);
+  font-variant-numeric: tabular-nums;
+  transition: background-color 0.16s var(--ease-out), color 0.16s var(--ease-out);
+}
+.gal-chip.is-active { background: var(--ink); color: #fff; }
+.gal-chip.is-active .gal-chip-n { background: var(--brand); color: var(--on-brand); }
+.gal-chip:focus-visible { outline: 2px solid var(--brand-deep); outline-offset: 2px; border-radius: 999px; }
+@media (hover: hover) {
+  .gal-chip:not(.is-active):hover { background: var(--grey-50); color: var(--dark); }
+  .gal-chip:not(.is-active):hover .gal-chip-n { background: var(--white); }
+}
+@media (max-width: 720px) {
+  /* Phones: solid (no blur to repaint while scrolling), 8px under the header
+     whose bottom edge is at 64px. The chips are a little tighter and the row
+     scrolls sideways when they do not fit; the edge that hides chips fades. */
+  .gal-bar {
+    top: 72px;
+    margin-bottom: 8px;
+    border-radius: 26px;
+    background: var(--white);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  .gal-chips { border-radius: 22px; }
+  .gal-chip { gap: 6px; padding: 0 6px 0 12px; }
+  .gal-chip-n { min-width: 24px; height: 24px; padding: 0 6px; }
+}
+@media (min-width: 721px) and (max-height: 1100px) {
+  .gal-bar { margin-bottom: 12px; }
+}
+/* Short landscape screens: a pinned bar would cover too much of the photos */
+@media (orientation: landscape) and (max-height: 500px) {
+  .gal-bar { position: relative; top: auto; }
+}
+
+
+/* ── GRID · equal 4:5 tiles; the column count grows with the screen ──────── */
+.gal-grid {
+  --gal-cols: 2;
+  --gal-gap: var(--gap-grid);
+  --gal-w: calc((100% - (var(--gal-cols) - 1) * var(--gal-gap)) / var(--gal-cols) - 0.01px);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gal-gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+@media (min-width: 680px)  { .gal-grid { --gal-cols: 3; } }    /* tile 195 to 272px */
+@media (min-width: 960px)  { .gal-grid { --gal-cols: 4; } }    /* 201 to 278px */
+@media (min-width: 1280px) { .gal-grid { --gal-cols: 5; } }    /* 215 to 229px */
+@media (min-width: 1360px) { .gal-grid { --gal-cols: 6; } }    /* 188 to 241px: a laptop shows its first row whole */
+@media (min-width: 1680px) { .gal-grid { --gal-cols: 7; } }    /* 200 to 264px */
+@media (min-width: 2200px) { .gal-grid { --gal-cols: 8; } }    /* 226 to 260px */
+@media (min-width: 2500px) { .gal-grid { --gal-cols: 10; } }   /* 207 to 217px */
+
+.gal-item {
+  flex: 0 0 var(--gal-w);
+  width: var(--gal-w);
+  min-width: 0;
+  /* a photo scrolled to from a link stays clear of the header, the chips
+     and the call bar at the bottom of a phone */
+  scroll-margin: 160px 0 104px;
+}
+.gal-item[hidden] { display: none; }
+
+/* A tile is the photo with the vehicle and the work on it, and under it the
+   sentence about what was done. One grid cell holds photo and name plate
+   (they overlap), the sentence is the row below. */
+.gal-tile {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  color: inherit;
+  text-align: left;
+  text-decoration: none;
+  cursor: zoom-in;
+  -webkit-tap-highlight-color: transparent;
+}
+.gal-photo {
+  grid-area: 1 / 1;
+  position: relative;
+  display: block;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: var(--r);
+  background: var(--dark-card);
+  transform: translateZ(0);          /* keeps the rounded corners while the photo scales */
+}
+.gal-photo img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  transition: transform 0.5s var(--ease-out);
+}
+/* Vehicle and what was done, always readable on the photo */
+.gal-cap {
+  grid-area: 1 / 1;
+  align-self: end;
+  z-index: 1;
+  display: grid;
+  gap: 2px;
+  padding: 48px 16px 16px;
+  border-radius: 0 0 var(--r-card) var(--r-card);
+  /* measured on the real pixels: white title and gold label stay above 4.5:1 also on the white hexagon lights */
+  background: linear-gradient(180deg, rgba(15,18,25,0) 0%, rgba(15,18,25,0.7) 45%, rgba(15,18,25,0.93) 100%);
+  pointer-events: none;
+}
+.gal-cap strong {
+  font-family: var(--font-heading);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: #fff;
+  text-wrap: balance;
+}
+.gal-label {
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--brand);
+}
+.gal-nb { white-space: nowrap; }   /* "Mercedes-Benz" stays in one piece */
+/* No sentence under the photos (the owner, 2026-11-18: less text). The
+   sentence of each photo is in the viewer, under the opened photo. */
+@media (min-width: 680px) { .gal-photo { border-radius: var(--r-card); } }
+
+/* The sign that a photo opens */
+.gal-zoom {
+  position: absolute;
+  top: 8px; right: 8px;
+  z-index: 1;
+  display: grid;
+  place-items: center;
+  width: 32px; height: 32px;
+  border: 1px solid rgba(255,255,255,0.2);
+  border-radius: 50%;
+  background: rgba(15,18,25,0.55);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 0.2s var(--ease), transform 0.2s var(--ease);
+}
+.gal-zoom svg { width: 16px; height: 16px; }
+.gal-tile:focus-visible { outline: 3px solid var(--brand); outline-offset: 2px; border-radius: var(--r-card); }
+.gal-tile:active .gal-photo img { transform: scale(1.02); }
+@media (hover: hover) {
+  .gal-zoom { opacity: 0; transform: scale(0.85); }
+  .gal-tile:hover .gal-zoom,
+  .gal-tile:focus-visible .gal-zoom { opacity: 1; transform: none; }
+  .gal-tile:hover .gal-photo img { transform: scale(1.05); }
+}
+@media (min-width: 680px) { .gal-zoom { top: 12px; right: 12px; } }
+
+/* The photo a visitor came for (link from the homepage) or looked at last */
+.gal-item:target .gal-photo,
+.gal-item.is-current .gal-photo { box-shadow: 0 0 0 3px var(--brand), 0 0 0 8px var(--brand-glow); }
+.gal-item.is-current .gal-photo { transition: box-shadow 0.3s var(--ease); }
+
+/* Phones: two columns. Nothing lies on a picture that is only half a screen
+   wide: vehicle, work and sentence stand under the photo. */
+@media (max-width: 679px) {
+  .gal-tile:active .gal-photo img { transform: none; opacity: 0.86; }
+  .gal-cap {
+    grid-area: 2 / 1;
+    align-self: auto;
+    padding: 8px 2px 0;
+    border-radius: 0;
+    background: none;
+  }
+  .gal-cap strong { color: var(--dark); }
+  .gal-label { color: var(--brand-deep); }
+  .gal-tile:focus-visible { border-radius: var(--r); }
+  /* An odd number of photos: the last one takes the full row, so no photo
+     is left alone beside an empty space */
+  .gal-item--wide { flex-basis: 100%; width: 100%; }
+}
+
+/* Photos appear softly after a category change (never on page load) */
+@keyframes gal-in {
+  from { opacity: 0; transform: translateY(8px); }
+}
+.gal-grid.is-swapping .gal-item:not([hidden]) { animation: gal-in 0.28s var(--ease-out) both; }
+
+
+/* ── BOOKING CARD · closes the grid ─────────────────────────────────────────
+   It is the last item of the list and stands right after the last photo,
+   one place wide when one place is free (compact, see the container rule
+   below) and two places wide otherwise, never wider: it is a prompt, not a
+   slab. When the last row of photos is full it takes a row of its own and
+   is centred there (.is-alone, set by galleryBookFit in script.js). On a
+   phone two places are the whole row. */
+.gal-book {
+  position: relative;
+  flex: 1 1 max(calc(2 * var(--gal-w) + var(--gal-gap)), 21rem);
+  max-width: calc(2 * var(--gal-w) + var(--gal-gap) + 0.02px);
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.07);
+  border-radius: var(--r-card);
+  background: linear-gradient(145deg, #0f1219 0%, #161b27 100%);
+  box-shadow: 0 2px 8px rgba(15,18,25,0.12), 0 16px 48px rgba(15,18,25,0.18);
+  text-align: center;
+  container-type: inline-size;
+}
+@supports (container-type: inline-size) {
+  @media (min-width: 700px) {
+    /* beside photos the card is exactly as tall as a photo (4:5 of one place),
+       whether it is one place wide or two; alone in its row it is as tall as
+       its content */
+    .gal-book { flex-basis: var(--gal-w); align-self: flex-start; }
+    .gal-book-in { min-height: calc((100cqw - var(--gal-gap)) * 0.625); }
+    .gal-book.is-alone .gal-book-in { min-height: 0; }
+  }
+}
+.gal-book.is-alone { margin-left: auto; margin-right: auto; }
+.gal-book-in {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: 16px;
+  height: 100%;
+  padding: var(--pad-card);
+}
+.gal-book::before {                 /* the gold top line of the glass cards */
+  content: "";
+  position: absolute;
+  top: 0; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(230,189,13,0.7), transparent);
+  pointer-events: none;
+}
+.gal-book::after {                  /* the soft gold light of the dark cards */
+  content: "";
+  position: absolute;
+  top: -80px; right: -64px;
+  width: 280px; height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(230,189,13,0.13), transparent 68%);
+  pointer-events: none;
+}
+.gal-book h2 {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  color: #fff;
+  text-wrap: balance;
+}
+.gal-book .glass-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  width: 100%;
+  margin: 0;
+}
+.gal-book .glass-actions .button { flex: 0 1 auto; width: auto; min-width: 0; }
+@media (max-width: 679px) {
+  .gal-book-in { padding: var(--pad-y) var(--pad-card); }
+  .gal-book .glass-actions .button { flex: 1 1 100%; }
+}
+/* One place wide (never on a phone, where the card has its own row):
+   a smaller title, the two buttons one above the other */
+@media (min-width: 700px) {
+  @container (max-width: 21rem) {
+    .gal-book-in { gap: 12px; padding: 16px; min-height: 125cqw; }
+    .gal-book h2 { font-size: var(--fs-lead); line-height: 1.2; }
+    .gal-book .glass-actions { gap: 8px; }
+    .gal-book .glass-actions .button {
+      flex: 1 1 100%;
+      gap: 6px;
+      padding: 0 8px;
+      font-size: var(--fs-meta);
+    }
+    .gal-book .glass-actions .button svg { width: 18px; height: 18px; }
+  }
+}
+/* the call button on a dark surface: the outline, light */
+.gal-book .button-secondary,
+.glb .button-secondary {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.22);
+  color: #fff;
+  /* no fade on the background: the shared button fades it, and a white
+     button must never show through, not even for a moment while loading */
+  transition: transform 0.2s var(--spring);
+}
+.gal-book .button-secondary svg,
+.glb .button-secondary svg { fill: var(--brand); }
+@media (hover: hover) {
+  .gal-book .button-secondary:hover,
+  .glb .button-secondary:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.4); }
+}
+
+
+/* ── LINE UNDER THE GRID · how many photos are shown, and the way back ───── */
+.gal-status {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 4px 12px;
+  margin: 16px 0 0;
+  font-size: var(--fs-meta);
+  line-height: 1.5;
+  color: var(--grey-500);
+  text-align: center;
+}
+.gal-reset {
+  position: relative;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--brand-deep);
+  font: inherit;
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.gal-reset::after { content: ""; position: absolute; inset: -12px -8px; }
+.gal-reset[hidden] { display: none; }
+
+
+/* ════════════════════════════════════════════════════════════════════════════
+   PHOTO VIEWER · full screen. Phone: the photo on top, the caption and the
+   booking buttons in a panel below. Landscape and desktop: the photo on the
+   left at full height, the panel on the right.
+   ════════════════════════════════════════════════════════════════════════════ */
+html.glb-open,
+html.glb-open body { overflow: hidden; }
+html.glb-open body { padding-right: var(--glb-sbw, 0px); }   /* no sideways jump when the scrollbar goes */
+
+.glb {
+  position: fixed;
+  inset: 0;
+  z-index: 9990;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr) auto;
+  visibility: hidden;
+  opacity: 0;
+  background: rgba(5,8,15, calc(0.95 * var(--glb-dim, 1)));
+  -webkit-backdrop-filter: blur(20px) saturate(1.4);
+  backdrop-filter: blur(20px) saturate(1.4);
+  color: #fff;
+  overscroll-behavior: contain;
+  pointer-events: none;
+  transition: opacity 0.24s var(--ease), visibility 0s linear 0.24s;
+}
+.glb.is-open {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.24s var(--ease), visibility 0s;
+}
+
+.glb-view { position: relative; min-width: 0; min-height: 0; }
+
+/* The photo: three slides side by side (previous, current, next), so a swipe
+   drags the neighbour in and the neighbours are already loaded */
+.glb-stage {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: zoom-out;
+}
+.glb-track { position: absolute; inset: 0; will-change: transform; }
+.glb-slide {
+  --glb-pad-y: 0px;                 /* free space around the photo (set per layout below) */
+  --glb-pad-x: 0px;
+  position: absolute;
+  inset: 0;
+  padding: var(--glb-pad-y) var(--glb-pad-x);
+  /* the small grid photo stands in, in exactly the same place, until the full one has arrived */
+  background: center / contain no-repeat content-box;
+}
+.glb-slide img {
+  position: absolute;
+  top: var(--glb-pad-y);
+  left: var(--glb-pad-x);
+  width: calc(100% - 2 * var(--glb-pad-x));
+  height: calc(100% - 2 * var(--glb-pad-y));
+  max-width: none;
+  object-fit: contain;
+  -webkit-user-drag: none;
+  transition: opacity 0.2s var(--ease);
+}
+.glb-slide.is-loading img { opacity: 0; }
+.glb-slide.is-broken img { visibility: hidden; }   /* the full photo did not arrive: the small one stays, without a broken image mark */
+.glb-slide.is-loading::after {
+  content: "";
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 32px; height: 32px;
+  margin: -16px 0 0 -16px;
+  border: 3px solid rgba(255,255,255,0.15);
+  border-top-color: rgba(255,255,255,0.85);
+  border-radius: 50%;
+  opacity: 0;
+  animation: glb-spin 0.8s linear infinite, glb-late 0.2s linear 0.45s forwards;
+}
+@keyframes glb-spin { to { transform: rotate(360deg); } }
+@keyframes glb-late { to { opacity: 1; } }
+
+/* Controls on the photo */
+.glb-ui {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  padding: max(8px, env(safe-area-inset-top, 0px)) max(8px, env(safe-area-inset-right, 0px)) 0 max(8px, env(safe-area-inset-left, 0px));
+  pointer-events: none;
+}
+.glb.is-open .glb-ui > * { pointer-events: auto; }
+.glb-btn,
+.glb-count {
+  flex: none;
+  display: grid;
+  place-items: center;
+  height: 44px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  background: rgba(5,8,15,0.55);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: #fff;
+}
+.glb-btn {
+  width: 44px;
+  padding: 0;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: background-color 0.16s var(--ease), border-color 0.16s var(--ease);
+}
+.glb-btn svg { width: 22px; height: 22px; }
+.glb-btn:disabled { opacity: 0.35; cursor: default; }
+.glb-btn:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; border-radius: 999px; }
+@media (hover: hover) {
+  .glb-btn:not(:disabled):hover { background: rgba(255,255,255,0.16); border-color: rgba(255,255,255,0.4); }
+}
+.glb-count {
+  min-width: 72px;
+  margin: 0;
+  padding: 0 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  font-variant-numeric: tabular-nums;
+}
+.glb-close { margin-left: auto; }
+
+/* The panel: caption, the other photos, the booking prompt */
+.glb-panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+  padding: 12px max(16px, env(safe-area-inset-right, 0px)) max(12px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  border-top: 1px solid rgba(255,255,255,0.08);
+  background: linear-gradient(180deg, #16181c 0%, #0c0e12 100%);
+}
+.glb-panel::before {                /* gold top line, as on the glass cards */
+  content: "";
+  position: absolute;
+  top: -1px; left: 12%; right: 12%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, rgba(230,189,13,0.6), transparent);
+  pointer-events: none;
+}
+.glb-label {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--fs-meta);
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--brand);
+}
+.glb-title {
+  margin: 2px 0 0;
+  font-family: var(--font-heading);
+  font-size: var(--fs-lead);
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+.glb-desc {
+  margin: 4px 0 0;
+  min-height: 4.35em;                /* three lines: the photo does not jump when the text is shorter */
+  font-size: var(--fs-meta);
+  line-height: 1.45;
+  color: var(--on-dark-2);
+}
+.glb-more-title {
+  margin: 0 0 8px;
+  font-size: var(--fs-meta);
+  line-height: 1.3;
+  color: var(--on-dark-2);
+}
+.glb-thumbs {
+  display: flex;
+  gap: 8px;
+  margin: 0 -16px;
+  padding: 2px 16px;
+  overflow-x: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  touch-action: pan-x;
+}
+.glb-thumbs::-webkit-scrollbar { display: none; }
+.glb-thumb {
+  position: relative;
+  flex: none;
+  width: 44px;
+  height: 55px;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 8px;
+  background: var(--dark-card);
+  opacity: 0.45;
+  cursor: pointer;
+  touch-action: manipulation;
+  transition: opacity 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.glb-thumb img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.glb-thumb.is-same { opacity: 1; }              /* the same vehicle as the photo on screen */
+.glb-thumb.is-first { margin-left: 8px; }       /* a new vehicle starts here */
+.glb-thumb[aria-current="true"] { opacity: 1; box-shadow: 0 0 0 2px var(--brand); }
+.glb-thumb:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; opacity: 1; }
+@media (hover: hover) { .glb-thumb:hover { opacity: 1; } }
+
+.glb-book-q {
+  margin: 0 0 8px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-body);
+  font-weight: 700;
+  line-height: 1.3;
+  color: #fff;
+}
+.glb-actions { display: flex; gap: 8px; }
+.glb-actions .button { min-width: 0; padding: 0 16px; }
+.glb-actions .button-whatsapp { flex: 1 1 auto; }
+.glb-actions .button-secondary { flex: 0 0 auto; }
+/* Narrow phones: both labels stay whole */
+@media (max-width: 389px) {
+  .glb-actions .button { padding: 0 12px; }
+}
+/* Short phones: the panel gives a little height back to the photo */
+@media (orientation: portrait) and (max-height: 760px) {
+  .glb-panel { gap: 8px; padding-top: 8px; padding-bottom: max(8px, env(safe-area-inset-bottom, 0px)); }
+  .glb-more-title { margin-bottom: 4px; }
+  .glb-thumb { height: 44px; }
+  .glb-book-q { margin-bottom: 4px; }
+}
+
+/* The cookie question of a first visit lies above the viewer. The panel
+   makes room for it (--glb-cookie is measured in script.js, cookieRoom), so
+   the caption and both booking buttons stay in view; upright, the row of
+   small photos steps aside until the question has been answered. */
+.glb.has-cookie .glb-panel { padding-bottom: calc(var(--glb-cookie, 0px) + 8px); }
+@media (orientation: portrait) {
+  .glb.has-cookie .glb-more { display: none; }
+  .glb.has-cookie .glb-desc { min-height: 0; }
+}
+
+/* Tablet upright: the panel keeps a readable width */
+@media (min-width: 600px) and (orientation: portrait) {
+  .glb-panel { padding: 16px max(24px, calc(50% - 320px)) 24px; }
+  .glb-thumbs { margin: 0; padding: 2px; }
+}
+
+/* Landscape phones, tablets on their side, every desktop */
+@media (orientation: landscape) and (min-width: 640px) {
+  .glb {
+    grid-template-columns: minmax(0, 1fr) clamp(280px, 26vw, 440px);
+    grid-template-rows: minmax(0, 1fr);
+  }
+  /* caption on top, booking buttons pinned to the bottom, the small photos
+     take the room between the two and scroll inside it when there are many */
+  .glb-panel {
+    gap: 24px;
+    padding: 24px;
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+    border-top: 0;
+    border-left: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+  }
+  .glb-info { flex: none; }      /* the caption is never cut */
+  .glb-more { flex: 1 1 auto; min-height: 0; overflow-y: auto; overscroll-behavior: contain; touch-action: pan-y; scrollbar-width: thin; }
+  .glb-book { flex: none; }
+  .glb-panel::before { top: 12%; bottom: 12%; left: -1px; right: auto; width: 1px; height: auto;
+    background: linear-gradient(to bottom, transparent, rgba(230,189,13,0.6), transparent); }
+  .glb-desc { min-height: 0; margin-top: 8px; font-size: var(--fs-body); line-height: 1.55; }
+  .glb-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+    margin: 0;
+    padding: 2px;
+    overflow: visible;
+    touch-action: auto;
+  }
+  .glb-thumb { width: auto; height: auto; aspect-ratio: 4 / 5; }
+  .glb-thumb.is-first { margin-left: 0; }
+  .glb-actions { flex-direction: column; }
+  .glb-actions .button { width: 100%; padding: 0 16px; }
+}
+/* A laptop window is short: the small photos are one sideways row, as on a
+   phone (the mouse wheel moves it), so caption, row and both buttons fit
+   without anything being cut or scrolling inside the panel */
+@media (orientation: landscape) and (min-width: 640px) and (max-height: 800px) {
+  .glb-panel { gap: 16px; }
+  .glb-more { flex: none; overflow: visible; }
+  .glb-thumbs {
+    display: flex;
+    margin: 0 -24px;
+    padding: 2px 24px;
+    overflow-x: auto;
+    touch-action: pan-x;
+  }
+  .glb-thumb { flex: none; width: 44px; height: 55px; aspect-ratio: auto; }
+  .glb-thumb.is-first { margin-left: 8px; }
+}
+@media (orientation: landscape) and (min-width: 1041px) and (max-height: 800px) {
+  .glb-thumbs { margin: 0 -32px; padding: 2px 32px; }
+}
+/* A phone on its side: caption and buttons only */
+@media (orientation: landscape) and (min-width: 640px) and (max-height: 500px) {
+  .glb-panel { gap: 12px; padding: 16px; padding-right: max(16px, env(safe-area-inset-right, 0px)); justify-content: space-between; }
+  .glb-desc { font-size: var(--fs-meta); line-height: 1.45; margin-top: 4px; }
+  .glb-more { display: none; }
+}
+@media (orientation: landscape) and (min-width: 1041px) {
+  .glb-ui { padding: 16px; }
+  .glb-slide { --glb-pad-y: 24px; --glb-pad-x: 88px; }
+  .glb-btn { width: 48px; height: 48px; }
+  .glb-count { height: 48px; }
+  /* the arrows stay beside the photo, also on a very wide screen
+     (half of a 3:4 photo at full height is 37.5vh wide) */
+  .glb-prev, .glb-next { position: absolute; top: 50%; margin-top: -24px; }
+  .glb-prev { left: max(16px, calc(50% - 37.5vh - 72px)); }
+  .glb-next { right: max(16px, calc(50% - 37.5vh - 72px)); }
+  .glb-panel { padding: 32px; }
+  .glb-title { font-size: var(--fs-h3); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gal-tile img, .gal-zoom, .glb, .glb.is-open, .glb-slide img { transition: none; }
+  .glb-slide.is-loading::after { animation: glb-late 0.2s linear 0.45s forwards; }   /* a ring that does not turn */
+  .gal-grid.is-swapping .gal-item:not([hidden]) { animation: none; }
+}

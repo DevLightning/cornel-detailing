@@ -4217,11 +4217,11 @@ a, button { -webkit-tap-highlight-color: transparent; }
   .gallery-tile--tall { min-height: 560px; }
 }
 /* More reviews per row as the screen widens, so the cards keep their size */
-@media (min-width: 2800px) {
+@media (min-width: 2200px) {
   .reviews-scroller { --rv-n: 5; }
   .reviews-track .review-card:nth-child(5) { display: flex; }
 }
-@media (min-width: 3600px) {
+@media (min-width: 3000px) {
   .reviews-scroller { --rv-n: 6; }
   .reviews-track .review-card:nth-child(6) { display: flex; }
 }
@@ -5285,19 +5285,35 @@ a, button { -webkit-tap-highlight-color: transparent; }
 @media (max-width: 480px) {
   :root { --pad-y: 28px; }
 }
-/* Large and ultrawide screens: everything steps up together, so nothing is
-   left at its laptop size inside a block twice as wide */
+/* Large and ultrawide screens: MORE COLUMNS AND MORE AIR, NOT BIGGER THINGS.
+   A 34 inch ultrawide is a desktop monitor that is wider, not further away:
+   text, buttons and icons keep their desktop size (a first version scaled
+   everything with the width, and on a 2560x1080 screen that gave a 90px
+   headline, 19px body text and a hero that filled 78% of the screen). The
+   width goes into extra columns (photo strip, reviews, packages, FAQ), and
+   anything with a height follows the height of the screen, never its width.
+   Only from 3000px, where the pixels really are smaller, is there one small
+   step up. */
 @media (min-width: 1921px) {
   :root {
-    --gap-head: 48px; --gap-grid: 24px; --pad-card: 32px;
-    --btn-h: 60px; --ico-tile: 60px; --ico-glyph: 30px; --ico-stroke: 2px; --r-tile: 16px;
-    --fs-h1: clamp(4.5rem, 3.5vw, 6.5rem);
-    --fs-h2: clamp(2.7rem, 2.1vw, 3.6rem);
-    --fs-lead: clamp(1.25rem, 0.85vw, 1.5rem);
-    --fs-body: clamp(1.125rem, 0.75vw, 1.3125rem);
-    --fs-meta: clamp(1rem, 0.65vw, 1.125rem);
+    --gap-head: 40px; --gap-grid: 24px; --pad-card: 28px;
+    --fs-h1: 4.5rem;
+    --fs-h2: 2.7rem;
+    --fs-h3: 1.65rem;
   }
   body { font-size: var(--fs-body); }
+}
+@media (min-width: 3000px) {
+  :root {
+    --gap-head: 48px; --pad-card: 32px;
+    --btn-h: 56px; --ico-tile: 56px; --ico-glyph: 28px; --r-tile: 14px;
+    --fs-h1: 5rem;
+    --fs-h2: 3rem;
+    --fs-h3: 1.8rem;
+    --fs-lead: 1.25rem;
+    --fs-body: 1.0625rem;
+    --fs-meta: 0.9375rem;
+  }
 }
 
 /* ── PAGE ───────────────────────────────────────────────────────────────────
@@ -5375,10 +5391,10 @@ a, button { -webkit-tap-highlight-color: transparent; }
 .button-small svg { width: 16px; height: 16px; }
 .button-secondary svg { fill: var(--ink); }
 .button-wrap { height: auto; min-height: var(--btn-h); border-radius: 26px; }
-@media (min-width: 1921px) {
-  .button { padding: 0 32px; gap: 10px; }
-  .button svg { width: 24px; height: 24px; }
-  .button-small { height: 52px; padding: 0 24px; }
+@media (min-width: 3000px) {
+  .button { padding: 0 30px; }
+  .button svg { width: 22px; height: 22px; }
+  .button-small { height: 48px; padding: 0 22px; }
 }
 /* The bar that follows the phone keeps its own compact size */
 .mobile-cta .button { height: 54px; border-radius: 25px; }
@@ -5452,7 +5468,7 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 .op-ico { border: 1px solid rgba(230,189,13,0.3); }
 .map-facade-pin { background: var(--brand); color: var(--on-brand); box-shadow: 0 4px 14px var(--brand-glow); }
 .stars { width: 86px; height: 16px; flex: none; fill: var(--rating); }
-@media (min-width: 1921px) { .stars { width: 108px; height: 20px; } }
+@media (min-width: 3000px) { .stars { width: 96px; height: 18px; } }
 
 /* ── CARD · the original soft card ──────────────────────────────────────── */
 .value-card,
@@ -5492,8 +5508,29 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 .hero-bg {
   position: absolute; inset: 0;
   z-index: -2;
-  background: url("assets/gallery/background_rs3.webp") center 30% / cover no-repeat;
+  /* The Urus SE under the hexagon lights (16:9). What shows of it depends on
+     the shape of the hero: a phone sees the full height, a laptop the lights
+     and the car, a wide screen a band across the car. */
+  background: url("assets/gallery/hero-urus.webp") center 30% / cover no-repeat;
 }
+@media (min-width: 1441px) { .hero-bg { background-position: center 52%; } }
+@media (min-width: 1921px) { .hero-bg { background-position: center 62%; } }
+/* The film lies on the photo and under the veil. It is invisible until it
+   really plays (script.js: setupHeroFilm), so a phone that will not start it
+   (low power mode, reduced motion, data saver) shows the photo and nothing
+   else. Three files, each cut to the shape of its hero: see
+   build/make_hero_video.py. */
+.hero-film {
+  position: absolute; inset: 0;
+  z-index: -2;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.9s var(--ease);
+}
+.hero-film.is-playing { opacity: 1; }
 .hero::after {
   content: "";
   position: absolute; inset: 0;
@@ -5611,7 +5648,7 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 
 @media (max-width: 720px) {
   .hero { min-height: 500px; padding: 48px var(--pad-x) 40px; }
-  .hero-bg { background-position: 60% 30%; }
+  .hero-bg { background-position: 50% 50%; }
   .hero-h1-city { font-size: 0.54em; }
 }
 @media (min-width: 721px) {
@@ -5621,11 +5658,10 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
   .hero-trust-row { margin-top: 16px; }
 }
 @media (min-width: 1921px) {
-  .hero { min-height: min(880px, 78svh); }
+  /* a wide screen is usually a short one (2560x1080): the hero takes about
+     six tenths of the height, so the first photos show below it */
+  .hero { min-height: min(760px, 60svh); }
   .hero-content { max-width: 1400px; }
-  .hero-sub { margin-top: 24px; }
-  .hero-actions { margin-top: 40px; gap: 8px; }
-  .hero-trust-row { margin-top: 24px; gap: 8px; }
 }
 /* Landscape phones: the short screen gets a tighter stack */
 @media (orientation: landscape) and (max-height: 500px) {
@@ -5642,6 +5678,12 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
 }
 @media (min-width: 1921px) {
   .ss-card { flex: 0 0 calc((100% - 4 * var(--gap-grid)) / 4.4); }
+}
+@media (min-width: 2400px) {
+  .ss-card { flex: 0 0 calc((100% - 5 * var(--gap-grid)) / 5.4); }
+}
+@media (min-width: 3000px) {
+  .ss-card { flex: 0 0 calc((100% - 6 * var(--gap-grid)) / 6.4); }
 }
 
 /* ── LEISTUNGEN · service cards ─────────────────────────────────────────── */
@@ -5660,11 +5702,15 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
   color: inherit;
   transition: transform 0.24s var(--spring), box-shadow 0.24s var(--ease), border-color 0.2s var(--ease);
 }
-.value-card:hover {
-  transform: translateY(-4px);
-  box-shadow: var(--shadow-card);
-  border-color: rgba(15,20,34,0.12);
+@media (hover: hover) {
+  .value-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-card);
+    border-color: rgba(15,20,34,0.12);
+  }
 }
+.value-card--link { -webkit-tap-highlight-color: transparent; touch-action: manipulation; }
+.value-card--link:active { transform: scale(0.985); border-color: rgba(15,20,34,0.18); }
 .value-card > * { grid-column: 2; }
 .value-card > .icon-badge { grid-column: 1; grid-row: 1 / span 2; }
 .value-card h3 {
@@ -5717,7 +5763,9 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
   color: var(--grey-500);
   transition: transform 0.2s var(--ease), color 0.2s var(--ease);
 }
-.value-card--link:hover .vc-arrow { color: var(--brand-deep); transform: translateX(3px); }
+@media (hover: hover) {
+  .value-card--link:hover .vc-arrow { color: var(--brand-deep); transform: translateX(3px); }
+}
 @media (min-width: 721px) {
   .value-grid--menu { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
@@ -5793,10 +5841,12 @@ svg[fill="none"] * { vector-effect: non-scaling-stroke; }
   color: var(--dark);
 }
 .mid-cta-btn { flex: none; min-width: 15em; animation: none; }
+.mid-cta-call { flex: none; }
+.mid-cta-note { flex-basis: 100%; text-align: center; }
 .mid-cta-note { font-size: var(--fs-meta); color: var(--grey-500); }
 @media (max-width: 720px) {
   .mid-cta { flex-direction: column; text-align: center; padding: var(--pad-y) var(--pad-x); }
-  .mid-cta-btn { width: 100%; min-width: 0; }
+  .mid-cta-btn, .mid-cta-call { width: 100%; min-width: 0; }
 }
 
 /* ── KERAMIK · the layout and the look stay; only sizes join the system ─── */
@@ -5966,7 +6016,7 @@ li.faq-item p { padding: 0; }
   .location-map, .map-facade, .location-map iframe { min-height: 340px; }
 }
 @media (min-width: 1921px) {
-  .location-map, .map-facade, .location-map iframe { min-height: 440px; }
+  .location-map, .map-facade, .location-map iframe { min-height: 360px; }
 }
 
 /* ── KONTAKT · the last block: one glass card, one question, two buttons ── */
@@ -6003,7 +6053,7 @@ li.faq-item p { padding: 0; }
    the block empty at 2560px. The media column follows the screen and the
    three owner traits stand side by side. */
 @media (min-width: 1921px) {
-  .op-grid { grid-template-columns: minmax(0, clamp(520px, 26vw, 720px)) minmax(0, 1fr); }
+  .op-grid { grid-template-columns: minmax(0, clamp(420px, 19vw, 560px)) minmax(0, 1fr); }
   .op-traits {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -6018,7 +6068,7 @@ li.faq-item p { padding: 0; }
     padding: 32px 0;
     border-top: 1px solid var(--border);
   }
-  .ceramic-layout { grid-template-columns: clamp(460px, 26vw, 720px) minmax(0, 1fr); }
+  .ceramic-layout { grid-template-columns: clamp(420px, 19vw, 560px) minmax(0, 1fr); }
   .ceramic-video-frame { aspect-ratio: 1 / 1; }
 }
 /* <<< /SYSTEM 2 >>> */

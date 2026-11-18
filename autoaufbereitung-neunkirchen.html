@@ -50,7 +50,7 @@
           "isPartOf": {"@id": "https://corneldetailing.com/#website"},
           "about": {"@id": "https://corneldetailing.com/#business"},
           "inLanguage": "de-AT",
-          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/gallery/background_rs3.webp"}
+          "primaryImageOfPage": {"@type": "ImageObject", "url": "https://corneldetailing.com/assets/gallery/hero-urus.webp"}
         },
         {
           "@type": "Service",
@@ -110,11 +110,11 @@
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png?v=2" />
     <link rel="apple-touch-icon" sizes="180x180" href="/favicon-192.png?v=2" />
     <!-- the same hero background the homepage preloads -->
-    <link rel="preload" as="image" href="assets/gallery/background_rs3.webp" fetchpriority="high" />
+    <link rel="preload" as="image" href="assets/gallery/hero-urus.webp" fetchpriority="high" />
 
-    <link rel="stylesheet" href="styles.css?v=58" />
+    <link rel="stylesheet" href="styles.css?v=59" />
     <script src="site-config.js?v=8" defer></script>
-    <script src="script.js?v=35" defer></script>
+    <script src="script.js?v=36" defer></script>
     <script src="consent.js?v=9" defer></script>
   </head>
   <body>
@@ -156,6 +156,10 @@
         <!-- 1 HERO · the homepage hero, with the town in the headline -->
         <section class="hero" aria-label="Autoaufbereitung Neunkirchen">
           <div class="hero-bg"></div>
+          <!-- the film over the photo: it has no address here, script.js gives it
+               one after the page has loaded, so the photo stays the first picture -->
+          <video class="hero-film" id="heroFilm" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1" disablepictureinpicture
+            data-phone="assets/gallery/hero-film-phone.mp4" data-mid="assets/gallery/hero-film.mp4" data-wide="assets/gallery/hero-film-wide.mp4"></video>
           <div class="hero-content">
             <h1><span class="hero-accent">Autoaufbereitung</span> <span class="hero-h1-city">in Neunkirchen.</span></h1>
             <p class="hero-sub">Von der Handwäsche bis zur Keramikversiegelung.</p>

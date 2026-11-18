@@ -32,6 +32,8 @@ python build/gen_price_table.py        # schreibt die Preistabellen
 python build/gen_price_marks.py        # schreibt die "ab"-Preise der Leistungskarten
 python build/verify_seo.py             # prueft alles (0 failures erwartet)
 python build/prerender_packages.py --check   # HTML == JavaScript?
+python build/make_gallery_thumbs.py    # nur nach neuen Galerie-Fotos: kleine Vorschaubilder
+python build/prerender_gallery.py       # nur nach neuen Galerie-Fotos: schreibt die Fotos in galerie.html
 python build/run_behaviour_check.py    # klickt die Seite in Chrome durch
 ```
 
