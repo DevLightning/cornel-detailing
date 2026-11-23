@@ -536,3 +536,41 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
     - datenschutz.html keeps "Kein Kontaktformular". Adding a form later
       means a privacy section, a way to send it (no backend exists: the
       site is static) and a real test inquiry before go-live.
+97. The desktop version of the Betriebe page (23 Nov 2026, the owner: improve
+    the laptop, PC and ultrawide version, "the mobile is fine"). Everything
+    is in the DESKTOP part at the end of the `<<< B2B PAGE >>>` layer and
+    starts at 1041px; phones and tablets were measured before and after and
+    are identical (page height and every section, heading, card and button at
+    360, 390, 768 and 1040 wide).
+    - The four services stand in ONE row at every desktop width. Before, a
+      laptop showed two rows of half empty cards. From 1041 to 1599px a card
+      is too narrow for icon and text side by side, so the tile goes on top
+      (as on the homepage service cards); from 1600px the icon stands at the
+      left, like the rows above and below it.
+    - Preise and Region stand side by side as two equal halves. They are
+      wrapped in `<div class="b2b-pair">`, which is `display: contents`
+      below 1041px. Both headings keep the one title size (rule 73); a block
+      whose heading does not fit a half at that size stays at full width,
+      which is why "Vor dem Verkauf" was not put in the row.
+    - The closing question stands on one line.
+    - Shared, in the PLACEMENT layer: an odd number of questions in the two
+      column FAQ puts the last one in the middle at column width instead of
+      alone on the left (this page has five; the winter guide's list of
+      five tips is the only other odd list on the site).
+    - The closing dark card was NOT changed to a full width block: the same
+      card closes ten other pages, and a one page variant is what the owner
+      calls random. Change it everywhere or nowhere.
+    - Measure a wrapped block with `main section`, not `main > section`: the
+      audit table silently skipped blocks inside a wrapper.
+98. Betriebe page, round two (23 Nov 2026, the owner, on his ultrawide).
+    - Hero: the long paragraph is gone ("too much text in the first hero");
+      title, one line, two buttons and three facts remain. The background is
+      the homepage photo `hero-urus.webp` (phones `hero-urus-phone.webp`)
+      under the homepage's dark veil, with the same two preloads in the head.
+      This changes phones too: the hero is shorter, nothing else moved.
+    - "not every section has to be centered, it looks forced": from 1041px the
+      titles stay centred and running text reads from the left edge (Vor dem
+      Verkauf in a 68ch column, Preise and Region over the full half).
+    - The closing contact card fills its block from 1041px, in one plain dark
+      colour (#10141c), no gradient, no glow, no white box around it. Only on
+      this page so far; the other ten pages still have the small card.

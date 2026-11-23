@@ -6185,6 +6185,15 @@ li.faq-item p { padding: 0; }
   .vehicle-select-btns { flex-basis: 620px; }
   .location-map, .map-facade, .location-map iframe { min-height: 320px; }
 }
+/* An odd number of questions in the two column list: the last one stands in
+   the middle at column width instead of alone on the left. */
+@media (min-width: 1041px) {
+  .faq-list > .faq-item:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+    justify-self: center;
+    width: calc(50% - var(--gap-grid) / 2);
+  }
+}
 /* <<< /PLACEMENT >>> */
 
 /* <<< B2B PAGE >>>  fahrzeugaufbereitung-autohaus-werkstatt.html only
@@ -6205,7 +6214,30 @@ li.faq-item p { padding: 0; }
   font-weight: 700;
   color: #fff;
 }
-.b2b-page .gallery-hero-heading > p.b2b-sub + p { margin-top: 12px; max-width: 62ch; }
+
+/* The hero photo is the homepage's (the owner, 23 Nov 2026: "use the lambo
+   picture ... the same as on homepage"), under the homepage's dark veil, so
+   both heroes look the same. The hero carries only the title, one line, the
+   two buttons and three facts: the long paragraph was cut ("too much text"). */
+.b2b-hero { background: #05060a; }
+.b2b-hero .gallery-hero-bg {
+  background: url("assets/gallery/hero-urus.webp") center 52% / cover no-repeat;
+  opacity: 1;
+}
+.b2b-hero::after {
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 115%, rgba(230,189,13,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(5,6,10,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 100% at 0% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 100% at 100% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(5,6,10,0.56) 0%, rgba(5,6,10,0.80) 55%, rgba(5,6,10,0.93) 100%);
+}
+@media (max-width: 720px) {
+  .b2b-hero .gallery-hero-bg { background-image: url("assets/gallery/hero-urus-phone.webp"); background-position: 50% 50%; }
+}
+@media (min-width: 1041px) {
+  .b2b-hero { min-height: min(600px, 70svh); }
+}
 
 .b2b-actions {
   display: flex;
@@ -6240,9 +6272,8 @@ li.faq-item p { padding: 0; }
 }
 .b2b-trust li + li::before { content: "·"; margin: 0 10px; color: var(--brand); }
 
-/* four cards: one column on phones, two on laptops, four in a row from 1600px */
-@media (min-width: 1041px) { .value-grid.b2b-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-@media (min-width: 1600px) { .value-grid.b2b-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+/* four cards: one column on phones and tablets; the desktop row is in the
+   DESKTOP part at the end of this layer */
 .b2b-note {
   margin: 20px auto 0;
   text-align: center;
@@ -6300,6 +6331,77 @@ li.faq-item p { padding: 0; }
   .b2b-actions .button { width: 100%; }
   .b2b-trust { flex-direction: column; align-items: center; }
   .b2b-trust li + li::before { content: none; }
+}
+/* ── DESKTOP, from 1041px (the owner, 23 Nov 2026: improve the laptop, PC and
+   ultrawide version, "the mobile is fine"). Nothing below reaches a phone or
+   a tablet; `.b2b-pair` is `display: contents` there, so the two blocks it
+   wraps stack exactly as before. Placement follows rule 91: every heading at
+   the one title size on the centre line, a block's button on that line at
+   the bottom. */
+.b2b-pair { display: contents; }
+@media (min-width: 1041px) {
+  /* the four services in ONE row at every desktop width. Before, a laptop
+     showed two rows of half empty cards and only a 1600px screen got the
+     row. From 1600px a card is wide enough for the icon at the left, like
+     the rows above and below it. */
+  .value-grid.b2b-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+  /* Preise and Region are two short blocks: side by side as two equal halves
+     instead of two wide, nearly empty bands. The button of the first stands
+     at the bottom, on its centre line. */
+  .b2b-pair {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--gap-block);
+    margin-top: var(--gap-block);
+  }
+  .b2b-pair > .section { display: flex; flex-direction: column; margin-top: 0; }
+  .b2b-pair > .section > .b2b-actions { margin-top: auto; padding-top: var(--gap-head); }
+
+  /* the closing question fits one line on a desktop card */
+  .b2b-page .cta-card h2 { max-width: none; }
+}
+/* a laptop card is too narrow for icon and text side by side: the tile goes on
+   top, as on the four service cards of the homepage */
+@media (min-width: 1041px) and (max-width: 1599px) {
+  .b2b-grid-4 .value-card { grid-template-columns: minmax(0, 1fr); align-content: start; }
+  .b2b-grid-4 .value-card > * { grid-column: 1; }
+  .b2b-grid-4 .value-card > .icon-badge { grid-row: auto; margin-bottom: 16px; }
+}
+/* ── Round two on desktop (the owner, 23 Nov 2026) ─────────────────────────
+   1. "not every section has to be centered, it looks forced": titles stay on
+      the centre line, running text reads from the left edge in a readable
+      measure. The text blocks are Vor dem Verkauf, Preise and Region.
+   2. The closing contact card fills its block instead of floating small in
+      the middle of a white box, in one plain dark colour (no gradient, no
+      glow): the card IS the block. */
+@media (min-width: 1041px) {
+  .b2b-text > p,
+  .b2b-text > .b2b-address { text-align: left; }
+  #vor-dem-verkauf .b2b-text > p { width: 100%; max-width: 68ch; }
+  .b2b-pair .b2b-text > p { max-width: none; margin-left: 0; margin-right: 0; }
+  .b2b-pair .b2b-text > .b2b-address { align-self: stretch; }
+  .b2b-pair .b2b-text { justify-items: stretch; }
+  .b2b-pair .b2b-text > .section-tag { justify-self: center; }
+
+  .b2b-page .section.section-cta {
+    display: block;
+    padding: 0;
+    background: none;
+    border: 0;
+    box-shadow: none;
+  }
+  .b2b-page .cta-card.cta-card--dark {
+    max-width: none;
+    padding: clamp(48px, 5vw, 72px) var(--pad-x);
+    border: 0 !important;
+    border-radius: var(--r-block);
+    background: #10141c !important;
+    box-shadow: none !important;
+  }
+  .b2b-page .cta-card--dark::before { content: none; }
+  .b2b-page .cta-card--dark p { max-width: 62ch; color: rgba(255,255,255,0.78) !important; }
+  .b2b-page .cta-card--dark .b2b-actions { margin-top: 32px; }
 }
 /* <<< /B2B PAGE >>> */
 
