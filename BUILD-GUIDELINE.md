@@ -501,3 +501,38 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
     320px at 2752 (the owner's screen), 549px at 3440. One line in the WIDE
     SCALE layer of styles.css. The gallery keeps 8 columns until 3200px,
     because its grid is now narrower than the screen.
+
+## 19. The page for Betriebe (2026-11-23)
+
+95. `fahrzeugaufbereitung-autohaus-werkstatt.html` is the page for Autohäuser,
+    Werkstätten and Firmen mit Fuhrpark, built from the owner's brief
+    "Landingpage Werkstätten und Autohäuser Text und Umsetzung.docx". Text is
+    the brief's, word for word, except: "und" for "&" in the title (rule 66),
+    a shorter description (snippet budget), the site's phone format, two typo
+    fixes, no [BESTÄTIGEN] markers. Its own styles are the `<<< B2B PAGE >>>`
+    layer of styles.css; everything else is the shared parts.
+    - No sticky bottom bar on this page (the brief). The header stays
+      identical to every page (rule 63). The brief also wanted no WhatsApp
+      button and a form; the owner decided otherwise (rule 96).
+    - The FAQ JSON-LD repeats the VISIBLE questions word for word.
+    - Block 5 "Vor dem Verkauf" (Betriebe bring cars before selling or
+      handing them to their customers) and the last FAQ question belong
+      together: change one, change both (visible and JSON-LD).
+    - Owner's answers, 23 Nov 2026: pickup for every Betrieb within 75 km
+      of Enzenreith, free of charge ("kostenlos"), or the Betrieb brings
+      the cars; on-site work only
+      after agreement. No VAT or Kleinunternehmer text on this page.
+    - Linked from the footer of every page ("Für Betriebe") and from the
+      homepage link row under the FAQ; in sitemap.xml, llms.txt and the
+      short-address redirects of vercel.json.
+96. No contact form on the site (owner's decision, 23 Nov 2026, after a
+    form and a mail function had been built and tested). The Betriebe page
+    ends in the dark contact card `#anfrage` with three buttons: call
+    (`button-light`, data-call-link), WhatsApp (`button-whatsapp`, its own
+    prefilled text for Betriebe) and e-mail (mailto with a subject), plus the
+    address written out. The hero "Angebot anfragen" jumps there.
+    - The call and WhatsApp buttons are counted by the existing conversion
+      listener (`a.button`, `a.button-whatsapp`); e-mail is not tracked.
+    - datenschutz.html keeps "Kein Kontaktformular". Adding a form later
+      means a privacy section, a way to send it (no backend exists: the
+      site is static) and a real test inquiry before go-live.

@@ -20,6 +20,7 @@ PAGES = [
     ("keramikversiegelung-neunkirchen.html",        "keramikversiegelung-neunkirchen.html",         "0.85", "monthly"),
     ("lackpolitur-neunkirchen.html",                "lackpolitur-neunkirchen.html",                 "0.85", "monthly"),
     ("innenreinigung-gloggnitz.html",               "innenreinigung-gloggnitz.html",                "0.85", "monthly"),
+    ("fahrzeugaufbereitung-autohaus-werkstatt.html", "fahrzeugaufbereitung-autohaus-werkstatt.html", "0.80", "monthly"),
     ("galerie.html",                                "galerie.html",                                 "0.80", "monthly"),
     ("autoaufbereitung-kosten-neunkirchen.html",    "autoaufbereitung-kosten-neunkirchen.html",     "0.75", "monthly"),
     ("keramikversiegelung-vs-politur-neunkirchen.html", "keramikversiegelung-vs-politur-neunkirchen.html", "0.70", "monthly"),

@@ -6187,6 +6187,122 @@ li.faq-item p { padding: 0; }
 }
 /* <<< /PLACEMENT >>> */
 
+/* <<< B2B PAGE >>>  fahrzeugaufbereitung-autohaus-werkstatt.html only
+   The page for Autohäuser, Werkstätten and Fuhrparks. It is built from the
+   site's own parts (subpage hero, value cards, FAQ, dark call card); what
+   lives here is only what that page has and no other: the two hero buttons,
+   the trust line, four cards in a row, numbered steps and the contact card.
+   No form (the owner's decision): call, WhatsApp and e-mail in the closing
+   card, and no bar that floats over the content. Buttons are at least 48px
+   high with 16px between them. */
+.b2b-page .gallery-hero-inner { max-width: 860px; }   /* room for the three facts on one line */
+.b2b-page .gallery-hero-heading { max-width: 760px; }
+.b2b-page .gallery-hero-heading h1 { text-wrap: balance; }
+.b2b-page .gallery-hero-heading > p.b2b-sub {
+  margin-top: 12px;
+  font-family: var(--font-heading);
+  font-size: var(--fs-lead);
+  font-weight: 700;
+  color: #fff;
+}
+.b2b-page .gallery-hero-heading > p.b2b-sub + p { margin-top: 12px; max-width: 62ch; }
+
+.b2b-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 28px;
+}
+.b2b-actions .button { min-height: max(48px, var(--btn-h)); height: auto; }
+.button.b2b-cta {
+  background: var(--brand);
+  color: var(--dark);
+  border-color: transparent;
+  box-shadow: 0 4px 18px rgba(230,189,13,0.32);
+}
+@media (hover: hover) { .button.b2b-cta:hover { background: var(--brand-hi); } }
+.button.b2b-cta svg { width: 20px; height: 20px; }
+.b2b-call { animation: none; }
+.b2b-actions--light { margin-top: var(--gap-head); }
+
+.b2b-trust {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 0;
+  margin: 24px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: rgba(255,255,255,0.78);
+}
+.b2b-trust li + li::before { content: "·"; margin: 0 10px; color: var(--brand); }
+
+/* four cards: one column on phones, two on laptops, four in a row from 1600px */
+@media (min-width: 1041px) { .value-grid.b2b-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1600px) { .value-grid.b2b-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.b2b-note {
+  margin: 20px auto 0;
+  text-align: center;
+  font-size: var(--fs-body);
+  color: var(--grey-600);
+}
+
+/* numbered steps: the number takes the place of the icon */
+.b2b-steps { margin: 0; padding: 0; list-style: none; }
+.b2b-step {
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--brand);
+  color: var(--dark);
+  font-family: var(--font-heading);
+  font-size: var(--fs-lead);
+  font-weight: 800;
+}
+.value-card > .b2b-step { grid-column: 1; }
+
+/* text blocks: heading, then up to two paragraphs, all on the centre line */
+.b2b-text > p { max-width: 62ch; margin-left: auto; margin-right: auto; }
+.b2b-text > p + p { margin-top: 12px; }
+.b2b-address {
+  margin-top: 16px;
+  font-style: normal;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+/* the contact card: three buttons, the address written out for copying */
+.b2b-contact .button svg { width: 20px; height: 20px; }
+.b2b-contact .b2b-mail svg { fill: none; stroke: currentColor; }   /* a line icon, the shared button icons are filled */
+.b2b-nowrap { white-space: nowrap; }
+.cta-card--dark .b2b-mail-line {
+  margin-top: 16px;
+  font-size: var(--fs-meta);
+  font-weight: 600;
+  color: rgba(255,255,255,0.78) !important;   /* the card's paragraphs are 0.45: the address must stay readable */
+  user-select: all;
+}
+
+/* line icons on this page (the shared icons are filled shapes) */
+.b2b-page .icon-badge svg.b2b-ico { fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+@media (max-width: 389px) {
+  .b2b-call-pre { display: none; }        /* the number alone fits a 360px phone */
+  .b2b-hero .hero-location { font-size: 12px; letter-spacing: 0.02em; padding-left: 10px; padding-right: 10px; white-space: nowrap; }
+}
+@media (max-width: 720px) {
+  .b2b-actions .button { width: 100%; }
+  .b2b-trust { flex-direction: column; align-items: center; }
+  .b2b-trust li + li::before { content: none; }
+}
+/* <<< /B2B PAGE >>> */
+
 /* <<< WIDE SCALE >>>
    Screens wider than 1920px show the whole page at nine tenths (the owner,
    2026-11-18: "too big on ultrawides, make it like 90% of what it is now").

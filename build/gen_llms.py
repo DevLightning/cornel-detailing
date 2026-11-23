@@ -28,6 +28,8 @@ SERVICES = [
      "Zwei- oder dreistufige Maschinenpolitur, entfernt Kratzer, Swirls und Hologramme"),
     ("keramikversiegelung-neunkirchen.html", "Keramikversiegelung",
      "Lackschutz mit bis zu 12 oder bis zu 60 Monaten Standzeit, auf poliertem Lack"),
+    ("fahrzeugaufbereitung-autohaus-werkstatt.html", "Für Autohäuser und Werkstätten",
+     "Aufbereitung für Autohäuser, Werkstätten und Fuhrparks, kostenlose Abholung im Umkreis von 75 km, Angebot auf Anfrage"),
     ("innenreinigung-gloggnitz.html", "Innenreinigung",
      "Tornador Gun, Teppiche, Polster, Dachhimmel, Lederpflege, Armaturen und Kofferraum"),
 ]
