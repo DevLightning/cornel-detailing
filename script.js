@@ -1973,6 +1973,19 @@ function setupActiveNav() {
     if (window._moveNavPill) window._moveNavPill(lastLink);
   };
   window.addEventListener("scroll", atEnd, { passive: true });
+
+  // Back above the first menu section (in the hero) nothing is marked. The
+  // observer only reports sections entering its band, so without this the
+  // last section seen stayed marked after scrolling back to the top.
+  const first = sections[0];
+  const atTop = () => {
+    if (first.getBoundingClientRect().top < window.innerHeight * 0.35) return;
+    if (!navLinks.some((l) => l.classList.contains("is-active"))) return;
+    navLinks.forEach((l) => l.classList.remove("is-active"));
+    activeId = null;
+    if (window._moveNavPill) window._moveNavPill(null);
+  };
+  window.addEventListener("scroll", atTop, { passive: true });
 }
 
 function setupNavPill() {

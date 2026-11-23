@@ -6405,6 +6405,153 @@ li.faq-item p { padding: 0; }
 }
 /* <<< /B2B PAGE >>> */
 
+/* <<< FLAT >>>  the owner, 23 Nov 2026: "remove any glow from the hero and
+   homepage, we're removing the glows, and less gradients overall, just
+   standard colors".
+   No glow anywhere: no gold halo around buttons, no pulsing, no glowing gold
+   title, no light sweep over the header, no coloured orbs behind the page.
+   Surfaces are one plain colour each. What stays: the neutral grey shadows
+   that lift white blocks off the page, the plain dark layer over a photo that
+   keeps its text readable, the dark fade under the labels of the reference
+   photos, and the white fade at the ends of the photo strip that shows it
+   scrolls. Geometry is untouched: this layer only paints. */
+
+/* page and header */
+body::before,
+body::after { content: none; }
+.topbar::before,
+.topbar::after { content: none; animation: none; }
+.topnav-cta,
+.topnav-cta:hover { box-shadow: none !important; }
+.topbar-phone {
+  background: var(--brand);
+  border-color: var(--brand-dark);
+  box-shadow: none;
+}
+.topbar-phone::after { content: none; animation: none; }
+.topnav a.is-active::before { box-shadow: none; }
+
+/* hero: the photo under its dark shading, the keyword in plain gold */
+/* the dark shading over the hero photo stays (the owner: it is there to
+   make the text easier to read); only its faint gold glow is gone */
+.hero::after,
+.b2b-hero::after {
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 0%, rgba(5,6,10,0.65) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 100% at 0% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 100% at 100% 50%, rgba(5,6,10,0.55) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(5,6,10,0.56) 0%, rgba(5,6,10,0.80) 55%, rgba(5,6,10,0.93) 100%);
+}
+.gallery-hero::after { background: rgba(16,20,28,0.6); }
+.hero-accent,
+.hero h1 .hero-accent {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  -webkit-text-fill-color: currentColor;
+  color: var(--brand);
+  filter: none;
+}
+
+/* buttons: flat, still, no halo */
+.button,
+.button:hover,
+.cta-pulse,
+.hero-link--pulse { animation: none; }
+.button-whatsapp,
+.button-whatsapp:hover,
+.button-primary,
+.button-primary:hover,
+.button.b2b-cta,
+.hero-actions .hero-cta-primary,
+.hero-actions .hero-cta-primary:hover,
+.ceramic-actions .button-whatsapp,
+.mid-cta-btn { box-shadow: none !important; }
+.mobile-cta .button-whatsapp,
+.mobile-cta .button-whatsapp:hover,
+.mobile-cta .button-whatsapp:focus-visible,
+.mobile-cta .button-whatsapp:active {
+  background: var(--brand);
+  border-color: transparent;
+  box-shadow: none;
+}
+.mobile-cta .button-secondary,
+.mobile-cta .button-secondary:hover,
+.mobile-cta .button-secondary:focus-visible,
+.mobile-cta .button-secondary:active {
+  background: var(--white);
+  box-shadow: none;
+}
+
+/* white blocks and cards: plain white */
+.section,
+.showcase-strip,
+.cta-card,
+.glass-card,
+.glass-card:hover {
+  background: var(--white);
+}
+.glass-card,
+.glass-card:hover { -webkit-backdrop-filter: none; backdrop-filter: none; }
+.ss-card--all { background: var(--white); }
+.ss-card-all-arrow,
+.ss-card--all:hover .ss-card-all-arrow { box-shadow: none; }
+.pkg-card.is-recommended::before { background: var(--brand); }
+
+/* dark blocks: one plain dark colour */
+.ceramic-showcase { background: #10141c; }
+.cta-card--dark,
+.b2b-page .cta-card.cta-card--dark { background: #10141c !important; }
+.cta-card--dark::before { content: none; }
+.ceramic-tag {
+  background: rgba(230,189,13,0.14);
+  border-color: rgba(230,189,13,0.3);
+  box-shadow: none;
+}
+.ceramic-video-overlay { background: none; }
+.ceramic-video-frame::after { content: none; }
+.ceramic-benefit,
+.ceramic-benefit:hover { background: rgba(255,255,255,0.04); }
+
+/* map button: plain grey with its grid, the pin without a halo */
+.map-facade {
+  background:
+    repeating-linear-gradient(0deg, transparent 0 39px, rgba(15,20,34,0.05) 39px 40px),
+    repeating-linear-gradient(90deg, transparent 0 39px, rgba(15,20,34,0.05) 39px 40px),
+    var(--grey-50);
+}
+.map-facade-pin { box-shadow: none; }
+/* <<< /FLAT >>> */
+
+/* <<< MENU >>>  the owner, 23 Nov 2026: "take a look at the menu, it has some
+   glitches and I think a bit of a darker color would suit it better. On mobile
+   there are some gray arrows out of place".
+   1. The arrows: every menu row draws its arrow with ::after. The layer that
+      enlarges tap areas (TAP TARGETS) gives `.topnav a[href]::after` an
+      absolute position, which lifted each arrow out of its row and parked it
+      over the right edge of the menu, between two rows. The rows are 52px
+      high and as wide as the menu, so they need no larger tap area: on the
+      phone and tablet menu the arrow goes back into its row.
+   2. Darker: the bar and the menu sheet share one darker navy instead of the
+      logo navy, plain, no gradient. */
+:root { --menu-bg: #161b23; }
+.topbar,
+.topbar.is-scrolled { background: rgba(22,27,35,0.96); }
+@media (max-width: 1024px) {
+  .topnav {
+    background: var(--menu-bg);
+    border-color: rgba(255,255,255,0.08);
+  }
+  .topnav a[href]::after {
+    position: static;
+    inset: auto;
+    pointer-events: none;
+  }
+  .topnav a.is-active { background: rgba(255,255,255,0.07); }
+  .topnav a:hover { background: rgba(255,255,255,0.05); }
+}
+/* <<< /MENU >>> */
+
 /* <<< WIDE SCALE >>>
    Screens wider than 1920px show the whole page at nine tenths (the owner,
    2026-11-18: "too big on ultrawides, make it like 90% of what it is now").

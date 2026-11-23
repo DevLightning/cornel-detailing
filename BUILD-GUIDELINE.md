@@ -574,3 +574,38 @@ shadows: "too unprofessional, keep the feeling of the original"). So:
     - The closing contact card fills its block from 1041px, in one plain dark
       colour (#10141c), no gradient, no glow, no white box around it. Only on
       this page so far; the other ten pages still have the small card.
+99. No glow, plain colours (23 Nov 2026, the owner: "remove any glow from the
+    hero and homepage, we're removing the glows, and less gradients overall,
+    just standard colors"). The layer `<<< FLAT >>>` in styles.css, just
+    before WIDE SCALE, does it in one place and only paints (page geometry was
+    measured identical before and after). Gone: the gold halo and the pulse
+    on every button, the gold gradient title in the hero and its glow, the
+    light sweep and the gold line on the header, the ring on the phone
+    button, the coloured orbs behind the page, the gradient on white blocks,
+    cards, the dark blocks and the map button.
+    Kept on purpose: the dark shading over the hero photo (the owner: "leave
+    the dark gradient over the hero lambo image, that one is there to help
+    make the text clearer to read"; only its faint gold glow is gone),
+    neutral grey shadows under white blocks, the dark fade
+    under the labels on the reference photos, the white fade at the ends of
+    the photo strip (it shows the strip scrolls), the map's grid lines.
+    Do not bring a glow or a decorative gradient back; a new element gets one
+    plain colour. Effects are checked with a computed-style list of every
+    rendered element (gradient, gold shadow, text shadow, drop shadow, gradient
+    text, animation), not by eye.
+100. The menu (23 Nov 2026, the owner: "it has some glitches and I think a
+    bit of a darker color would suit it better. On mobile there are some gray
+    arrows out of place"). Layer `<<< MENU >>>` in styles.css and
+    setupActiveNav() in script.js.
+    - The arrows in the phone and tablet menu are drawn with `::after`. The
+      TAP TARGETS layer gives `.topnav a[href]::after` an absolute position
+      for a larger tap area, which threw each arrow out of its row onto the
+      menu's right edge. Below 1025px the arrow is static again (the rows are
+      52px high and full width, they need no larger area). Any new
+      `::after` drawing on a link must check that layer first.
+    - Header bar and menu sheet are one darker navy, rgba(22,27,35,0.96) and
+      #161b23, plain.
+    - The highlight of the current section cleared only when another section
+      came into view, so after scrolling back to the top the last one stayed
+      marked. Above the first menu section nothing is marked now; at the page
+      end Kontakt is. Tested at 1440, 2752 and 390 by scrolling down and back.
